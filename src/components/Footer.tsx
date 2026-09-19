@@ -3,46 +3,17 @@ import { Newsletter } from "./Newsletter";
 import { company, institutionalLinks } from "@/data/site";
 
 const PAYMENT_SPRITE = "/img/67436b40-sprite-payments.svg";
-const SPRITE_COUNT = 24;
-const SPRITE_W = 1139;
-const SLICE = SPRITE_W / SPRITE_COUNT;
-// Índices das bandeiras dentro do sprite de referência.
-const FLAGS: { index: number; name: string }[] = [
-  { index: 0, name: "Visa" },
-  { index: 1, name: "Mastercard" },
-  { index: 2, name: "American Express" },
-  { index: 3, name: "Diners Club" },
-  { index: 4, name: "Hipercard" },
-  { index: 5, name: "Hiper" },
-  { index: 6, name: "Elo" },
-  { index: 7, name: "Discover" },
-  { index: 11, name: "JCB" },
-  { index: 12, name: "Maestro" },
-  { index: 13, name: "Visa Electron" },
-  { index: 14, name: "Ame" },
-  { index: 15, name: "PicPay" },
-  { index: 17, name: "Sodexo Alimentação" },
-  { index: 19, name: "Pix" },
-  { index: 20, name: "VR" },
-  { index: 21, name: "Ticket" },
-  { index: 22, name: "Sorocred" },
-];
 
-function PaymentFlag({ index, name }: { index: number; name: string }) {
+function PaymentFlags() {
   return (
-    <span
-      role="img"
-      aria-label={name}
-      title={name}
-      className="block h-[34px] w-[44px] rounded border border-border bg-white bg-no-repeat"
-      style={{
-        backgroundImage: `url(${PAYMENT_SPRITE})`,
-        backgroundSize: `${SPRITE_W}px 34px`,
-        backgroundPosition: `-${index * SLICE + 2}px 0`,
-      }}
+    <img
+      src={PAYMENT_SPRITE}
+      alt="Bandeiras de pagamento aceitas: Visa, Mastercard, American Express, Diners, Hipercard, Elo, JCB, Pix, vale-refeição e outras"
+      className="w-full max-w-[260px]"
     />
   );
 }
+
 
 
 const socials = [
