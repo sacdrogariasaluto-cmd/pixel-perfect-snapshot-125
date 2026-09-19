@@ -3,16 +3,36 @@ import { Newsletter } from "./Newsletter";
 import { company, institutionalLinks } from "@/data/site";
 
 const PAYMENT_SPRITE = "/img/67436b40-sprite-payments.svg";
+// O sprite de referência tem 1139x34. Exibimos em 4 faixas para caber na coluna.
+const SPRITE_W = 1060;
+const SPRITE_H = 32;
+const ROWS = 4;
+const ROW_W = SPRITE_W / ROWS;
 
 function PaymentFlags() {
   return (
-    <img
-      src={PAYMENT_SPRITE}
-      alt="Bandeiras de pagamento aceitas: Visa, Mastercard, American Express, Diners, Hipercard, Elo, JCB, Pix, vale-refeição e outras"
-      className="w-full max-w-[260px]"
-    />
+    <div
+      role="img"
+      aria-label="Bandeiras de pagamento aceitas: Visa, Mastercard, American Express, Diners, Hipercard, Elo, JCB, Pix, vale-refeição e outras"
+      className="flex flex-col gap-1"
+    >
+      {Array.from({ length: ROWS }).map((_, i) => (
+        <span
+          key={i}
+          className="block rounded bg-white bg-no-repeat"
+          style={{
+            width: `${ROW_W}px`,
+            height: `${SPRITE_H}px`,
+            backgroundImage: `url(${PAYMENT_SPRITE})`,
+            backgroundSize: `${SPRITE_W}px ${SPRITE_H}px`,
+            backgroundPosition: `-${i * ROW_W}px 0`,
+          }}
+        />
+      ))}
+    </div>
   );
 }
+
 
 
 
