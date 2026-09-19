@@ -59,17 +59,15 @@ export function Footer() {
         <div className="container-site grid gap-8 py-8 md:grid-cols-4">
           <div>
             <h3 className="mb-4 text-muted-foreground">Pague com</h3>
-            <div className="flex flex-wrap gap-2">
-              {FLAGS.map((f) => (
-                <PaymentFlag key={f.name} index={f.index} name={f.name} />
-              ))}
-
+            <div className="flex flex-col items-start gap-3">
+              <PaymentFlags />
               <img
                 src="/img/10fbedc9-cartao-convenio.png"
                 alt="Cartão convênio"
                 className="h-[34px] w-auto rounded border border-border"
               />
             </div>
+
           </div>
 
           <div>
