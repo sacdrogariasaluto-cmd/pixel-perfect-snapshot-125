@@ -89,9 +89,10 @@ export function Footer() {
           <div>
             <h3 className="mb-4 text-muted-foreground">Pague com</h3>
             <div className="flex flex-wrap gap-2">
-              {FLAGS.map((f, i) => (
-                <PaymentFlag key={f} index={i} name={f} />
+              {FLAGS.map((f) => (
+                <PaymentFlag key={f.name} index={f.index} name={f.name} />
               ))}
+
               <img
                 src="/img/10fbedc9-cartao-convenio.png"
                 alt="Cartão convênio"
