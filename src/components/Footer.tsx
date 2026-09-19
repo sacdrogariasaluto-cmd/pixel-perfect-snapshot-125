@@ -34,11 +34,11 @@ function PaymentFlag({ index, name }: { index: number; name: string }) {
       role="img"
       aria-label={name}
       title={name}
-      className="block h-[34px] w-[48px] rounded border border-border bg-white bg-no-repeat"
+      className="block h-[34px] w-[44px] rounded border border-border bg-white bg-no-repeat"
       style={{
         backgroundImage: `url(${PAYMENT_SPRITE})`,
         backgroundSize: `${SPRITE_W}px 34px`,
-        backgroundPosition: `-${index * SLICE}px 0`,
+        backgroundPosition: `-${index * SLICE + 2}px 0`,
       }}
     />
   );
