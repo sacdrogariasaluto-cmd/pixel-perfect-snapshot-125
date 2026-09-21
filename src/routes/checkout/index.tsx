@@ -722,10 +722,18 @@ function CheckoutPage() {
 
                     {payment === "cartao" && (
                       <div className="mt-4 grid gap-4 sm:grid-cols-6">
-                        <Field className="sm:col-span-4" id="cardNumber" label="Número do cartão" placeholder="0000 0000 0000 0000" inputMode="numeric" value={cardNumber} onChange={(v) => setCardNumber(maskCard(v))} error={errors['cardNumber']} />
-                        <Field className="sm:col-span-2" id="cardValidade" label="Validade" placeholder="MM/AA" inputMode="numeric" value={cardValidade} onChange={(v) => setCardValidade(maskValidade(v))} error={errors['cardValidade']} />
-                        <Field className="sm:col-span-4" id="cardName" label="Nome impresso no cartão" placeholder="Ex.: MARIA DA SILVA" value={cardName} onChange={setCardName} error={errors['cardName']} />
-                        <Field className="sm:col-span-2" id="cardCvv" label="CVV" placeholder="000" inputMode="numeric" maxLength={4} value={cardCvv} onChange={(v) => setCardCvv(onlyDigits(v).slice(0, 4))} error={errors['cardCvv']} />
+                        <div className="sm:col-span-4">
+                          <Field id="cardNumber" label="Número do cartão" placeholder="0000 0000 0000 0000" inputMode="numeric" autoComplete="cc-number" value={cardNumber} onChange={(v) => setCardNumber(maskCard(v))} error={errors['cardNumber']} />
+                          {cardDigits.length > 0 && !errors['cardNumber'] && (
+                            <p className={`mt-1 text-xs ${cardNumberOk ? "text-buy" : "text-muted-foreground"}`}>
+                              {cardBrand ? (cardNumberOk ? `${cardBrand.label} · número válido` : cardBrand.label) : "Bandeira não reconhecida"}
+                            </p>
+                          )}
+                        </div>
+                        <Field className="sm:col-span-2" id="cardValidade" label="Validade" placeholder="MM/AA" inputMode="numeric" autoComplete="cc-exp" value={cardValidade} onChange={(v) => setCardValidade(maskValidade(v))} error={errors['cardValidade']} />
+                        <Field className="sm:col-span-4" id="cardName" label="Nome impresso no cartão" placeholder="Ex.: MARIA DA SILVA" autoComplete="cc-name" value={cardName} onChange={setCardName} error={errors['cardName']} />
+                        <Field className="sm:col-span-2" id="cardCvv" label="CVV" placeholder={cardBrand?.cvv === 4 ? "0000" : "000"} inputMode="numeric" autoComplete="cc-csc" maxLength={cardBrand?.cvv ?? 4} value={cardCvv} onChange={(v) => setCardCvv(onlyDigits(v).slice(0, cardBrand?.cvv ?? 4))} error={errors['cardCvv']} />
+
                         <div className="sm:col-span-6">
                           <label htmlFor="parcelas" className="mb-1.5 block text-sm font-bold">
                             Parcelas
