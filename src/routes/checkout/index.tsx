@@ -230,7 +230,18 @@ function CheckoutPage() {
               <section className="rounded-md bg-surface p-5">
                 <h2 className="mb-4 text-base font-bold">1. Seus dados</h2>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <Field id="email" label="E-mail" type="email" inputMode="email" autoComplete="email" value={email} onChange={setEmail} error={errors['email']} />
+                  <div>
+                    <Field id="email" label="E-mail" type="email" inputMode="email" autoComplete="email" list="email-sugestoes" value={email} onChange={setEmail} error={errors['email']} />
+                    <datalist id="email-sugestoes">
+                      {(() => {
+                        const [user = "", domain = ""] = email.split("@");
+                        if (!user) return null;
+                        return EMAIL_DOMAINS.filter((d) => !domain || d.startsWith(domain)).map((d) => (
+                          <option key={d} value={`${user}@${d}`} />
+                        ));
+                      })()}
+                    </datalist>
+                  </div>
                   <Field id="name" label="Nome completo" autoComplete="name" value={name} onChange={setName} error={errors['name']} />
                   <Field id="phone" label="Celular / WhatsApp" inputMode="tel" autoComplete="tel" value={phone} onChange={(v) => setPhone(maskPhone(v))} error={errors['phone']} />
                   <Field id="cpf" label="CPF" inputMode="numeric" value={cpf} onChange={(v) => setCpf(maskCpf(v))} error={errors['cpf']} />
