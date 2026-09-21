@@ -1,7 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { CheckoutFooter, CheckoutHeader } from "@/components/CheckoutHeader";
+import { checkCoupon, createOrder } from "@/lib/store.functions";
 import { brl, useCart } from "@/lib/cart";
+
 
 export const Route = createFileRoute("/checkout/")({
   head: () => ({
@@ -284,6 +287,8 @@ function CheckoutPage() {
 
   const [coupon, setCoupon] = useState("");
   const [couponOpen, setCouponOpen] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
+  const [couponMsg, setCouponMsg] = useState<string | null>(null);
   const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -300,7 +305,30 @@ function CheckoutPage() {
   const pixTotal = useMemo(() => lines.reduce((s, l) => s + l.pixPrice * l.qty, 0), [lines]);
   const productsTotal = payment === "pix" ? pixTotal : subtotal;
   const pixDiscount = subtotal - pixTotal;
-  const total = productsTotal + shippingPrice;
+  const couponDiscount = appliedCoupon?.discount ?? 0;
+  const total = Math.max(0, productsTotal + shippingPrice - couponDiscount);
+
+  const runCoupon = useServerFn(checkCoupon);
+  const sendOrder = useServerFn(createOrder);
+
+  async function applyCoupon() {
+    if (!coupon.trim()) return;
+    setCouponMsg(null);
+    try {
+      const res = await runCoupon({ data: { code: coupon, subtotal: productsTotal } });
+      if (res.ok) {
+        setAppliedCoupon({ code: res.code, discount: res.discount });
+        setCouponMsg(`Cupom ${res.code} aplicado.`);
+      } else {
+        setAppliedCoupon(null);
+        setCouponMsg(res.message);
+      }
+    } catch {
+      setAppliedCoupon(null);
+      setCouponMsg("Não foi possível validar o cupom agora.");
+    }
+  }
+
 
   async function lookupCep(value: string) {
     const digits = onlyDigits(value);
@@ -400,20 +428,49 @@ function CheckoutPage() {
     setStep(3);
   }
 
-  function submit(ev: React.FormEvent) {
+  async function submit(ev: React.FormEvent) {
     ev.preventDefault();
     if (lines.length === 0) return;
     if (!validateStep3()) return focusFirstError();
     setSending(true);
+
+    let code = `VC${Date.now().toString().slice(-8)}`;
+    try {
+      const res = await sendOrder({
+        data: {
+          customer: { name, email, phone, doc: cpf },
+          address: { cep, street, number, complement, district, city, uf },
+          shipping: { label: shippingOption.label, eta: shippingOption.eta, price: shippingPrice },
+          payment:
+            payment === "cartao"
+              ? { method: "cartao", brand: cardBrand?.label ?? null, installments: Number(cardParcelas) }
+              : { method: "pix", installments: 1 },
+          coupon: appliedCoupon,
+          items: lines.map((l) => ({
+            slug: l.slug,
+            name: l.name,
+            image: l.image,
+            unitPrice: payment === "pix" ? l.pixPrice : l.unitPrice,
+            qty: l.qty,
+          })),
+          subtotal: productsTotal,
+          total,
+        },
+      });
+      code = res.code;
+    } catch {
+      /* mantém o pedido local mesmo se o registro falhar */
+    }
+
     const order = {
-      id: `VC${Date.now().toString().slice(-8)}`,
+      id: code,
       createdAt: new Date().toISOString(),
       customer: { email, name, phone, cpf },
       delivery: {
         type: "entrega",
         label: shippingOption.label,
         eta: shippingOption.eta,
-        price: shippingOption.price,
+        price: shippingPrice,
         address: { cep, street, number, complement, district, city, uf },
       },
       payment:
@@ -421,7 +478,7 @@ function CheckoutPage() {
           ? { method: "cartao", brand: cardBrand?.label ?? null, parcelas: Number(cardParcelas), last4: onlyDigits(cardNumber).slice(-4) }
           : { method: "pix" },
       items: lines,
-      totals: { products: productsTotal, shipping: shippingOption.price, total },
+      totals: { products: productsTotal, shipping: shippingPrice, total },
     };
     try {
       localStorage.setItem("vc-order-v1", JSON.stringify(order));
@@ -431,6 +488,7 @@ function CheckoutPage() {
     clear();
     navigate({ to: "/checkout/pedido" });
   }
+
 
   const ctaClass =
     "w-full rounded-full bg-brand py-4 text-base font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-60";
@@ -796,17 +854,20 @@ function CheckoutPage() {
                       aria-label="Cupom de desconto"
                       className="h-10 w-full rounded-xl border border-border px-3 text-sm outline-none focus:border-brand"
                     />
-                    <button type="button" className="h-10 shrink-0 rounded-xl bg-brand px-4 text-sm font-bold text-primary-foreground">
+                    <button
+                      type="button"
+                      onClick={applyCoupon}
+                      className="h-10 shrink-0 rounded-xl bg-brand px-4 text-sm font-bold text-primary-foreground"
+                    >
                       Aplicar
                     </button>
                   </div>
                 )}
-                {couponOpen && (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Cupons dependem de integração com o sistema da loja.
-                  </p>
+                {couponOpen && couponMsg && (
+                  <p className={`mt-1 text-xs ${appliedCoupon ? "text-buy" : "text-promo"}`}>{couponMsg}</p>
                 )}
               </div>
+
 
               <div className="space-y-2 text-sm">
                 <p className="flex justify-between">
@@ -817,6 +878,13 @@ function CheckoutPage() {
                   <span>Frete</span>
                   {cepOk ? <span>{brl(shippingPrice)}</span> : <span className="text-xs text-muted-foreground">informe o CEP</span>}
                 </p>
+                {appliedCoupon && (
+                  <p className="flex justify-between text-buy">
+                    <span>Cupom {appliedCoupon.code}</span>
+                    <strong>-{brl(appliedCoupon.discount)}</strong>
+                  </p>
+                )}
+
                 {savings + pixDiscount > 0 && (
                   <p className="flex justify-between text-buy">
                     <span>Você economiza</span>
