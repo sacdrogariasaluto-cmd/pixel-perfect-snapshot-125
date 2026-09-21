@@ -276,6 +276,11 @@ function CheckoutPage() {
   const [cardValidade, setCardValidade] = useState("");
   const [cardCvv, setCardCvv] = useState("");
   const [cardParcelas, setCardParcelas] = useState("1");
+  const cardBrand = useMemo(() => detectBrand(cardNumber), [cardNumber]);
+  const cardDigits = onlyDigits(cardNumber);
+  const cardNumberOk =
+    !!cardBrand && cardBrand.lengths.includes(cardDigits.length) && luhnValid(cardDigits);
+
 
   const [coupon, setCoupon] = useState("");
   const [couponOpen, setCouponOpen] = useState(false);
