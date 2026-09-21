@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 
 export function CookieNotice() {
   const [show, setShow] = useState(false);
@@ -18,9 +19,13 @@ export function CookieNotice() {
       <p className="text-muted-foreground">
         Usamos cookies para melhorar sua experiência de navegação. Ao continuar, você concorda com
         a nossa{" "}
-        <a href="#" className="text-brand underline">
+        <Link
+          to="/ajuda/$slug"
+          params={{ slug: "politica-de-privacidade" }}
+          className="text-brand underline"
+        >
           política de privacidade
-        </a>
+        </Link>
         .
       </p>
       <button

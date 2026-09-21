@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SlugIndexRouteImport } from './routes/$slug/index'
 import { Route as SlugPRouteImport } from './routes/$slug/p'
+import { Route as AjudaIndexRouteImport } from './routes/ajuda.index'
+import { Route as AjudaSlugRouteImport } from './routes/ajuda.$slug'
 import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
 import { Route as CheckoutCarrinhoRouteImport } from './routes/checkout/carrinho'
 import { Route as CheckoutLoginRouteImport } from './routes/checkout/login'
@@ -30,6 +32,16 @@ const SlugIndexRoute = SlugIndexRouteImport.update({
 const SlugPRoute = SlugPRouteImport.update({
   id: '/$slug/p',
   path: '/$slug/p',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AjudaIndexRoute = AjudaIndexRouteImport.update({
+  id: '/ajuda/',
+  path: '/ajuda/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AjudaSlugRoute = AjudaSlugRouteImport.update({
+  id: '/ajuda/$slug',
+  path: '/ajuda/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutIndexRoute = CheckoutIndexRouteImport.update({
@@ -56,29 +68,35 @@ const CheckoutPedidoRoute = CheckoutPedidoRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug/p': typeof SlugPRoute
+  '/ajuda/$slug': typeof AjudaSlugRoute
   '/checkout/carrinho': typeof CheckoutCarrinhoRoute
   '/checkout/login': typeof CheckoutLoginRoute
   '/checkout/pedido': typeof CheckoutPedidoRoute
   '/$slug/': typeof SlugIndexRoute
+  '/ajuda/': typeof AjudaIndexRoute
   '/checkout/': typeof CheckoutIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug/p': typeof SlugPRoute
+  '/ajuda/$slug': typeof AjudaSlugRoute
   '/checkout/carrinho': typeof CheckoutCarrinhoRoute
   '/checkout/login': typeof CheckoutLoginRoute
   '/checkout/pedido': typeof CheckoutPedidoRoute
   '/$slug': typeof SlugIndexRoute
+  '/ajuda': typeof AjudaIndexRoute
   '/checkout': typeof CheckoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$slug/p': typeof SlugPRoute
+  '/ajuda/$slug': typeof AjudaSlugRoute
   '/checkout/carrinho': typeof CheckoutCarrinhoRoute
   '/checkout/login': typeof CheckoutLoginRoute
   '/checkout/pedido': typeof CheckoutPedidoRoute
   '/$slug/': typeof SlugIndexRoute
+  '/ajuda/': typeof AjudaIndexRoute
   '/checkout/': typeof CheckoutIndexRoute
 }
 export interface FileRouteTypes {
@@ -86,38 +104,46 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$slug/p'
+    | '/ajuda/$slug'
     | '/checkout/carrinho'
     | '/checkout/login'
     | '/checkout/pedido'
     | '/$slug/'
+    | '/ajuda/'
     | '/checkout/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$slug/p'
+    | '/ajuda/$slug'
     | '/checkout/carrinho'
     | '/checkout/login'
     | '/checkout/pedido'
     | '/$slug'
+    | '/ajuda'
     | '/checkout'
   id:
     | '__root__'
     | '/'
     | '/$slug/p'
+    | '/ajuda/$slug'
     | '/checkout/carrinho'
     | '/checkout/login'
     | '/checkout/pedido'
     | '/$slug/'
+    | '/ajuda/'
     | '/checkout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugPRoute: typeof SlugPRoute
+  AjudaSlugRoute: typeof AjudaSlugRoute
   CheckoutCarrinhoRoute: typeof CheckoutCarrinhoRoute
   CheckoutLoginRoute: typeof CheckoutLoginRoute
   CheckoutPedidoRoute: typeof CheckoutPedidoRoute
   SlugIndexRoute: typeof SlugIndexRoute
+  AjudaIndexRoute: typeof AjudaIndexRoute
   CheckoutIndexRoute: typeof CheckoutIndexRoute
 }
 
@@ -142,6 +168,20 @@ declare module '@tanstack/react-router' {
       path: '/$slug/p'
       fullPath: '/$slug/p'
       preLoaderRoute: typeof SlugPRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ajuda/': {
+      id: '/ajuda/'
+      path: '/ajuda'
+      fullPath: '/ajuda/'
+      preLoaderRoute: typeof AjudaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ajuda/$slug': {
+      id: '/ajuda/$slug'
+      path: '/ajuda/$slug'
+      fullPath: '/ajuda/$slug'
+      preLoaderRoute: typeof AjudaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout/': {
@@ -178,10 +218,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugPRoute: SlugPRoute,
+  AjudaSlugRoute: AjudaSlugRoute,
   CheckoutCarrinhoRoute: CheckoutCarrinhoRoute,
   CheckoutLoginRoute: CheckoutLoginRoute,
   CheckoutPedidoRoute: CheckoutPedidoRoute,
   SlugIndexRoute: SlugIndexRoute,
+  AjudaIndexRoute: AjudaIndexRoute,
   CheckoutIndexRoute: CheckoutIndexRoute,
 }
 export const routeTree = rootRouteImport

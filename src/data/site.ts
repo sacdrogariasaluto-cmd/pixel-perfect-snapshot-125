@@ -150,9 +150,10 @@ export const company = {
 };
 
 export const institutionalLinks = [
-  "Política do Site",
-  "Quem Somos",
-  "Entregas",
-  "Dúvidas",
-  "Trocas e Devoluções",
-];
+  { label: "A Empresa", to: "/ajuda/a-empresa" },
+  { label: "Política de Privacidade", to: "/ajuda/politica-de-privacidade" },
+  { label: "Política de Pagamentos", to: "/ajuda/politica-de-pagamentos" },
+  { label: "Política de Entrega", to: "/ajuda/politica-de-entrega" },
+  { label: "Trocas e Devoluções", to: "/ajuda/trocas-e-devolucoes" },
+  { label: "Dúvidas", to: "/ajuda/duvidas" },
+] as const;

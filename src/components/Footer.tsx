@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { HeadsetIcon } from "./Icons";
 import { Newsletter } from "./Newsletter";
 import { company, institutionalLinks } from "@/data/site";
@@ -72,10 +73,14 @@ export function Footer() {
           </span>
           <nav className="flex flex-wrap items-center gap-x-3 gap-y-2" aria-label="Institucional">
             {institutionalLinks.map((l, i) => (
-              <span key={l} className="flex items-center gap-3">
-                <a href="#" className="hover:text-brand">
-                  {l}
-                </a>
+              <span key={l.to} className="flex items-center gap-3">
+                <Link
+                  to="/ajuda/$slug"
+                  params={{ slug: l.to.replace("/ajuda/", "") }}
+                  className="hover:text-brand"
+                >
+                  {l.label}
+                </Link>
                 {i < institutionalLinks.length - 1 && (
                   <span className="text-border" aria-hidden="true">
                     |
