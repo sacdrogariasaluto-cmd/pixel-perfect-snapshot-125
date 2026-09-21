@@ -1,2 +1,3 @@
 - [x] Deixar a adição ao carrinho igual à loja de referência
 - [ ] Recriar o painel administrativo conforme a referência enviada
+- [ ] Recriar a listagem e os detalhes internos dos pedidos conforme as referências
