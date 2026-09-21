@@ -482,70 +482,106 @@ function CheckoutPage() {
               <StepShell
                 index={3}
                 title="Pagamento"
-                subtitle={step < 3 ? "Preencha os dados de entrega para continuar" : "Escolha como prefere pagar."}
+                subtitle={step < 3 ? "Preencha os dados de entrega para continuar" : ""}
                 active={step === 3}
                 done={false}
                 onEdit={() => setStep(3)}
               >
-                <div className="space-y-3">
-                  {[
-                    { id: "pix", title: "Pix", desc: `Desconto à vista${pixDiscount > 0 ? ` de ${brl(pixDiscount)}` : ""}` },
-                    { id: "cartao", title: "Cartão de crédito", desc: "Parcele em até 6x sem juros" },
-                  ].map((m) => (
-                    <div key={m.id} className={`rounded-xl border ${payment === m.id ? "border-brand" : "border-border"}`}>
-                      <label className="flex cursor-pointer items-center gap-3 p-4 text-sm">
+                <div className="space-y-4">
+                  <div className={`rounded-2xl border p-4 ${payment === "pix" ? "border-brand" : "border-border"}`}>
+                    <label className="flex cursor-pointer items-start justify-between gap-3">
+                      <span className="flex items-center gap-2">
                         <input
                           type="radio"
                           name="pagamento"
-                          checked={payment === m.id}
-                          onChange={() => setPayment(m.id)}
-                            className="h-4 w-4 accent-brand"
+                          checked={payment === "pix"}
+                          onChange={() => setPayment("pix")}
+                          className="h-4 w-4 accent-brand"
                         />
-                        <span>
-                          <span className="block font-bold">{m.title}</span>
-                          <span className="block text-xs text-muted-foreground">{m.desc}</span>
+                        <span className="text-sm font-bold">Pix</span>
+                      </span>
+                      <span className="flex flex-col items-end gap-1">
+                        <span className="rounded bg-buy/10 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-buy">
+                          APROVAÇÃO IMEDIATA
                         </span>
-                      </label>
-
-                      {payment === "cartao" && m.id === "cartao" && (
-                        <div className="grid gap-4 border-t border-border p-4 sm:grid-cols-6">
-                          <Field className="sm:col-span-4" id="cardNumber" label="Número do cartão" inputMode="numeric" value={cardNumber} onChange={(v) => setCardNumber(maskCard(v))} error={errors['cardNumber']} />
-                          <Field className="sm:col-span-2" id="cardValidade" label="Validade" placeholder="MM/AA" inputMode="numeric" value={cardValidade} onChange={(v) => setCardValidade(maskValidade(v))} error={errors['cardValidade']} />
-                          <Field className="sm:col-span-4" id="cardName" label="Nome impresso no cartão" value={cardName} onChange={setCardName} error={errors['cardName']} />
-                          <Field className="sm:col-span-2" id="cardCvv" label="CVV" inputMode="numeric" maxLength={4} value={cardCvv} onChange={(v) => setCardCvv(onlyDigits(v).slice(0, 4))} error={errors['cardCvv']} />
-                          <div className="sm:col-span-6">
-                            <label htmlFor="parcelas" className="mb-1.5 block text-sm font-bold">
-                              Parcelas
-                            </label>
-                            <select
-                              id="parcelas"
-                              value={cardParcelas}
-                              onChange={(e) => setCardParcelas(e.target.value)}
-                              className="h-12 w-full rounded-xl border border-border bg-surface px-4 text-sm"
-                            >
-                              {[1, 2, 3, 4, 5, 6].map((n) => (
-                                <option key={n} value={n}>
-                                  {n}x de {brl(total / n)} sem juros
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <p className="text-xs text-muted-foreground sm:col-span-6">
-                            Nenhum dado de cartão é cobrado ou armazenado: a captura real depende de integração com um meio de pagamento.
-                          </p>
-                        </div>
-                      )}
-
-                      {payment === "pix" && m.id === "pix" && (
-                        <p className="border-t border-border p-4 text-xs text-muted-foreground">
-                          O código Pix será exibido após a confirmação do pedido.
+                        {pixDiscount > 0 && (
+                          <span className="rounded bg-buy/10 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-buy">
+                            DESCONTO À VISTA
+                          </span>
+                        )}
+                      </span>
+                    </label>
+                    {payment === "pix" && (
+                      <>
+                        <p className="mt-3 text-sm font-bold">
+                          A confirmação de pagamento é realizada em poucos minutos. Utilize o aplicativo do seu banco
+                          para pagar.
                         </p>
-                      )}
-                    </div>
-                  ))}
+                        <p className="mt-3 text-lg font-bold text-buy">Valor no Pix: {brl(total)}</p>
+                      </>
+                    )}
+                  </div>
+
+                  <div className={`rounded-2xl border p-4 ${payment === "cartao" ? "border-brand" : "border-border"}`}>
+                    <label className="flex cursor-pointer items-start justify-between gap-3">
+                      <span className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="pagamento"
+                          checked={payment === "cartao"}
+                          onChange={() => setPayment("cartao")}
+                          className="h-4 w-4 accent-brand"
+                        />
+                        <span className="text-sm font-bold">Cartão de crédito</span>
+                      </span>
+                      <span className="rounded bg-brand/10 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-brand-dark">
+                        ATÉ 6X SEM JUROS
+                      </span>
+                    </label>
+
+                    {payment === "cartao" && (
+                      <div className="mt-4 grid gap-4 sm:grid-cols-6">
+                        <Field className="sm:col-span-4" id="cardNumber" label="Número do cartão" placeholder="0000 0000 0000 0000" inputMode="numeric" value={cardNumber} onChange={(v) => setCardNumber(maskCard(v))} error={errors['cardNumber']} />
+                        <Field className="sm:col-span-2" id="cardValidade" label="Validade" placeholder="MM/AA" inputMode="numeric" value={cardValidade} onChange={(v) => setCardValidade(maskValidade(v))} error={errors['cardValidade']} />
+                        <Field className="sm:col-span-4" id="cardName" label="Nome impresso no cartão" placeholder="Ex.: MARIA DA SILVA" value={cardName} onChange={setCardName} error={errors['cardName']} />
+                        <Field className="sm:col-span-2" id="cardCvv" label="CVV" placeholder="000" inputMode="numeric" maxLength={4} value={cardCvv} onChange={(v) => setCardCvv(onlyDigits(v).slice(0, 4))} error={errors['cardCvv']} />
+                        <div className="sm:col-span-6">
+                          <label htmlFor="parcelas" className="mb-1.5 block text-sm font-bold">
+                            Parcelas
+                          </label>
+                          <select
+                            id="parcelas"
+                            value={cardParcelas}
+                            onChange={(e) => setCardParcelas(e.target.value)}
+                            className="h-12 w-full rounded-xl border border-border bg-surface px-4 text-sm"
+                          >
+                            {[1, 2, 3, 4, 5, 6].map((n) => (
+                              <option key={n} value={n}>
+                                {n}x de {brl(total / n)} sem juros
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <p className="text-xs text-muted-foreground sm:col-span-6">
+                          Nenhum dado de cartão é cobrado ou armazenado: a captura real depende de integração com um
+                          meio de pagamento.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <Field
+                    id="cpf"
+                    label="CPF/CNPJ"
+                    placeholder="Digite o número"
+                    inputMode="numeric"
+                    value={cpf}
+                    onChange={(v) => setCpf(maskCpf(v))}
+                    error={errors['cpf']}
+                  />
 
                   <button type="submit" disabled={sending} className={ctaClass}>
-                    {sending ? "Enviando…" : "Finalizar pedido"}
+                    {sending ? "Enviando…" : "Finalizar Compra"}
                   </button>
                 </div>
               </StepShell>
