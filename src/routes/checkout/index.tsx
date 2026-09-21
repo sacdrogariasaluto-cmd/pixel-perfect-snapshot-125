@@ -303,10 +303,6 @@ function CheckoutPage() {
     <div className="flex min-h-screen flex-col bg-background">
       <CheckoutHeader />
 
-      <div className="bg-brand py-3 text-center text-sm font-bold text-primary-foreground">
-        Compra 100% segura · Identificação › Entrega › Pagamento
-      </div>
-
       <main className="container-site flex-1 py-6 lg:py-10">
         {lines.length === 0 ? (
           <div className="mt-6 rounded-2xl bg-surface p-12 text-center">
