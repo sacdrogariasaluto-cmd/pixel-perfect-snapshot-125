@@ -1,22 +1,15 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { BasketIcon, HeadsetIcon, MenuIcon, PinIcon, SearchIcon, UserIcon } from "./Icons";
+import { BasketIcon, HeadsetIcon, MenuIcon, PinIcon, UserIcon } from "./Icons";
 import { DepartmentMenu } from "./DepartmentMenu";
+import { SearchBox } from "./SearchBox";
 import { useCart } from "@/lib/cart";
 import { Button } from "./ui/button";
 
 export function Header() {
   const [menu, setMenu] = useState(false);
-  const [term, setTerm] = useState("");
   const { count } = useCart();
-  const navigate = useNavigate();
 
-  const submitSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = term.trim();
-    if (!q) return;
-    void navigate({ to: "/busca", search: { q, ordem: "relevancia" } });
-  };
 
   return (
     <header className="sticky top-0 z-50 bg-surface shadow-[0_1px_0_rgba(0,0,0,0.08)]">
@@ -42,29 +35,8 @@ export function Header() {
           <img src="/img/a18dca27-logo.svg" alt="Drogaria Vera Cruz" className="h-[30px] w-auto md:h-[42px]" />
         </Link>
 
-        <form
-          className="relative ml-2 hidden w-[350px] md:block"
-          role="search"
-          onSubmit={submitSearch}
-        >
-          <label className="sr-only" htmlFor="busca">
-            Buscar produtos
-          </label>
-          <input
-            id="busca"
-            value={term}
-            onChange={(e) => setTerm(e.target.value)}
-            placeholder="O que você está buscando?"
-            className="h-11 w-full rounded-full border border-border bg-surface pl-5 pr-12 text-base outline-none placeholder:text-muted-foreground focus:border-brand"
-          />
-          <button
-            type="submit"
-            aria-label="Buscar"
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-brand"
-          >
-            <SearchIcon className="h-5 w-5" />
-          </button>
-        </form>
+        <SearchBox />
+
 
         <nav className="ml-auto flex items-center gap-5 justify-self-end text-[13px]">
           <span className="hidden items-center gap-2 lg:flex">
@@ -95,23 +67,8 @@ export function Header() {
           </Link>
         </nav>
       </div>
-      <form
-        className="relative px-4 pb-3 md:hidden"
-        role="search"
-        onSubmit={submitSearch}
-      >
-        <label className="sr-only" htmlFor="busca-mobile">Buscar produtos</label>
-        <input
-          id="busca-mobile"
-          value={term}
-          onChange={(e) => setTerm(e.target.value)}
-          placeholder="O que você está buscando?"
-          className="h-[51px] w-full rounded-full border border-border bg-surface pl-5 pr-12 text-[15px] outline-none placeholder:text-muted-foreground focus:border-brand"
-        />
-        <Button type="submit" variant="ghost" size="icon" aria-label="Buscar" className="absolute right-6 top-1 text-muted-foreground">
-          <SearchIcon className="h-5 w-5" />
-        </Button>
-      </form>
+      <SearchBox variant="mobile" />
+
     </header>
   );
 }
