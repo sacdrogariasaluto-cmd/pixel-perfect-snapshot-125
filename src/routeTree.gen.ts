@@ -18,6 +18,7 @@ import { Route as SlugPRouteImport } from './routes/$slug/p'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AjudaIndexRouteImport } from './routes/ajuda.index'
 import { Route as AjudaSlugRouteImport } from './routes/ajuda.$slug'
+import { Route as ApiDemoTokenRouteImport } from './routes/api/demo-token'
 import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
 import { Route as CheckoutCarrinhoRouteImport } from './routes/checkout/carrinho'
 import { Route as CheckoutLoginRouteImport } from './routes/checkout/login'
@@ -71,6 +72,11 @@ const AjudaSlugRoute = AjudaSlugRouteImport.update({
   path: '/ajuda/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDemoTokenRoute = ApiDemoTokenRouteImport.update({
+  id: '/api/demo-token',
+  path: '/api/demo-token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckoutIndexRoute = CheckoutIndexRouteImport.update({
   id: '/checkout/',
   path: '/checkout/',
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/$slug/p': typeof SlugPRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ajuda/$slug': typeof AjudaSlugRoute
+  '/api/demo-token': typeof ApiDemoTokenRoute
   '/checkout/carrinho': typeof CheckoutCarrinhoRoute
   '/checkout/login': typeof CheckoutLoginRoute
   '/checkout/pedido': typeof CheckoutPedidoRoute
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/busca': typeof BuscaRoute
   '/$slug/p': typeof SlugPRoute
   '/ajuda/$slug': typeof AjudaSlugRoute
+  '/api/demo-token': typeof ApiDemoTokenRoute
   '/checkout/carrinho': typeof CheckoutCarrinhoRoute
   '/checkout/login': typeof CheckoutLoginRoute
   '/checkout/pedido': typeof CheckoutPedidoRoute
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/$slug/p': typeof SlugPRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ajuda/$slug': typeof AjudaSlugRoute
+  '/api/demo-token': typeof ApiDemoTokenRoute
   '/checkout/carrinho': typeof CheckoutCarrinhoRoute
   '/checkout/login': typeof CheckoutLoginRoute
   '/checkout/pedido': typeof CheckoutPedidoRoute
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/$slug/p'
     | '/admin'
     | '/ajuda/$slug'
+    | '/api/demo-token'
     | '/checkout/carrinho'
     | '/checkout/login'
     | '/checkout/pedido'
@@ -196,6 +206,7 @@ export interface FileRouteTypes {
     | '/busca'
     | '/$slug/p'
     | '/ajuda/$slug'
+    | '/api/demo-token'
     | '/checkout/carrinho'
     | '/checkout/login'
     | '/checkout/pedido'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/$slug/p'
     | '/_authenticated/admin'
     | '/ajuda/$slug'
+    | '/api/demo-token'
     | '/checkout/carrinho'
     | '/checkout/login'
     | '/checkout/pedido'
@@ -234,6 +246,7 @@ export interface RootRouteChildren {
   BuscaRoute: typeof BuscaRoute
   SlugPRoute: typeof SlugPRoute
   AjudaSlugRoute: typeof AjudaSlugRoute
+  ApiDemoTokenRoute: typeof ApiDemoTokenRoute
   CheckoutCarrinhoRoute: typeof CheckoutCarrinhoRoute
   CheckoutLoginRoute: typeof CheckoutLoginRoute
   CheckoutPedidoRoute: typeof CheckoutPedidoRoute
@@ -305,6 +318,13 @@ declare module '@tanstack/react-router' {
       path: '/ajuda/$slug'
       fullPath: '/ajuda/$slug'
       preLoaderRoute: typeof AjudaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/demo-token': {
+      id: '/api/demo-token'
+      path: '/api/demo-token'
+      fullPath: '/api/demo-token'
+      preLoaderRoute: typeof ApiDemoTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout/': {
@@ -401,6 +421,7 @@ const rootRouteChildren: RootRouteChildren = {
   BuscaRoute: BuscaRoute,
   SlugPRoute: SlugPRoute,
   AjudaSlugRoute: AjudaSlugRoute,
+  ApiDemoTokenRoute: ApiDemoTokenRoute,
   CheckoutCarrinhoRoute: CheckoutCarrinhoRoute,
   CheckoutLoginRoute: CheckoutLoginRoute,
   CheckoutPedidoRoute: CheckoutPedidoRoute,
