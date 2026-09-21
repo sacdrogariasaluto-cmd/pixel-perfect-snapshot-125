@@ -796,17 +796,20 @@ function CheckoutPage() {
                       aria-label="Cupom de desconto"
                       className="h-10 w-full rounded-xl border border-border px-3 text-sm outline-none focus:border-brand"
                     />
-                    <button type="button" className="h-10 shrink-0 rounded-xl bg-brand px-4 text-sm font-bold text-primary-foreground">
+                    <button
+                      type="button"
+                      onClick={applyCoupon}
+                      className="h-10 shrink-0 rounded-xl bg-brand px-4 text-sm font-bold text-primary-foreground"
+                    >
                       Aplicar
                     </button>
                   </div>
                 )}
-                {couponOpen && (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Cupons dependem de integração com o sistema da loja.
-                  </p>
+                {couponOpen && couponMsg && (
+                  <p className={`mt-1 text-xs ${appliedCoupon ? "text-buy" : "text-promo"}`}>{couponMsg}</p>
                 )}
               </div>
+
 
               <div className="space-y-2 text-sm">
                 <p className="flex justify-between">
