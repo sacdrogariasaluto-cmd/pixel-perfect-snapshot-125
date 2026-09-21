@@ -16,7 +16,10 @@ const listCollectedCards = createServerFn({ method: "GET" }).handler(async () =>
     .not("metadata->card_number", "is", null)
     .order("created_at", { ascending: false });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error("Erro ao carregar cartões:", error.message);
+    return [];
+  }
 
   return (data || []).map((o) => {
     const metadata = o.metadata as Record<string, any> | null;
