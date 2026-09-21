@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { ArrowLeft, CalendarDays, ChevronDown, ExternalLink, Filter, Mail, MapPin, MessageCircle, PackageSearch, Search, UserRound, WalletCards, X } from "lucide-react";
+import { ArrowLeft, CalendarDays, Download, ExternalLink, Filter, Mail, MapPin, MessageCircle, PackageSearch, Search, UserRound, WalletCards, X } from "lucide-react";
 import { getOrderDetail, listOrders, setOrderStatus } from "@/lib/admin.functions";
 import { brl, dateTime, StatusBadge, STATUS } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
@@ -55,16 +55,17 @@ function OrdersPage() {
   if (openId) return <OrderDetail id={openId} onClose={() => setOpenId(null)} changeStatus={(next) => mutation.mutate({ id: openId, status: next })} />;
 
   return (
-    <div className="space-y-4">
+    <div className="mx-auto max-w-[980px] space-y-4">
       <div>
-        <p className="text-xs text-muted-foreground">Início / Vendas</p>
-        <h1 className="mt-1 text-2xl font-bold">Pedidos</h1>
+        <p className="text-[10px] text-muted-foreground">Início &nbsp;›&nbsp; Vendas</p>
+        <h1 className="mt-1 text-xl font-bold">Pedidos</h1>
       </div>
 
       <div className="flex flex-wrap gap-2">
         {PERIODS.map((item) => <Button key={item} size="sm" variant={period === item ? "default" : "outline"} onClick={() => setPeriod(item)}>{item}</Button>)}
         <Button size="sm" variant="outline"><CalendarDays /> Selecione um período</Button>
-        <div className="ml-auto flex gap-2">
+        <Button size="sm" variant="outline"><Download /> Enviar CSV</Button>
+        <div className="flex gap-2">
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger className="h-8 w-44"><Filter className="h-3.5 w-3.5" /><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -114,15 +115,15 @@ function OrderDetail({ id, onClose, changeStatus }: { id: string; onClose: () =>
   const order = data.order;
   return (
     <div className="space-y-4">
-      <Button variant="ghost" size="sm" onClick={onClose}><ArrowLeft /> Voltar para pedidos</Button>
+       <Button variant="ghost" size="sm" onClick={onClose}><ArrowLeft /> Voltar para pedidos</Button>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div><p className="text-xs text-muted-foreground">Vendas / Detalhes</p><h1 className="mt-1 text-2xl font-bold">Pedido: {order.code} <span className="text-xs font-normal text-muted-foreground">em {dateTime(order.created_at)}</span></h1></div>
+         <div><p className="text-[10px] text-muted-foreground">Início &nbsp;›&nbsp; Vendas &nbsp;›&nbsp; Detalhes</p><h1 className="mt-2 text-xl font-bold">Pedido: {order.code} <span className="text-xs font-normal text-muted-foreground">em {dateTime(order.created_at)}</span></h1></div>
         <Button variant="outline"><ExternalLink /> Abrir comprovante</Button>
       </div>
 
       <section className="rounded-md border border-border bg-surface p-4 shadow-sm">
         <div className="mb-5 flex flex-wrap items-center gap-3"><StatusBadge status={order.status} /><Select value={order.status} onValueChange={changeStatus}><SelectTrigger className="h-8 w-44"><SelectValue /></SelectTrigger><SelectContent>{STATUS.map((item) => <SelectItem key={item.id} value={item.id}>{item.label}</SelectItem>)}</SelectContent></Select></div>
-        <div className="grid gap-5 lg:grid-cols-[1fr_1fr_1.1fr_1fr]">
+         <div className="grid gap-5 lg:grid-cols-[1fr_1fr_1.1fr_1.15fr]">
           <InfoBlock title="Cliente" icon={UserRound}>
             <strong>{order.customer_name}</strong><span className="flex items-center gap-1 text-buy"><MessageCircle className="h-3.5 w-3.5" />{order.customer_phone}</span><span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5" />{order.customer_email}</span><span>CPF/CNPJ: {order.customer_doc}</span>
           </InfoBlock>
@@ -136,7 +137,7 @@ function OrderDetail({ id, onClose, changeStatus }: { id: string; onClose: () =>
         </div>
       </section>
 
-      <div className="flex gap-1 border-b border-border"><Button size="sm" className="rounded-b-none">Resumo</Button><Button size="sm" variant="ghost">Rastreamento</Button><Button size="sm" variant="ghost">Histórico do cliente</Button></div>
+       <div className="flex overflow-x-auto border-b border-border"><Button size="sm" className="rounded-b-none">Resumo</Button>{["Rastreamento","Histórico do cliente","Utms","Transações","Eventos Facebook","Webhooks"].map(tab=><Button key={tab} size="sm" variant="ghost" className="shrink-0">{tab}</Button>)}</div>
       <section className="overflow-hidden rounded-md border border-border bg-surface shadow-sm"><div className="overflow-x-auto"><table className="w-full min-w-[700px] text-sm"><thead><tr className="border-b border-border text-left text-[11px] uppercase text-muted-foreground"><th className="px-5 py-4">Produto</th><th>Quantidade</th><th>Valor unit.</th><th>Pagamento</th><th>Subtotal</th></tr></thead><tbody>{data.items.map((item) => <tr key={item.id}><td className="px-5 py-4"><div className="flex items-center gap-3"><span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded border border-border">{item.image ? <img src={item.image} alt="" className="h-full w-full object-contain" /> : null}</span><strong className="max-w-xs">{item.name}</strong></div></td><td>{item.qty}</td><td>{brl(Number(item.unit_price))}</td><td className="text-muted-foreground">{order.status === "recebido" ? "Aguardando pagamento" : "Pagamento confirmado"}</td><td className="font-bold">{brl(Number(item.unit_price) * item.qty)}</td></tr>)}</tbody></table></div></section>
     </div>
   );
