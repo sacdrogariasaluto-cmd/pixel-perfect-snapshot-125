@@ -3,35 +3,47 @@ import { Newsletter } from "./Newsletter";
 import { company, institutionalLinks } from "@/data/site";
 
 const PAYMENT_SPRITE = "/img/67436b40-sprite-payments.svg";
-// O sprite de referência tem 1139x34. Exibimos em 4 faixas para caber na coluna.
-const SPRITE_W = 1060;
-const SPRITE_H = 32;
-const ROWS = 2;
-const ROW_W = SPRITE_W / ROWS;
+// Sprite 1139x34 com 20 bandeiras de 56px (passo 57px).
+const FLAG_W = 56;
+const FLAG_H = 34;
+const STEP = 57;
+const SPRITE_W = 1139;
+
+// Somente as bandeiras vistas na referência.
+const FLAGS: { name: string; i: number }[] = [
+  { name: "Visa", i: 0 },
+  { name: "Mastercard", i: 1 },
+  { name: "American Express", i: 2 },
+  { name: "Diners Club", i: 3 },
+  { name: "Hipercard", i: 4 },
+  { name: "Elo", i: 6 },
+  { name: "JCB", i: 9 },
+  { name: "Pix", i: 16 },
+];
 
 function PaymentFlags() {
   return (
-    <div
-      role="img"
-      aria-label="Bandeiras de pagamento aceitas: Visa, Mastercard, American Express, Diners, Hipercard, Elo, JCB, Pix, vale-refeição e outras"
-      className="flex flex-col gap-1"
-    >
-      {Array.from({ length: ROWS }).map((_, i) => (
+    <div className="flex flex-wrap gap-2">
+      {FLAGS.map((f) => (
         <span
-          key={i}
-          className="block rounded bg-white bg-no-repeat"
+          key={f.name}
+          role="img"
+          aria-label={f.name}
+          title={f.name}
+          className="block rounded border border-border bg-white bg-no-repeat"
           style={{
-            width: `${ROW_W}px`,
-            height: `${SPRITE_H}px`,
+            width: `${FLAG_W}px`,
+            height: `${FLAG_H}px`,
             backgroundImage: `url(${PAYMENT_SPRITE})`,
-            backgroundSize: `${SPRITE_W}px ${SPRITE_H}px`,
-            backgroundPosition: `-${i * ROW_W}px 0`,
+            backgroundSize: `${SPRITE_W}px ${FLAG_H}px`,
+            backgroundPosition: `-${f.i * STEP}px 0`,
           }}
         />
       ))}
     </div>
   );
 }
+
 
 
 
