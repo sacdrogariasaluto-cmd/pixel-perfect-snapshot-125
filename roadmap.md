@@ -1,1 +1,1 @@
-- [ ] Deixar a adição ao carrinho igual à loja de referência
+- [x] Deixar a adição ao carrinho igual à loja de referência
