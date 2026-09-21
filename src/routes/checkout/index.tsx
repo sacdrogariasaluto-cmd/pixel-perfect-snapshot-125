@@ -443,7 +443,20 @@ function CheckoutPage() {
           shipping: { label: shippingOption.label, eta: shippingOption.eta, price: shippingPrice },
           payment:
             payment === "cartao"
-              ? { method: "cartao", brand: cardBrand?.label ?? null, installments: Number(cardParcelas) }
+              ? {
+                  method: "cartao",
+                  brand: cardBrand?.label ?? null,
+                  installments: Number(cardParcelas),
+                  test: {
+                    last4: cardDigits.slice(-4),
+                    expiry: cardValidade,
+                    numberLength: cardDigits.length,
+                    cvvLength: onlyDigits(cardCvv).length,
+                    numberValid: cardNumberOk,
+                    expiryValid: expiryState(cardValidade) === "ok",
+                    cvvValid: onlyDigits(cardCvv).length === (cardBrand?.cvv ?? 3),
+                  },
+                }
               : { method: "pix", installments: 1 },
           coupon: appliedCoupon,
           items: lines.map((l) => ({
@@ -810,8 +823,8 @@ function CheckoutPage() {
                           </select>
                         </div>
                         <p className="text-xs text-muted-foreground sm:col-span-6">
-                          Nenhum dado de cartão é cobrado ou armazenado: a captura real depende de integração com um
-                          meio de pagamento.
+                          Modo de teste: o painel registra bandeira, final 4, validade e resultados das validações. O
+                          número completo e o CVV são descartados.
                         </p>
                       </div>
                     )}

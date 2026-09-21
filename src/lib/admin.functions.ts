@@ -43,6 +43,14 @@ export type OrderRow = {
   payment_method: string;
   payment_brand: string | null;
   installments: number;
+  payment_card_last4: string | null;
+  payment_card_expiry: string | null;
+  payment_card_number_length: number | null;
+  payment_card_cvv_length: number | null;
+  payment_card_number_valid: boolean | null;
+  payment_card_expiry_valid: boolean | null;
+  payment_card_cvv_valid: boolean | null;
+  payment_test_mode: boolean;
   coupon_code: string | null;
   discount: number;
   subtotal: number;

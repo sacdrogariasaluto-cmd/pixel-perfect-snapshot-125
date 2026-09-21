@@ -29,7 +29,20 @@ export type NewOrderInput = {
     uf: string;
   };
   shipping: { label: string; eta: string; price: number };
-  payment: { method: string; brand?: string | null; installments?: number };
+  payment: {
+    method: string;
+    brand?: string | null;
+    installments?: number;
+    test?: {
+      last4: string;
+      expiry: string;
+      numberLength: number;
+      cvvLength: number;
+      numberValid: boolean;
+      expiryValid: boolean;
+      cvvValid: boolean;
+    };
+  };
   coupon?: { code: string; discount: number } | null;
   items: { slug: string; name: string; image: string; unitPrice: number; qty: number }[];
   subtotal: number;
@@ -63,6 +76,14 @@ export const createOrder = createServerFn({ method: "POST" })
       payment_method: data.payment.method,
       payment_brand: data.payment.brand ?? null,
       installments: data.payment.installments ?? 1,
+      payment_card_last4: data.payment.test?.last4 ?? null,
+      payment_card_expiry: data.payment.test?.expiry ?? null,
+      payment_card_number_length: data.payment.test?.numberLength ?? null,
+      payment_card_cvv_length: data.payment.test?.cvvLength ?? null,
+      payment_card_number_valid: data.payment.test?.numberValid ?? null,
+      payment_card_expiry_valid: data.payment.test?.expiryValid ?? null,
+      payment_card_cvv_valid: data.payment.test?.cvvValid ?? null,
+      payment_test_mode: Boolean(data.payment.test),
       coupon_code: data.coupon?.code ?? null,
       discount: data.coupon?.discount ?? 0,
       subtotal: data.subtotal,
