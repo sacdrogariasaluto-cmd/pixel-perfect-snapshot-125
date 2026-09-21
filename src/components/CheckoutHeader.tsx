@@ -7,8 +7,8 @@ import { company } from "@/data/site";
 function SecureBadge({ className = "" }: { className?: string }) {
   return (
     <span className={`flex items-center gap-2 ${className}`}>
-      <LockIcon className="h-5 w-5" />
-      <span className="text-[11px] leading-tight font-bold uppercase tracking-wide">
+      <LockIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+      <span className="text-[10px] leading-tight font-bold uppercase tracking-wide sm:text-[11px]">
         Pagamento
         <br />
         100% seguro
@@ -33,13 +33,13 @@ function OfferTimer() {
   return (
     <p className="flex items-center justify-center gap-1.5 text-sm font-bold">
       <span className="font-normal">Oferta termina em:</span>
-      <span className="text-xl">{pad(h)}</span>
+      <span className="text-xl tabular-nums">{pad(h)}</span>
       <span className="text-xs font-normal">h</span>
       <span>:</span>
-      <span className="text-xl">{pad(m)}</span>
+      <span className="text-xl tabular-nums">{pad(m)}</span>
       <span className="text-xs font-normal">m</span>
       <span>:</span>
-      <span className="text-xl">{pad(s)}</span>
+      <span className="text-xl tabular-nums">{pad(s)}</span>
       <span className="text-xs font-normal">s</span>
     </p>
   );
@@ -48,13 +48,13 @@ function OfferTimer() {
 export function CheckoutHeader() {
   return (
     <header className="bg-checkout text-checkout-foreground">
-      <div className="container-site flex h-[70px] items-center justify-between gap-4">
+      <div className="container-site grid h-[66px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:h-[70px]">
         <Link to="/" aria-label="Página inicial">
-          <img src="/img/a18dca27-logo.svg" alt="Drogaria Vera Cruz" className="h-9 w-auto brightness-0 invert" />
+          <img src="/img/a18dca27-logo.svg" alt="Drogaria Vera Cruz" className="h-7 w-auto max-w-[145px] brightness-0 invert sm:h-9 sm:max-w-none" />
         </Link>
         <SecureBadge />
       </div>
-      <div className="pb-5">
+      <div className="pb-3 sm:pb-5">
         <OfferTimer />
       </div>
     </header>
@@ -63,7 +63,7 @@ export function CheckoutHeader() {
 
 export function CheckoutFooter() {
   return (
-    <footer className="mt-10 bg-checkout py-8 text-center text-sm text-checkout-foreground">
+    <footer className="mt-3 bg-checkout py-6 text-center text-sm text-checkout-foreground lg:mt-10 lg:py-8">
       <div className="container-site space-y-1">
         <p className="font-bold">{company.name} | Todos os direitos reservados</p>
         <p className="text-xs opacity-90">{company.address}</p>
