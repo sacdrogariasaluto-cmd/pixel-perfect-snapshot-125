@@ -127,7 +127,6 @@ function CheckoutPage() {
   const [cardValidade, setCardValidade] = useState("");
   const [cardCvv, setCardCvv] = useState("");
   const [cardParcelas, setCardParcelas] = useState("1");
-  const [troco, setTroco] = useState("");
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
@@ -216,9 +215,7 @@ function CheckoutPage() {
       payment:
         payment === "cartao"
           ? { method: "cartao", parcelas: Number(cardParcelas), last4: onlyDigits(cardNumber).slice(-4) }
-          : payment === "pix"
-            ? { method: "pix" }
-            : { method: "dinheiro", troco },
+          : { method: "pix" },
       items: lines,
       totals: { products: productsTotal, shipping: shippingOption.price, total },
     };
@@ -334,7 +331,6 @@ function CheckoutPage() {
                   {[
                     { id: "pix", title: "Pix", desc: `Desconto à vista${pixDiscount > 0 ? ` de ${brl(pixDiscount)}` : ""}` },
                     { id: "cartao", title: "Cartão de crédito", desc: "Parcele em até 6x sem juros" },
-                    { id: "dinheiro", title: "Pagar na entrega", desc: "Dinheiro ou maquininha na porta" },
                   ].map((m) => (
                     <div key={m.id} className={`rounded-md border ${payment === m.id ? "border-brand" : "border-border"}`}>
                       <label className="flex cursor-pointer items-center gap-3 p-3 text-sm">
@@ -377,12 +373,6 @@ function CheckoutPage() {
                           <p className="text-xs text-muted-foreground sm:col-span-6">
                             Nenhum dado de cartão é cobrado ou armazenado: a captura real depende de integração com um meio de pagamento.
                           </p>
-                        </div>
-                      )}
-
-                      {payment === "dinheiro" && m.id === "dinheiro" && (
-                        <div className="border-t border-border p-4">
-                          <Field id="troco" label="Precisa de troco para quanto? (opcional)" inputMode="numeric" value={troco} onChange={setTroco} />
                         </div>
                       )}
 
