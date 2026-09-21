@@ -62,7 +62,88 @@ const maskPhone = (v: string) => {
   return d.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2");
 };
 const maskCep = (v: string) => onlyDigits(v).slice(0, 8).replace(/(\d{5})(\d)/, "$1-$2");
-const maskCard = (v: string) => onlyDigits(v).slice(0, 16).replace(/(\d{4})(?=\d)/g, "$1 ");
+type CardBrand = {
+  id: string;
+  label: string;
+  pattern: RegExp;
+  lengths: number[];
+  cvv: number;
+  gaps: number[];
+};
+
+const CARD_BRANDS: CardBrand[] = [
+  { id: "amex", label: "American Express", pattern: /^3[47]/, lengths: [15], cvv: 4, gaps: [4, 10] },
+  { id: "diners", label: "Diners Club", pattern: /^(36|38|30[0-5])/, lengths: [14], cvv: 3, gaps: [4, 10] },
+  {
+    id: "elo",
+    label: "Elo",
+    pattern:
+      /^(4011(78|79)|43(1274|8935)|45(1416|7393|763[12])|50(4175|6699|67[0-7][0-9]|9[0-9]{3})|627780|63(6297|6368)|65(0[0-9]{4}|16[5-9][0-9]|50[0-9]{3}))/,
+    lengths: [16],
+    cvv: 3,
+    gaps: [4, 8, 12],
+  },
+  { id: "hipercard", label: "Hipercard", pattern: /^(606282|3841)/, lengths: [16, 19], cvv: 3, gaps: [4, 8, 12] },
+  { id: "visa", label: "Visa", pattern: /^4/, lengths: [13, 16, 19], cvv: 3, gaps: [4, 8, 12] },
+  {
+    id: "mastercard",
+    label: "Mastercard",
+    pattern: /^(5[1-5]|2[2-7])/,
+    lengths: [16],
+    cvv: 3,
+    gaps: [4, 8, 12],
+  },
+  { id: "jcb", label: "JCB", pattern: /^35(2[89]|[3-8][0-9])/, lengths: [16, 19], cvv: 3, gaps: [4, 8, 12] },
+  { id: "discover", label: "Discover", pattern: /^(6011|64[4-9]|65)/, lengths: [16, 19], cvv: 3, gaps: [4, 8, 12] },
+];
+
+const detectBrand = (value: string): CardBrand | null => {
+  const d = onlyDigits(value);
+  if (!d) return null;
+  return CARD_BRANDS.find((b) => b.pattern.test(d)) ?? null;
+};
+
+const luhnValid = (value: string) => {
+  const d = onlyDigits(value);
+  if (d.length < 12) return false;
+  let sum = 0;
+  let double = false;
+  for (let i = d.length - 1; i >= 0; i--) {
+    let n = Number(d[i]);
+    if (double) {
+      n *= 2;
+      if (n > 9) n -= 9;
+    }
+    sum += n;
+    double = !double;
+  }
+  return sum % 10 === 0;
+};
+
+const maskCard = (v: string) => {
+  const brand = detectBrand(v);
+  const max = brand ? Math.max(...brand.lengths) : 19;
+  const gaps = brand?.gaps ?? [4, 8, 12, 16];
+  const d = onlyDigits(v).slice(0, max);
+  let out = "";
+  for (let i = 0; i < d.length; i++) {
+    if (gaps.includes(i) && i > 0) out += " ";
+    out += d[i];
+  }
+  return out;
+};
+
+const expiryState = (value: string): "incompleto" | "mes" | "vencido" | "ok" => {
+  const d = onlyDigits(value);
+  if (d.length !== 4) return "incompleto";
+  const month = Number(d.slice(0, 2));
+  const year = 2000 + Number(d.slice(2));
+  if (month < 1 || month > 12) return "mes";
+  const now = new Date();
+  const last = new Date(year, month, 0, 23, 59, 59);
+  return last < now ? "vencido" : "ok";
+};
+
 const maskValidade = (v: string) => onlyDigits(v).slice(0, 4).replace(/(\d{2})(\d)/, "$1/$2");
 
 function Field({
