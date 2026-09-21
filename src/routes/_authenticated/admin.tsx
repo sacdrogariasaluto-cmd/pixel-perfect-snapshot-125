@@ -141,10 +141,6 @@ function AdminLayout() {
       </aside>
 
        <div className="pt-[60px] lg:pl-48">
-         <div className="mx-4 mt-4 hidden items-center justify-between rounded-md border border-coupon bg-coupon/10 px-4 py-2.5 text-xs lg:flex">
-           <span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-buy" /><span><strong>Proteja sua conta com um autenticador</strong><span className="ml-2 text-muted-foreground">Adicione uma segunda confirmação ao entrar.</span></span></span>
-           <Button variant="outline" size="sm" className="h-7 bg-surface text-[11px]">Configurar autenticador</Button>
-         </div>
          <main className="mx-auto min-w-0 max-w-[1160px] px-4 py-5 lg:px-6 lg:py-5">
           {isLoading ? (
             <p className="text-sm text-muted-foreground">Carregando…</p>
