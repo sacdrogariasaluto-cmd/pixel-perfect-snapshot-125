@@ -6,7 +6,7 @@ const PAYMENT_SPRITE = "/img/67436b40-sprite-payments.svg";
 // O sprite de referência tem 1139x34. Exibimos em 4 faixas para caber na coluna.
 const SPRITE_W = 1060;
 const SPRITE_H = 32;
-const ROWS = 4;
+const ROWS = 2;
 const ROW_W = SPRITE_W / ROWS;
 
 function PaymentFlags() {
