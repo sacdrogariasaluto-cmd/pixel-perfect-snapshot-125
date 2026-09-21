@@ -150,14 +150,12 @@ function CheckoutPage() {
     if (name.trim().split(" ").length < 2) e['name'] = "Informe nome e sobrenome";
     if (onlyDigits(phone).length < 10) e['phone'] = "Informe um celular com DDD";
     if (onlyDigits(cpf).length !== 11) e['cpf'] = "Informe um CPF válido";
-    if (!isPickup) {
-      if (onlyDigits(cep).length !== 8) e['cep'] = "Informe o CEP";
-      if (!street.trim()) e['street'] = "Informe o endereço";
-      if (!number.trim()) e['number'] = "Nº";
-      if (!district.trim()) e['district'] = "Informe o bairro";
-      if (!city.trim()) e['city'] = "Informe a cidade";
-      if (!uf.trim()) e['uf'] = "UF";
-    }
+    if (onlyDigits(cep).length !== 8) e['cep'] = "Informe o CEP";
+    if (!street.trim()) e['street'] = "Informe o endereço";
+    if (!number.trim()) e['number'] = "Nº";
+    if (!district.trim()) e['district'] = "Informe o bairro";
+    if (!city.trim()) e['city'] = "Informe a cidade";
+    if (!uf.trim()) e['uf'] = "UF";
     if (payment === "cartao") {
       if (onlyDigits(cardNumber).length < 16) e['cardNumber'] = "Número do cartão incompleto";
       if (!cardName.trim()) e['cardName'] = "Informe o nome impresso no cartão";
@@ -182,15 +180,13 @@ function CheckoutPage() {
       id: `VC${Date.now().toString().slice(-8)}`,
       createdAt: new Date().toISOString(),
       customer: { email, name, phone, cpf },
-      delivery: isPickup
-        ? { type: "retirada", label: shippingOption.label, eta: shippingOption.eta, price: 0 }
-        : {
-            type: "entrega",
-            label: shippingOption.label,
-            eta: shippingOption.eta,
-            price: shippingOption.price,
-            address: { cep, street, number, complement, district, city, uf },
-          },
+      delivery: {
+        type: "entrega",
+        label: shippingOption.label,
+        eta: shippingOption.eta,
+        price: shippingOption.price,
+        address: { cep, street, number, complement, district, city, uf },
+      },
       payment:
         payment === "cartao"
           ? { method: "cartao", parcelas: Number(cardParcelas), last4: onlyDigits(cardNumber).slice(-4) }
