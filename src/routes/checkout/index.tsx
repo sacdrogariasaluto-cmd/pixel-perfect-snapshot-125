@@ -120,8 +120,8 @@ function StepShell({
 }) {
   return (
     <section
-      className={`mb-6 break-inside-avoid ${
-        active ? "rounded-2xl bg-surface p-5 shadow-sm md:p-6" : "px-1 py-2"
+      className={`break-inside-avoid lg:mb-6 ${!active ? "hidden lg:block" : ""} ${
+        active ? "bg-surface px-4 py-5 lg:rounded-2xl lg:p-6 lg:shadow-sm" : "px-1 py-2"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
@@ -170,12 +170,14 @@ function CheckoutPage() {
 
   const [coupon, setCoupon] = useState("");
   const [couponOpen, setCouponOpen] = useState(false);
+  const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
 
   const cepOk = onlyDigits(cep).length === 8;
-  const shippingOption = SHIPPING.find((s) => s.id === shipping)!;
+  const shippingOption = SHIPPING.find((s) => s.id === shipping) ?? SHIPPING[1];
+  if (!shippingOption) return null;
   const shippingPrice = cepOk ? shippingOption.price : 0;
   const pixTotal = useMemo(() => lines.reduce((s, l) => s + l.pixPrice * l.qty, 0), [lines]);
   const productsTotal = payment === "pix" ? pixTotal : subtotal;
@@ -303,7 +305,7 @@ function CheckoutPage() {
     <div className="flex min-h-screen flex-col bg-background">
       <CheckoutHeader />
 
-      <main className="container-site flex-1 py-6 lg:py-10">
+      <main className="w-full flex-1 lg:container-site lg:py-10">
         {lines.length === 0 ? (
           <div className="mt-6 rounded-2xl bg-surface p-12 text-center">
             <h2 className="text-xl font-bold">Seu carrinho está vazio</h2>
@@ -314,8 +316,55 @@ function CheckoutPage() {
         ) : (
           <form
             onSubmit={submit}
-            className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_375px] lg:gap-10"
+            className="grid items-start lg:grid-cols-[minmax(0,1fr)_375px] lg:gap-10"
           >
+            <div className="border-b border-border bg-surface lg:hidden">
+              <button
+                type="button"
+                onClick={() => setMobileSummaryOpen((value) => !value)}
+                aria-expanded={mobileSummaryOpen}
+                className="grid h-[52px] w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 text-left"
+              >
+                <span className="min-w-0 truncate text-sm font-medium">
+                  Resumo do pedido ({count}) <span aria-hidden="true" className="ml-1">⌄</span>
+                </span>
+                <strong className="shrink-0 text-base">{brl(total)}</strong>
+              </button>
+              {mobileSummaryOpen && (
+                <div className="border-t border-border px-4 py-3">
+                  <ul className="divide-y divide-border">
+                    {lines.map((line) => (
+                      <li key={line.slug} className="grid grid-cols-[44px_minmax(0,1fr)_auto] items-center gap-3 py-2">
+                        <img src={line.image} alt="" className="h-11 w-11 object-contain" />
+                        <span className="min-w-0 truncate text-xs">{line.qty}x {line.name}</span>
+                        <strong className="text-xs">{brl((payment === "pix" ? line.pixPrice : line.unitPrice) * line.qty)}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-2 flex justify-between border-t border-border pt-3 text-sm">
+                    <span>Frete</span>
+                    <span>{cepOk ? brl(shippingPrice) : "A calcular"}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <nav aria-label="Etapas do checkout" className="relative grid grid-cols-3 border-b border-border bg-surface px-4 py-4 lg:hidden">
+              <span aria-hidden="true" className="absolute top-[31px] right-[16.66%] left-[16.66%] h-px bg-border" />
+              {["Identificação", "Entrega", "Pagamento"].map((label, index) => {
+                const number = index + 1;
+                const reached = number <= step;
+                return (
+                  <div key={label} className="relative z-10 flex min-w-0 flex-col items-center gap-1.5">
+                    <span className={`grid h-6 w-6 place-items-center rounded-full text-xs font-bold ${reached ? "bg-brand text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+                      {number}
+                    </span>
+                    <span className={`truncate text-xs ${reached ? "font-medium text-brand-dark" : "text-muted-foreground"}`}>{label}</span>
+                  </div>
+                );
+              })}
+            </nav>
+
             <div className="lg:columns-2 lg:gap-10">
               <StepShell
                 index={1}
@@ -446,7 +495,7 @@ function CheckoutPage() {
                           name="pagamento"
                           checked={payment === m.id}
                           onChange={() => setPayment(m.id)}
-                          className="h-4 w-4 accent-[oklch(var(--brand))]"
+                            className="h-4 w-4 accent-brand"
                         />
                         <span>
                           <span className="block font-bold">{m.title}</span>
@@ -498,7 +547,7 @@ function CheckoutPage() {
               </StepShell>
             </div>
 
-            <aside className="space-y-4 rounded-2xl border border-border bg-surface p-5 shadow-sm lg:sticky lg:top-4">
+            <aside className="hidden space-y-4 rounded-2xl border border-border bg-surface p-5 shadow-sm lg:sticky lg:top-4 lg:block">
               <h2 className="text-lg font-bold">Resumo do pedido</h2>
 
               <div>
