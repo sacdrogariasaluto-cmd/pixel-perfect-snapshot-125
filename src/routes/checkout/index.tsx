@@ -27,6 +27,8 @@ const SHIPPING: Shipping[] = [
   { id: "padrao", label: "Entrega padrão", eta: "em até 2 dias úteis", price: 9.9 },
 ];
 
+const EMAIL_DOMAINS = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com.br", "icloud.com", "uol.com.br", "bol.com.br"];
+
 const onlyDigits = (v: string) => v.replace(/\D/g, "");
 const maskCpf = (v: string) =>
   onlyDigits(v).slice(0, 11).replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})$/, "$1-$2");
