@@ -98,11 +98,13 @@ export function Header() {
       <form
         className="relative px-4 pb-3 md:hidden"
         role="search"
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={submitSearch}
       >
         <label className="sr-only" htmlFor="busca-mobile">Buscar produtos</label>
         <input
           id="busca-mobile"
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
           placeholder="O que você está buscando?"
           className="h-[51px] w-full rounded-full border border-border bg-surface pl-5 pr-12 text-[15px] outline-none placeholder:text-muted-foreground focus:border-brand"
         />
