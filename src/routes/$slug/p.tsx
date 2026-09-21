@@ -221,16 +221,9 @@ function ProductPage() {
           </div>
         </div>
         <div className="mt-4 space-y-3 text-muted-foreground" style={{ fontSize: `${15 + fontStep}px` }}>
-          <h3 className="font-bold text-foreground">Sobre o produto</h3>
-          <p>
-            Descrição de exemplo para {product.name}. Substitua por conteúdo do seu catálogo, com
-            composição, modo de uso e advertências fornecidos pelo fabricante.
-          </p>
-          <h3 className="font-bold text-foreground">Avaliações</h3>
-          <p>
-            Avaliação agregada, distribuição de estrelas e perguntas e respostas dependem de
-            integração própria de reviews.
-          </p>
+          {descriptionFor(product).map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
         </div>
       </section>
 
