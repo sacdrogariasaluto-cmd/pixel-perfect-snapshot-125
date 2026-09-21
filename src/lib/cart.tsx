@@ -19,6 +19,8 @@ type CartCtx = {
   count: number;
   subtotal: number;
   savings: number;
+  open: boolean;
+  setOpen: (open: boolean) => void;
 };
 
 const Ctx = createContext<CartCtx | null>(null);
@@ -26,6 +28,7 @@ const KEY = "vc-cart-v1";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     try {
