@@ -12,9 +12,9 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/busca")({
   validateSearch: zodValidator(searchSchema),
-  head: ({ search }) => ({
+  head: () => ({
     meta: [
-      { title: `Busca: ${String(search?.['q'] ?? "")} — farmácia online` },
+      { title: "Busca de produtos — farmácia online" },
       { name: "description", content: "Resultados da busca de produtos da farmácia online." },
       { property: "og:title", content: "Busca de produtos" },
       { property: "og:description", content: "Encontre medicamentos, vitaminas e produtos de cuidados pessoais." },
