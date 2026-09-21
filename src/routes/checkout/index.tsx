@@ -62,7 +62,88 @@ const maskPhone = (v: string) => {
   return d.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2");
 };
 const maskCep = (v: string) => onlyDigits(v).slice(0, 8).replace(/(\d{5})(\d)/, "$1-$2");
-const maskCard = (v: string) => onlyDigits(v).slice(0, 16).replace(/(\d{4})(?=\d)/g, "$1 ");
+type CardBrand = {
+  id: string;
+  label: string;
+  pattern: RegExp;
+  lengths: number[];
+  cvv: number;
+  gaps: number[];
+};
+
+const CARD_BRANDS: CardBrand[] = [
+  { id: "amex", label: "American Express", pattern: /^3[47]/, lengths: [15], cvv: 4, gaps: [4, 10] },
+  { id: "diners", label: "Diners Club", pattern: /^(36|38|30[0-5])/, lengths: [14], cvv: 3, gaps: [4, 10] },
+  {
+    id: "elo",
+    label: "Elo",
+    pattern:
+      /^(4011(78|79)|43(1274|8935)|45(1416|7393|763[12])|50(4175|6699|67[0-7][0-9]|9[0-9]{3})|627780|63(6297|6368)|65(0[0-9]{4}|16[5-9][0-9]|50[0-9]{3}))/,
+    lengths: [16],
+    cvv: 3,
+    gaps: [4, 8, 12],
+  },
+  { id: "hipercard", label: "Hipercard", pattern: /^(606282|3841)/, lengths: [16, 19], cvv: 3, gaps: [4, 8, 12] },
+  { id: "visa", label: "Visa", pattern: /^4/, lengths: [13, 16, 19], cvv: 3, gaps: [4, 8, 12] },
+  {
+    id: "mastercard",
+    label: "Mastercard",
+    pattern: /^(5[1-5]|2[2-7])/,
+    lengths: [16],
+    cvv: 3,
+    gaps: [4, 8, 12],
+  },
+  { id: "jcb", label: "JCB", pattern: /^35(2[89]|[3-8][0-9])/, lengths: [16, 19], cvv: 3, gaps: [4, 8, 12] },
+  { id: "discover", label: "Discover", pattern: /^(6011|64[4-9]|65)/, lengths: [16, 19], cvv: 3, gaps: [4, 8, 12] },
+];
+
+const detectBrand = (value: string): CardBrand | null => {
+  const d = onlyDigits(value);
+  if (!d) return null;
+  return CARD_BRANDS.find((b) => b.pattern.test(d)) ?? null;
+};
+
+const luhnValid = (value: string) => {
+  const d = onlyDigits(value);
+  if (d.length < 12) return false;
+  let sum = 0;
+  let double = false;
+  for (let i = d.length - 1; i >= 0; i--) {
+    let n = Number(d[i]);
+    if (double) {
+      n *= 2;
+      if (n > 9) n -= 9;
+    }
+    sum += n;
+    double = !double;
+  }
+  return sum % 10 === 0;
+};
+
+const maskCard = (v: string) => {
+  const brand = detectBrand(v);
+  const max = brand ? Math.max(...brand.lengths) : 19;
+  const gaps = brand?.gaps ?? [4, 8, 12, 16];
+  const d = onlyDigits(v).slice(0, max);
+  let out = "";
+  for (let i = 0; i < d.length; i++) {
+    if (gaps.includes(i) && i > 0) out += " ";
+    out += d[i];
+  }
+  return out;
+};
+
+const expiryState = (value: string): "incompleto" | "mes" | "vencido" | "ok" => {
+  const d = onlyDigits(value);
+  if (d.length !== 4) return "incompleto";
+  const month = Number(d.slice(0, 2));
+  const year = 2000 + Number(d.slice(2));
+  if (month < 1 || month > 12) return "mes";
+  const now = new Date();
+  const last = new Date(year, month, 0, 23, 59, 59);
+  return last < now ? "vencido" : "ok";
+};
+
 const maskValidade = (v: string) => onlyDigits(v).slice(0, 4).replace(/(\d{2})(\d)/, "$1/$2");
 
 function Field({
@@ -195,6 +276,11 @@ function CheckoutPage() {
   const [cardValidade, setCardValidade] = useState("");
   const [cardCvv, setCardCvv] = useState("");
   const [cardParcelas, setCardParcelas] = useState("1");
+  const cardBrand = useMemo(() => detectBrand(cardNumber), [cardNumber]);
+  const cardDigits = onlyDigits(cardNumber);
+  const cardNumberOk =
+    !!cardBrand && cardBrand.lengths.includes(cardDigits.length) && luhnValid(cardDigits);
+
 
   const [coupon, setCoupon] = useState("");
   const [couponOpen, setCouponOpen] = useState(false);
@@ -277,14 +363,27 @@ function CheckoutPage() {
     const e: Record<string, string> = {};
     if (onlyDigits(cpf).length !== 11 && onlyDigits(cpf).length !== 14) e['cpf'] = "Informe um CPF ou CNPJ válido";
     if (payment === "cartao") {
-      if (onlyDigits(cardNumber).length < 16) e['cardNumber'] = "Número do cartão incompleto";
+      const digits = onlyDigits(cardNumber);
+      if (!digits) e['cardNumber'] = "Informe o número do cartão";
+      else if (!cardBrand) e['cardNumber'] = "Bandeira não reconhecida";
+      else if (!cardBrand.lengths.includes(digits.length))
+        e['cardNumber'] = `Número incompleto para ${cardBrand.label}`;
+      else if (!luhnValid(digits)) e['cardNumber'] = "Número de cartão inválido";
+
       if (!cardName.trim()) e['cardName'] = "Informe o nome impresso no cartão";
-      if (onlyDigits(cardValidade).length !== 4) e['cardValidade'] = "MM/AA";
-      if (onlyDigits(cardCvv).length < 3) e['cardCvv'] = "CVV";
+
+      const exp = expiryState(cardValidade);
+      if (exp === "incompleto") e['cardValidade'] = "Informe MM/AA";
+      else if (exp === "mes") e['cardValidade'] = "Mês inválido";
+      else if (exp === "vencido") e['cardValidade'] = "Cartão vencido";
+
+      const cvvLen = cardBrand?.cvv ?? 3;
+      if (onlyDigits(cardCvv).length !== cvvLen) e['cardCvv'] = `${cvvLen} dígitos`;
     }
     setErrors(e);
     return Object.keys(e).length === 0;
   }
+
 
   function goToStep2() {
     if (!validateStep1()) return focusFirstError();
@@ -319,7 +418,7 @@ function CheckoutPage() {
       },
       payment:
         payment === "cartao"
-          ? { method: "cartao", parcelas: Number(cardParcelas), last4: onlyDigits(cardNumber).slice(-4) }
+          ? { method: "cartao", brand: cardBrand?.label ?? null, parcelas: Number(cardParcelas), last4: onlyDigits(cardNumber).slice(-4) }
           : { method: "pix" },
       items: lines,
       totals: { products: productsTotal, shipping: shippingOption.price, total },
@@ -623,10 +722,18 @@ function CheckoutPage() {
 
                     {payment === "cartao" && (
                       <div className="mt-4 grid gap-4 sm:grid-cols-6">
-                        <Field className="sm:col-span-4" id="cardNumber" label="Número do cartão" placeholder="0000 0000 0000 0000" inputMode="numeric" value={cardNumber} onChange={(v) => setCardNumber(maskCard(v))} error={errors['cardNumber']} />
-                        <Field className="sm:col-span-2" id="cardValidade" label="Validade" placeholder="MM/AA" inputMode="numeric" value={cardValidade} onChange={(v) => setCardValidade(maskValidade(v))} error={errors['cardValidade']} />
-                        <Field className="sm:col-span-4" id="cardName" label="Nome impresso no cartão" placeholder="Ex.: MARIA DA SILVA" value={cardName} onChange={setCardName} error={errors['cardName']} />
-                        <Field className="sm:col-span-2" id="cardCvv" label="CVV" placeholder="000" inputMode="numeric" maxLength={4} value={cardCvv} onChange={(v) => setCardCvv(onlyDigits(v).slice(0, 4))} error={errors['cardCvv']} />
+                        <div className="sm:col-span-4">
+                          <Field id="cardNumber" label="Número do cartão" placeholder="0000 0000 0000 0000" inputMode="numeric" autoComplete="cc-number" value={cardNumber} onChange={(v) => setCardNumber(maskCard(v))} error={errors['cardNumber']} />
+                          {cardDigits.length > 0 && !errors['cardNumber'] && (
+                            <p className={`mt-1 text-xs ${cardNumberOk ? "text-buy" : "text-muted-foreground"}`}>
+                              {cardBrand ? (cardNumberOk ? `${cardBrand.label} · número válido` : cardBrand.label) : "Bandeira não reconhecida"}
+                            </p>
+                          )}
+                        </div>
+                        <Field className="sm:col-span-2" id="cardValidade" label="Validade" placeholder="MM/AA" inputMode="numeric" autoComplete="cc-exp" value={cardValidade} onChange={(v) => setCardValidade(maskValidade(v))} error={errors['cardValidade']} />
+                        <Field className="sm:col-span-4" id="cardName" label="Nome impresso no cartão" placeholder="Ex.: MARIA DA SILVA" autoComplete="cc-name" value={cardName} onChange={setCardName} error={errors['cardName']} />
+                        <Field className="sm:col-span-2" id="cardCvv" label="CVV" placeholder={cardBrand?.cvv === 4 ? "0000" : "000"} inputMode="numeric" autoComplete="cc-csc" maxLength={cardBrand?.cvv ?? 4} value={cardCvv} onChange={(v) => setCardCvv(onlyDigits(v).slice(0, cardBrand?.cvv ?? 4))} error={errors['cardCvv']} />
+
                         <div className="sm:col-span-6">
                           <label htmlFor="parcelas" className="mb-1.5 block text-sm font-bold">
                             Parcelas
