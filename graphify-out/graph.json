@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T22:00:02.189971+00:00",
+  "generated_at": "2026-09-21T23:06:12.998710+00:00",
   "files": [
     {
       "path": "components.json",
@@ -243,7 +243,7 @@
     },
     {
       "path": "src/routes/checkout/index.tsx",
-      "bytes": 41621
+      "bytes": 41687
     },
     {
       "path": "src/routes/checkout/carrinho.tsx",
@@ -263,7 +263,7 @@
     },
     {
       "path": "src/routes/_authenticated/admin.tsx",
-      "bytes": 7191
+      "bytes": 7256
     },
     {
       "path": "src/routes/_authenticated/route.tsx",
@@ -272,6 +272,10 @@
     {
       "path": "src/routes/_authenticated/admin/index.tsx",
       "bytes": 9661
+    },
+    {
+      "path": "src/routes/_authenticated/admin/cartoes.tsx",
+      "bytes": 4808
     },
     {
       "path": "src/routes/_authenticated/admin/clientes.tsx",
@@ -1362,6 +1366,34 @@
     {
       "source": "src/routes/_authenticated/admin/index.tsx",
       "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/admin/cartoes.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/admin/cartoes.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/routes/_authenticated/admin/cartoes.tsx",
+      "target": "@tanstack/react-start"
+    },
+    {
+      "source": "src/routes/_authenticated/admin/cartoes.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/_authenticated/admin/cartoes.tsx",
+      "target": "@/lib/admin.functions"
+    },
+    {
+      "source": "src/routes/_authenticated/admin/cartoes.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/routes/_authenticated/admin/cartoes.tsx",
+      "target": "@/components/admin/ui"
     },
     {
       "source": "src/routes/_authenticated/admin/clientes.tsx",
