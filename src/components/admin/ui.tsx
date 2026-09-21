@@ -25,10 +25,10 @@ export function StatusBadge({ status }: { status: string }) {
 
 export function Card({ title, children, right }: { title?: string; children: ReactNode; right?: ReactNode }) {
   return (
-    <section className="rounded-2xl border border-border bg-surface p-5">
+    <section className="rounded-md border border-border bg-surface p-4 shadow-sm">
       {(title || right) && (
         <div className="mb-4 flex items-center justify-between gap-3">
-          {title ? <h2 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">{title}</h2> : <span />}
+          {title ? <h2 className="text-xs font-bold uppercase text-foreground">{title}</h2> : <span />}
           {right}
         </div>
       )}
@@ -49,9 +49,9 @@ export function Metric({
   change?: number | null;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-4">
-      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
-      <p className="mt-1 text-2xl font-bold">{value}</p>
+    <div className="rounded-md border border-border bg-surface p-4 shadow-sm">
+      <p className="text-[11px] font-bold uppercase text-muted-foreground">{label}</p>
+      <p className="mt-1 text-xl font-bold text-foreground">{value}</p>
       <div className="mt-1 flex items-center gap-2 text-xs">
         {typeof change === "number" ? (
           <span className={change >= 0 ? "font-semibold text-buy" : "font-semibold text-promo"}>

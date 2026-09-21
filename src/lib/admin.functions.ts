@@ -65,7 +65,7 @@ export const getDashboard = createServerFn({ method: "GET" })
     const { data: rows, error } = await ctx.supabase
       .from("orders")
       .select(
-        "id, code, status, customer_name, customer_email, total, subtotal, shipping_price, discount, payment_method, created_at",
+        "id, code, status, customer_name, customer_email, total, subtotal, shipping_price, discount, payment_method, installments, address_uf, created_at",
       )
       .gte("created_at", prevSince.toISOString())
       .order("created_at", { ascending: false });
@@ -82,6 +82,8 @@ export const getDashboard = createServerFn({ method: "GET" })
       shipping_price: number;
       discount: number;
       payment_method: string;
+      installments: number;
+      address_uf: string;
       created_at: string;
     }[];
     const current = all.filter((o) => new Date(o.created_at) >= since);
@@ -99,11 +101,11 @@ export const getDashboard = createServerFn({ method: "GET" })
 
     // itens do período atual
     const ids = current.map((o) => o.id);
-    let items: { order_id: string; name: string; slug: string; qty: number; unit_price: number }[] = [];
+    let items: { order_id: string; name: string; slug: string; image: string; qty: number; unit_price: number }[] = [];
     if (ids.length) {
       const { data: it } = await ctx.supabase
         .from("order_items")
-        .select("order_id, name, slug, qty, unit_price")
+        .select("order_id, name, slug, image, qty, unit_price")
         .in("order_id", ids);
       items = (it ?? []) as typeof items;
     }
@@ -111,9 +113,9 @@ export const getDashboard = createServerFn({ method: "GET" })
     const validItems = items.filter((i) => validIds.has(i.order_id));
     const unitsSold = validItems.reduce((s, i) => s + i.qty, 0);
 
-    const byProduct = new Map<string, { name: string; qty: number; revenue: number }>();
+    const byProduct = new Map<string, { name: string; image: string; qty: number; revenue: number }>();
     for (const i of validItems) {
-      const e = byProduct.get(i.slug) ?? { name: i.name, qty: 0, revenue: 0 };
+      const e = byProduct.get(i.slug) ?? { name: i.name, image: i.image, qty: 0, revenue: 0 };
       e.qty += i.qty;
       e.revenue += Number(i.unit_price) * i.qty;
       byProduct.set(i.slug, e);
@@ -152,6 +154,15 @@ export const getDashboard = createServerFn({ method: "GET" })
       paymentCount[o.payment_method] = e;
     }
 
+    const installmentCount: Record<string, number> = {};
+    const stateCount: Record<string, number> = {};
+    for (const o of valid(current)) {
+      const installment = o.payment_method === "pix" ? "Pix" : `${Math.max(1, Number(o.installments) || 1)}x`;
+      installmentCount[installment] = (installmentCount[installment] ?? 0) + 1;
+      const uf = o.address_uf?.trim().toUpperCase();
+      if (uf) stateCount[uf] = (stateCount[uf] ?? 0) + 1;
+    }
+
     const customers = new Set(valid(current).map((o) => o.customer_email));
 
     return {
@@ -172,6 +183,8 @@ export const getDashboard = createServerFn({ method: "GET" })
       topProducts,
       statusCount,
       paymentCount,
+      installmentCount,
+      stateCount,
       latest: current.slice(0, 8).map((o) => ({
         id: o.id,
         code: o.code,
