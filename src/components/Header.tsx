@@ -1,22 +1,15 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { BasketIcon, HeadsetIcon, MenuIcon, PinIcon, SearchIcon, UserIcon } from "./Icons";
+import { BasketIcon, HeadsetIcon, MenuIcon, PinIcon, UserIcon } from "./Icons";
 import { DepartmentMenu } from "./DepartmentMenu";
+import { SearchBox } from "./SearchBox";
 import { useCart } from "@/lib/cart";
 import { Button } from "./ui/button";
 
 export function Header() {
   const [menu, setMenu] = useState(false);
-  const [term, setTerm] = useState("");
   const { count } = useCart();
-  const navigate = useNavigate();
 
-  const submitSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = term.trim();
-    if (!q) return;
-    void navigate({ to: "/busca", search: { q, ordem: "relevancia" } });
-  };
 
   return (
     <header className="sticky top-0 z-50 bg-surface shadow-[0_1px_0_rgba(0,0,0,0.08)]">
