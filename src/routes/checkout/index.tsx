@@ -120,11 +120,9 @@ function StepShell({
 }) {
   return (
     <section
-      className={
-        active
-          ? "rounded-2xl border border-border bg-surface p-5 shadow-sm md:p-6"
-          : "px-1 py-5"
-      }
+      className={`mb-6 break-inside-avoid ${
+        active ? "rounded-2xl bg-surface p-5 shadow-sm md:p-6" : "px-1 py-2"
+      }`}
     >
       <div className="flex items-start justify-between gap-3">
         <h2 className={`text-xl font-bold ${active ? "" : "text-muted-foreground"}`}>{title}</h2>
@@ -305,10 +303,6 @@ function CheckoutPage() {
     <div className="flex min-h-screen flex-col bg-background">
       <CheckoutHeader />
 
-      <div className="bg-brand py-3 text-center text-sm font-bold text-primary-foreground">
-        Compra 100% segura · Identificação › Entrega › Pagamento
-      </div>
-
       <main className="container-site flex-1 py-6 lg:py-10">
         {lines.length === 0 ? (
           <div className="mt-6 rounded-2xl bg-surface p-12 text-center">
@@ -320,9 +314,9 @@ function CheckoutPage() {
         ) : (
           <form
             onSubmit={submit}
-            className="grid items-start gap-6 lg:grid-cols-[400px_minmax(0,380px)] lg:justify-center lg:gap-12"
+            className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_375px] lg:gap-10"
           >
-            <div className="space-y-1">
+            <div className="lg:columns-2 lg:gap-10">
               <StepShell
                 index={1}
                 title="Identificação"

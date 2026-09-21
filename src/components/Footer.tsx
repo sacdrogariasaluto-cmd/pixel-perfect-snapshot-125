@@ -22,7 +22,7 @@ const FLAGS: { name: string; i: number }[] = [
   { name: "Pix", i: 16 },
 ];
 
-function PaymentFlags() {
+export function PaymentFlags() {
   return (
     <div className="flex flex-wrap gap-2">
       {FLAGS.map((f) => (
