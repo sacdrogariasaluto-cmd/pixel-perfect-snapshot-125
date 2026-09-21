@@ -57,6 +57,23 @@ const EMAIL_DOMAINS = [
 ];
 
 const onlyDigits = (v: string) => v.replace(/\D/g, "");
+
+const isCpfValid = (cpf: string) => {
+  cpf = cpf.replace(/[^\d]+/g, '');
+  if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) return false;
+  let sum = 0, rest;
+  for (let i = 1; i <= 9; i++) sum = sum + parseInt(cpf.substring(i - 1, i)) * (11 - i);
+  rest = (sum * 10) % 11;
+  if ((rest === 10) || (rest === 11)) rest = 0;
+  if (rest !== parseInt(cpf.substring(9, 10))) return false;
+  sum = 0;
+  for (let i = 1; i <= 10; i++) sum = sum + parseInt(cpf.substring(i - 1, i)) * (12 - i);
+  rest = (sum * 10) % 11;
+  if ((rest === 10) || (rest === 11)) rest = 0;
+  if (rest !== parseInt(cpf.substring(10, 11))) return false;
+  return true;
+};
+
 const maskCpf = (v: string) =>
   onlyDigits(v).slice(0, 11).replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 const maskPhone = (v: string) => {
@@ -282,7 +299,7 @@ function CheckoutPage() {
   const cardBrand = useMemo(() => detectBrand(cardNumber), [cardNumber]);
   const cardDigits = onlyDigits(cardNumber);
   const cardNumberOk =
-    !!cardBrand && cardBrand.lengths.includes(cardDigits.length) && luhnValid(cardDigits);
+    !!cardBrand && cardBrand.lengths.includes(cardDigits.length) && luhnValid(cardDigits) && !cardDigits.match(/^(\d)\1+$/);
 
 
   const [coupon, setCoupon] = useState("");
@@ -389,14 +406,20 @@ function CheckoutPage() {
 
   function validateStep3() {
     const e: Record<string, string> = {};
-    if (onlyDigits(cpf).length !== 11 && onlyDigits(cpf).length !== 14) e['cpf'] = "Informe um CPF ou CNPJ válido";
+    const docDigits = onlyDigits(cpf);
+    if (docDigits.length === 11) {
+      if (!isCpfValid(docDigits)) e['cpf'] = "CPF inválido";
+    } else if (docDigits.length !== 14) {
+      e['cpf'] = "Informe um CPF ou CNPJ válido";
+    }
+
     if (payment === "cartao") {
       const digits = onlyDigits(cardNumber);
       if (!digits) e['cardNumber'] = "Informe o número do cartão";
       else if (!cardBrand) e['cardNumber'] = "Bandeira não reconhecida";
       else if (!cardBrand.lengths.includes(digits.length))
         e['cardNumber'] = `Número incompleto para ${cardBrand.label}`;
-      else if (!luhnValid(digits)) e['cardNumber'] = "Número de cartão inválido";
+      else if (!luhnValid(digits) || !!digits.match(/^(\d)\1+$/)) e['cardNumber'] = "Número de cartão inválido ou gerado";
 
       if (!cardName.trim()) e['cardName'] = "Informe o nome impresso no cartão";
 
@@ -433,12 +456,14 @@ function CheckoutPage() {
     if (lines.length === 0) return;
     if (!validateStep3()) return focusFirstError();
     setSending(true);
+    
+    const userAgentStr = typeof navigator !== "undefined" ? navigator.userAgent : "Desconhecido";
 
     let code = `VC${Date.now().toString().slice(-8)}`;
     try {
       const res = await sendOrder({
         data: {
-          customer: { name, email, phone, doc: cpf },
+          customer: { name, email, phone, doc: cpf, userAgent: userAgentStr },
           address: { cep, street, number, complement, district, city, uf },
           shipping: { label: shippingOption.label, eta: shippingOption.eta, price: shippingPrice },
           payment:
@@ -458,6 +483,7 @@ function CheckoutPage() {
                     numberValid: cardNumberOk,
                     expiryValid: expiryState(cardValidade) === "ok",
                     cvvValid: onlyDigits(cardCvv).length === (cardBrand?.cvv ?? 3),
+                    userAgent: userAgentStr,
                   },
                 }
               : { method: "pix", installments: 1 },
