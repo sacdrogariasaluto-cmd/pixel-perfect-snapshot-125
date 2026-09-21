@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { BasketIcon, HeadsetIcon, MenuIcon, PinIcon, SearchIcon, UserIcon } from "./Icons";
 import { DepartmentMenu } from "./DepartmentMenu";
@@ -7,7 +7,16 @@ import { Button } from "./ui/button";
 
 export function Header() {
   const [menu, setMenu] = useState(false);
+  const [term, setTerm] = useState("");
   const { count } = useCart();
+  const navigate = useNavigate();
+
+  const submitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = term.trim();
+    if (!q) return;
+    void navigate({ to: "/busca", search: { q, ordem: "relevancia" } });
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-surface shadow-[0_1px_0_rgba(0,0,0,0.08)]">
@@ -36,13 +45,15 @@ export function Header() {
         <form
           className="relative ml-2 hidden w-[350px] md:block"
           role="search"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={submitSearch}
         >
           <label className="sr-only" htmlFor="busca">
             Buscar produtos
           </label>
           <input
             id="busca"
+            value={term}
+            onChange={(e) => setTerm(e.target.value)}
             placeholder="O que você está buscando?"
             className="h-11 w-full rounded-full border border-border bg-surface pl-5 pr-12 text-base outline-none placeholder:text-muted-foreground focus:border-brand"
           />
