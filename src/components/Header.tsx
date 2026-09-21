@@ -42,29 +42,8 @@ export function Header() {
           <img src="/img/a18dca27-logo.svg" alt="Drogaria Vera Cruz" className="h-[30px] w-auto md:h-[42px]" />
         </Link>
 
-        <form
-          className="relative ml-2 hidden w-[350px] md:block"
-          role="search"
-          onSubmit={submitSearch}
-        >
-          <label className="sr-only" htmlFor="busca">
-            Buscar produtos
-          </label>
-          <input
-            id="busca"
-            value={term}
-            onChange={(e) => setTerm(e.target.value)}
-            placeholder="O que você está buscando?"
-            className="h-11 w-full rounded-full border border-border bg-surface pl-5 pr-12 text-base outline-none placeholder:text-muted-foreground focus:border-brand"
-          />
-          <button
-            type="submit"
-            aria-label="Buscar"
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-brand"
-          >
-            <SearchIcon className="h-5 w-5" />
-          </button>
-        </form>
+        <SearchBox />
+
 
         <nav className="ml-auto flex items-center gap-5 justify-self-end text-[13px]">
           <span className="hidden items-center gap-2 lg:flex">
