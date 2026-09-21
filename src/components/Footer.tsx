@@ -74,7 +74,11 @@ export function Footer() {
           <nav className="flex flex-wrap items-center gap-x-3 gap-y-2" aria-label="Institucional">
             {institutionalLinks.map((l, i) => (
               <span key={l.to} className="flex items-center gap-3">
-                <Link to={l.to} className="hover:text-brand">
+                <Link
+                  to="/ajuda/$slug"
+                  params={{ slug: l.to.replace("/ajuda/", "") }}
+                  className="hover:text-brand"
+                >
                   {l.label}
                 </Link>
                 {i < institutionalLinks.length - 1 && (
