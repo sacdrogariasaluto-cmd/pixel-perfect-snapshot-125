@@ -22,6 +22,17 @@ function AdminLayout() {
   const queryClient = useQueryClient();
   const check = useServerFn(amIAdmin);
   const { data, isLoading } = useQuery({ queryKey: ["am-i-admin"], queryFn: () => check() });
+  const claimFn = useServerFn(claimFirstAdmin);
+  const [claimMsg, setClaimMsg] = useState<string | null>(null);
+  const claim = useMutation({
+    mutationFn: () => claimFn(),
+    onSuccess: (res) => {
+      setClaimMsg(res.message);
+      queryClient.invalidateQueries({ queryKey: ["am-i-admin"] });
+    },
+    onError: () => setClaimMsg("Não foi possível liberar o acesso."),
+  });
+
 
   async function signOut() {
     await queryClient.cancelQueries();
