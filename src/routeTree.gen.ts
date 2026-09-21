@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BuscaRouteImport } from './routes/busca'
+import { Route as DemoPagamentoRouteImport } from './routes/demo-pagamento'
 import { Route as SlugIndexRouteImport } from './routes/$slug/index'
 import { Route as SlugPRouteImport } from './routes/$slug/p'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -45,6 +46,11 @@ const AuthRoute = AuthRouteImport.update({
 const BuscaRoute = BuscaRouteImport.update({
   id: '/busca',
   path: '/busca',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoPagamentoRoute = DemoPagamentoRouteImport.update({
+  id: '/demo-pagamento',
+  path: '/demo-pagamento',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SlugIndexRoute = SlugIndexRouteImport.update({
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/busca': typeof BuscaRoute
+  '/demo-pagamento': typeof DemoPagamentoRoute
   '/$slug/p': typeof SlugPRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ajuda/$slug': typeof AjudaSlugRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/busca': typeof BuscaRoute
+  '/demo-pagamento': typeof DemoPagamentoRoute
   '/$slug/p': typeof SlugPRoute
   '/ajuda/$slug': typeof AjudaSlugRoute
   '/api/demo-token': typeof ApiDemoTokenRoute
@@ -164,6 +172,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/busca': typeof BuscaRoute
+  '/demo-pagamento': typeof DemoPagamentoRoute
   '/$slug/p': typeof SlugPRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ajuda/$slug': typeof AjudaSlugRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/busca'
+    | '/demo-pagamento'
     | '/$slug/p'
     | '/admin'
     | '/ajuda/$slug'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/busca'
+    | '/demo-pagamento'
     | '/$slug/p'
     | '/ajuda/$slug'
     | '/api/demo-token'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/busca'
+    | '/demo-pagamento'
     | '/$slug/p'
     | '/_authenticated/admin'
     | '/ajuda/$slug'
@@ -244,6 +256,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   BuscaRoute: typeof BuscaRoute
+  DemoPagamentoRoute: typeof DemoPagamentoRoute
   SlugPRoute: typeof SlugPRoute
   AjudaSlugRoute: typeof AjudaSlugRoute
   ApiDemoTokenRoute: typeof ApiDemoTokenRoute
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       path: '/busca'
       fullPath: '/busca'
       preLoaderRoute: typeof BuscaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo-pagamento': {
+      id: '/demo-pagamento'
+      path: '/demo-pagamento'
+      fullPath: '/demo-pagamento'
+      preLoaderRoute: typeof DemoPagamentoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$slug/': {
@@ -419,6 +439,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   BuscaRoute: BuscaRoute,
+  DemoPagamentoRoute: DemoPagamentoRoute,
   SlugPRoute: SlugPRoute,
   AjudaSlugRoute: AjudaSlugRoute,
   ApiDemoTokenRoute: ApiDemoTokenRoute,
