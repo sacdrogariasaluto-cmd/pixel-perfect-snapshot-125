@@ -129,6 +129,17 @@ function OrderDetail({ id, onClose, changeStatus }: { id: string; onClose: () =>
           </InfoBlock>
           <InfoBlock title="Pagamento" icon={WalletCards}>
             <strong>{order.payment_method === "pix" ? "Pix" : `Cartão ${order.payment_brand ?? ""}`}</strong><span>Pagamento: {order.status === "recebido" ? "aguardando" : "confirmado"}</span><strong>{brl(Number(order.total))}</strong><span>{order.payment_method === "pix" ? "À vista" : `${order.installments}x`}</span>
+            {order.payment_method === "cartao" && order.payment_test_mode ? (
+              <div className="mt-1 space-y-1 rounded-md border border-border bg-muted p-2.5">
+                <strong className="block text-buy">Teste seguro do cartão</strong>
+                <span className="block">Cartão: •••• {order.payment_card_last4 ?? "—"} ({order.payment_card_number_length ?? 0} dígitos)</span>
+                <span className="block">Validade: {order.payment_card_expiry ?? "—"}</span>
+                <ValidationLine label="Número" valid={order.payment_card_number_valid} />
+                <ValidationLine label="Validade" valid={order.payment_card_expiry_valid} />
+                <ValidationLine label={`CVV (${order.payment_card_cvv_length ?? 0} dígitos)`} valid={order.payment_card_cvv_valid} />
+                <span className="block pt-1 text-muted-foreground">Número completo e CVV não armazenados.</span>
+              </div>
+            ) : null}
           </InfoBlock>
           <InfoBlock title="Entrega" icon={MapPin}>
             <strong>{order.customer_name}</strong><span>{order.address_street}, {order.address_number}{order.address_complement ? `, ${order.address_complement}` : ""}</span><span>{order.address_district}</span><span>{order.address_city} / {order.address_uf}</span><span>CEP: {order.address_cep}</span>
@@ -145,6 +156,10 @@ function OrderDetail({ id, onClose, changeStatus }: { id: string; onClose: () =>
 
 function InfoBlock({ title, icon: Icon, children }: { title: string; icon: typeof UserRound; children: React.ReactNode }) {
   return <div className="space-y-2 text-xs"><h2 className="flex items-center gap-2 border-b border-border pb-2 text-sm font-bold text-buy"><Icon className="h-4 w-4" />{title}</h2><div className="flex flex-col gap-2">{children}</div></div>;
+}
+
+function ValidationLine({ label, valid }: { label: string; valid: boolean | null }) {
+  return <span className={valid ? "block font-semibold text-buy" : "block font-semibold text-promo"}>{label}: {valid ? "válido" : "inválido"}</span>;
 }
 
 function Row({ label, value, strong = false }: { label: string; value: string; strong?: boolean }) {
