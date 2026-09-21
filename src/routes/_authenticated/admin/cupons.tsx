@@ -2,10 +2,23 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
+import { Tag } from "lucide-react";
 import { deleteCoupon, listCoupons, saveCoupon, type CouponRow } from "@/lib/admin.functions";
 import { brl, Card } from "@/components/admin/ui";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/_authenticated/admin/cupons")({
+  head: () => ({
+    meta: [
+      { title: "Cupons — Drogaria Vera Cruz" },
+      { name: "description", content: "Crie e gerencie cupons de desconto da loja." },
+      { property: "og:title", content: "Cupons — Drogaria Vera Cruz" },
+      { property: "og:description", content: "Gestão de cupons e descontos da loja." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: CouponsPage,
 });
 
@@ -82,11 +95,11 @@ function CouponsPage() {
     });
   }
 
-  const input = "h-10 w-full rounded-lg border border-border bg-background px-3 text-sm outline-none focus:border-brand";
+  const input = "mt-1 h-9 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-brand";
 
   return (
     <div className="space-y-5">
-      <h1 className="text-xl font-bold">Cupons de desconto</h1>
+      <div><p className="text-xs text-muted-foreground">Início / Marketing</p><h1 className="mt-1 text-2xl font-bold">Cupons de desconto</h1></div>
 
       <Card title={form.id ? "Editar cupom" : "Novo cupom"}>
         <form
@@ -99,7 +112,7 @@ function CouponsPage() {
         >
           <label className="text-sm">
             Código
-            <input
+            <Input
               className={input}
               value={form.code}
               onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })}
@@ -115,11 +128,11 @@ function CouponsPage() {
           </label>
           <label className="text-sm">
             Valor
-            <input className={input} value={form.value} onChange={(e) => setForm({ ...form, value: e.target.value })} />
+            <Input className={input} value={form.value} onChange={(e) => setForm({ ...form, value: e.target.value })} />
           </label>
           <label className="text-sm">
             Pedido mínimo (R$)
-            <input
+            <Input
               className={input}
               value={form.min_total}
               onChange={(e) => setForm({ ...form, min_total: e.target.value })}
@@ -127,7 +140,7 @@ function CouponsPage() {
           </label>
           <label className="text-sm">
             Limite de usos
-            <input
+            <Input
               className={input}
               value={form.max_uses}
               onChange={(e) => setForm({ ...form, max_uses: e.target.value })}
@@ -136,7 +149,7 @@ function CouponsPage() {
           </label>
           <label className="text-sm">
             Validade
-            <input
+            <Input
               type="date"
               className={input}
               value={form.expires_at}
@@ -154,13 +167,12 @@ function CouponsPage() {
           </label>
 
           <div className="flex items-end gap-2 sm:col-span-2">
-            <button
+            <Button
               type="submit"
               disabled={saveMutation.isPending}
-              className="h-10 rounded-full bg-brand px-5 text-sm font-bold text-primary-foreground disabled:opacity-60"
             >
               {form.id ? "Salvar alterações" : "Criar cupom"}
-            </button>
+            </Button>
             {form.id ? (
               <button type="button" onClick={() => setForm(EMPTY)} className="text-sm text-muted-foreground underline">
                 Cancelar
@@ -175,7 +187,7 @@ function CouponsPage() {
         {isLoading ? (
           <p className="text-sm text-muted-foreground">Carregando…</p>
         ) : !data || data.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Nenhum cupom criado ainda.</p>
+          <div className="flex min-h-48 flex-col items-center justify-center"><Tag className="h-8 w-8 text-muted-foreground" /><p className="mt-3 text-sm text-muted-foreground">Nenhum cupom criado ainda.</p></div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] text-sm">
