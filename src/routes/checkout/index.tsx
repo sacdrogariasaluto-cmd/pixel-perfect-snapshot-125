@@ -160,6 +160,7 @@ function CheckoutPage() {
   const [cepLoading, setCepLoading] = useState(false);
   const [cepMsg, setCepMsg] = useState<string | null>(null);
 
+  const [addressConfirmed, setAddressConfirmed] = useState(false);
   const [shipping, setShipping] = useState("padrao");
   const [payment, setPayment] = useState("pix");
   const [cardNumber, setCardNumber] = useState("");
