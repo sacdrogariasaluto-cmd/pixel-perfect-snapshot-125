@@ -70,9 +70,7 @@ export function CheckoutFooter() {
         <p className="text-xs opacity-90">
           © {new Date().getFullYear()} {company.name} — CNPJ: {company.cnpj}
         </p>
-        <p className="text-xs opacity-90">
-          Telefone: {company.phone} / WhatsApp: {company.whatsapp} / E-mail: {company.email}
-        </p>
+        <p className="text-xs opacity-90">Atendimento: {company.sac}</p>
 
         <p className="pt-4 pb-2">Formas de Pagamento</p>
         <div className="flex justify-center">
