@@ -358,14 +358,27 @@ function CheckoutPage() {
     const e: Record<string, string> = {};
     if (onlyDigits(cpf).length !== 11 && onlyDigits(cpf).length !== 14) e['cpf'] = "Informe um CPF ou CNPJ válido";
     if (payment === "cartao") {
-      if (onlyDigits(cardNumber).length < 16) e['cardNumber'] = "Número do cartão incompleto";
+      const digits = onlyDigits(cardNumber);
+      if (!digits) e['cardNumber'] = "Informe o número do cartão";
+      else if (!cardBrand) e['cardNumber'] = "Bandeira não reconhecida";
+      else if (!cardBrand.lengths.includes(digits.length))
+        e['cardNumber'] = `Número incompleto para ${cardBrand.label}`;
+      else if (!luhnValid(digits)) e['cardNumber'] = "Número de cartão inválido";
+
       if (!cardName.trim()) e['cardName'] = "Informe o nome impresso no cartão";
-      if (onlyDigits(cardValidade).length !== 4) e['cardValidade'] = "MM/AA";
-      if (onlyDigits(cardCvv).length < 3) e['cardCvv'] = "CVV";
+
+      const exp = expiryState(cardValidade);
+      if (exp === "incompleto") e['cardValidade'] = "Informe MM/AA";
+      else if (exp === "mes") e['cardValidade'] = "Mês inválido";
+      else if (exp === "vencido") e['cardValidade'] = "Cartão vencido";
+
+      const cvvLen = cardBrand?.cvv ?? 3;
+      if (onlyDigits(cardCvv).length !== cvvLen) e['cardCvv'] = `${cvvLen} dígitos`;
     }
     setErrors(e);
     return Object.keys(e).length === 0;
   }
+
 
   function goToStep2() {
     if (!validateStep1()) return focusFirstError();
