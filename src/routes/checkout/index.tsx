@@ -9,10 +9,10 @@ export const Route = createFileRoute("/checkout/")({
       { title: "Finalizar pedido — farmácia online" },
       {
         name: "description",
-        content: "Checkout em uma única etapa: informe seus dados, endereço de entrega e forma de pagamento sem precisar criar conta.",
+        content: "Checkout rápido em três passos: identificação, entrega e pagamento, sem precisar criar conta.",
       },
       { property: "og:title", content: "Finalizar pedido" },
-      { property: "og:description", content: "Checkout rápido em uma etapa, sem cadastro obrigatório." },
+      { property: "og:description", content: "Checkout rápido em três passos, sem cadastro obrigatório." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -83,7 +83,7 @@ function Field({
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "id" | "value" | "onChange" | "className">) {
   return (
     <div className={className}>
-      <label htmlFor={id} className="mb-1 block text-xs font-bold text-muted-foreground">
+      <label htmlFor={id} className="mb-1.5 block text-sm font-bold">
         {label}
       </label>
       <input
@@ -91,7 +91,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={!!error}
-        className={`h-11 w-full rounded-md border px-3 text-sm outline-none focus:border-brand ${
+        className={`h-12 w-full rounded-xl border bg-surface px-4 text-sm outline-none placeholder:text-muted-foreground focus:border-brand ${
           error ? "border-promo" : "border-border"
         }`}
         {...rest}
@@ -101,9 +101,51 @@ function Field({
   );
 }
 
+function StepShell({
+  index,
+  title,
+  subtitle,
+  active,
+  done,
+  onEdit,
+  children,
+}: {
+  index: number;
+  title: string;
+  subtitle: string;
+  active: boolean;
+  done: boolean;
+  onEdit: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      className={
+        active
+          ? "rounded-2xl border border-border bg-surface p-5 shadow-sm md:p-6"
+          : "px-1 py-5"
+      }
+    >
+      <div className="flex items-start justify-between gap-3">
+        <h2 className={`text-xl font-bold ${active ? "" : "text-muted-foreground"}`}>{title}</h2>
+        <span className="mt-1 shrink-0 text-xs font-bold text-muted-foreground">{index} de 3</span>
+      </div>
+      <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
+      {!active && done && (
+        <button type="button" onClick={onEdit} className="mt-2 text-sm font-bold text-brand underline">
+          Editar
+        </button>
+      )}
+      {active && <div className="mt-5">{children}</div>}
+    </section>
+  );
+}
+
 function CheckoutPage() {
   const navigate = useNavigate();
   const { lines, subtotal, savings, count, setQty, remove, clear } = useCart();
+
+  const [step, setStep] = useState(1);
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -127,6 +169,9 @@ function CheckoutPage() {
   const [cardValidade, setCardValidade] = useState("");
   const [cardCvv, setCardCvv] = useState("");
   const [cardParcelas, setCardParcelas] = useState("1");
+
+  const [coupon, setCoupon] = useState("");
+  const [couponOpen, setCouponOpen] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
@@ -169,18 +214,38 @@ function CheckoutPage() {
     }
   }
 
-  function validate() {
+  function focusFirstError() {
+    const first = document.querySelector<HTMLElement>('[aria-invalid="true"]');
+    first?.scrollIntoView({ behavior: "smooth", block: "center" });
+    first?.focus();
+  }
+
+  function validateStep1() {
     const e: Record<string, string> = {};
+    if (name.trim().split(" ").filter(Boolean).length < 2) e['name'] = "Informe nome e sobrenome";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e['email'] = "Informe um e-mail válido";
-    if (name.trim().split(" ").length < 2) e['name'] = "Informe nome e sobrenome";
     if (onlyDigits(phone).length < 10) e['phone'] = "Informe um celular com DDD";
     if (onlyDigits(cpf).length !== 11) e['cpf'] = "Informe um CPF válido";
-    if (onlyDigits(cep).length !== 8) e['cep'] = "Informe o CEP";
-    if (!street.trim()) e['street'] = "Informe o endereço";
-    if (!number.trim()) e['number'] = "Nº";
-    if (!district.trim()) e['district'] = "Informe o bairro";
-    if (!city.trim()) e['city'] = "Informe a cidade";
-    if (!uf.trim()) e['uf'] = "UF";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  }
+
+  function validateStep2() {
+    const e: Record<string, string> = {};
+    if (!cepOk) e['cep'] = "Informe o CEP";
+    if (cepOk) {
+      if (!street.trim()) e['street'] = "Informe o endereço";
+      if (!number.trim()) e['number'] = "Nº";
+      if (!district.trim()) e['district'] = "Informe o bairro";
+      if (!city.trim()) e['city'] = "Informe a cidade";
+      if (!uf.trim()) e['uf'] = "UF";
+    }
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  }
+
+  function validateStep3() {
+    const e: Record<string, string> = {};
     if (payment === "cartao") {
       if (onlyDigits(cardNumber).length < 16) e['cardNumber'] = "Número do cartão incompleto";
       if (!cardName.trim()) e['cardName'] = "Informe o nome impresso no cartão";
@@ -191,15 +256,20 @@ function CheckoutPage() {
     return Object.keys(e).length === 0;
   }
 
+  function goToStep2() {
+    if (!validateStep1()) return focusFirstError();
+    setStep(2);
+  }
+
+  function goToStep3() {
+    if (!validateStep2()) return focusFirstError();
+    setStep(3);
+  }
+
   function submit(ev: React.FormEvent) {
     ev.preventDefault();
     if (lines.length === 0) return;
-    if (!validate()) {
-      const first = document.querySelector<HTMLElement>('[aria-invalid="true"]');
-      first?.scrollIntoView({ behavior: "smooth", block: "center" });
-      first?.focus();
-      return;
-    }
+    if (!validateStep3()) return focusFirstError();
     setSending(true);
     const order = {
       id: `VC${Date.now().toString().slice(-8)}`,
@@ -228,31 +298,40 @@ function CheckoutPage() {
     navigate({ to: "/checkout/pedido" });
   }
 
+  const ctaClass =
+    "w-full rounded-xl bg-brand py-4 text-base font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-60";
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <CheckoutHeader />
 
-      <main className="container-site flex-1 py-6">
-        <h1 className="text-2xl font-bold">Finalizar pedido</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Tudo em uma única etapa e sem precisar criar conta.
-        </p>
+      <div className="bg-brand py-3 text-center text-sm font-bold text-primary-foreground">
+        Compra 100% segura · Identificação › Entrega › Pagamento
+      </div>
 
+      <main className="container-site flex-1 py-6">
         {lines.length === 0 ? (
-          <div className="mt-6 rounded-md bg-surface p-12 text-center">
+          <div className="mt-6 rounded-2xl bg-surface p-12 text-center">
             <h2 className="text-xl font-bold">Seu carrinho está vazio</h2>
             <Link to="/" className="mt-3 inline-block text-brand underline">
               Escolher produtos
             </Link>
           </div>
         ) : (
-          <form onSubmit={submit} className="mt-6 grid items-start gap-6 lg:grid-cols-[1fr_360px]">
-            <div className="space-y-4">
-              <section className="rounded-md bg-surface p-5">
-                <h2 className="mb-4 text-base font-bold">1. Seus dados</h2>
-                <div className="grid gap-4 sm:grid-cols-2">
+          <form onSubmit={submit} className="grid items-start gap-6 lg:grid-cols-[1fr_360px]">
+            <div className="space-y-1">
+              <StepShell
+                index={1}
+                title="Identificação"
+                subtitle={step === 1 ? "Preencha seus dados para envio do pedido." : name || "Dados informados"}
+                active={step === 1}
+                done={step > 1}
+                onEdit={() => setStep(1)}
+              >
+                <div className="space-y-4">
+                  <Field id="name" label="Nome completo" placeholder="Ex.: Maria da Silva" autoComplete="name" value={name} onChange={setName} error={errors['name']} />
                   <div>
-                    <Field id="email" label="E-mail" type="email" inputMode="email" autoComplete="email" list="email-sugestoes" value={email} onChange={setEmail} error={errors['email']} />
+                    <Field id="email" label="E-mail" placeholder="Ex.: maria@email.com" type="email" inputMode="email" autoComplete="email" list="email-sugestoes" value={email} onChange={setEmail} error={errors['email']} />
                     <datalist id="email-sugestoes">
                       {(() => {
                         const [user = "", domain = ""] = email.split("@");
@@ -263,77 +342,108 @@ function CheckoutPage() {
                       })()}
                     </datalist>
                   </div>
-                  <Field id="name" label="Nome completo" autoComplete="name" value={name} onChange={setName} error={errors['name']} />
-                  <Field id="phone" label="Celular / WhatsApp" inputMode="tel" autoComplete="tel" value={phone} onChange={(v) => setPhone(maskPhone(v))} error={errors['phone']} />
-                  <Field id="cpf" label="CPF" inputMode="numeric" value={cpf} onChange={(v) => setCpf(maskCpf(v))} error={errors['cpf']} />
-                </div>
-                <p className="mt-3 text-xs text-muted-foreground">
-                  O CPF é usado apenas para emissão da nota fiscal do pedido.
-                </p>
-              </section>
+                  <Field id="phone" label="Celular / WhatsApp" placeholder="(11) 99999-9999" inputMode="tel" autoComplete="tel" value={phone} onChange={(v) => setPhone(maskPhone(v))} error={errors['phone']} />
+                  <Field id="cpf" label="CPF" placeholder="000.000.000-00" inputMode="numeric" value={cpf} onChange={(v) => setCpf(maskCpf(v))} error={errors['cpf']} />
 
-              <section className="rounded-md bg-surface p-5">
-                <h2 className="mb-4 text-base font-bold">2. Entrega</h2>
-                <div className="grid gap-4 sm:grid-cols-6">
-                  <Field className="sm:col-span-2" id="cep" label="CEP" inputMode="numeric" autoComplete="postal-code" value={cep} onChange={lookupCep} error={errors['cep']} />
-                  {cepLoading && <p className="self-end pb-3 text-xs text-muted-foreground sm:col-span-4">Buscando endereço…</p>}
-                  {cepMsg && <p className="text-xs text-muted-foreground sm:col-span-6">{cepMsg}</p>}
-                </div>
+                  {pixDiscount > 0 && (
+                    <p className="rounded-xl bg-background p-4 text-sm">
+                      <strong>Você ganhou {brl(pixDiscount)} de desconto</strong>
+                      <br />
+                      <span className="text-muted-foreground">pagando com Pix</span>
+                    </p>
+                  )}
 
-                {!cepOk ? (
-                  <p className="mt-4 rounded-md bg-background p-3 text-sm text-muted-foreground">
-                    Informe o CEP para ver as opções e o valor da entrega.
+                  <button type="button" onClick={goToStep2} className={ctaClass}>
+                    Ir para Entrega
+                  </button>
+                  <p className="text-center text-xs text-muted-foreground">
+                    O CPF é usado apenas para emissão da nota fiscal do pedido.
                   </p>
-                ) : (
-                  <>
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                      {SHIPPING.map((s) => (
-                        <label
-                          key={s.id}
-                          className={`cursor-pointer rounded-md border p-3 text-sm ${
-                            shipping === s.id ? "border-brand bg-brand/5" : "border-border"
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name="entrega"
-                            className="sr-only"
-                            checked={shipping === s.id}
-                            onChange={() => setShipping(s.id)}
-                          />
-                          <span className="block font-bold">{s.label}</span>
-                          <span className="block text-xs text-muted-foreground">{s.eta}</span>
-                          <span className="mt-1 block font-bold text-buy">
-                            {s.price === 0 ? "Grátis" : brl(s.price)}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
+                </div>
+              </StepShell>
 
-                    <div className="mt-4 grid gap-4 sm:grid-cols-6">
-                      <Field className="sm:col-span-6" id="street" label="Endereço" autoComplete="address-line1" value={street} onChange={setStreet} error={errors['street']} />
-                      <Field className="sm:col-span-2" id="number" label="Número" value={number} onChange={setNumber} error={errors['number']} />
-                      <Field className="sm:col-span-4" id="complement" label="Complemento (opcional)" value={complement} onChange={setComplement} />
-                      <Field className="sm:col-span-3" id="district" label="Bairro" value={district} onChange={setDistrict} error={errors['district']} />
-                      <Field className="sm:col-span-2" id="city" label="Cidade" value={city} onChange={setCity} error={errors['city']} />
-                      <Field className="sm:col-span-1" id="uf" label="UF" maxLength={2} value={uf} onChange={(v) => setUf(v.toUpperCase())} error={errors['uf']} />
-                    </div>
-                  </>
-                )}
-                <p className="mt-3 text-xs text-muted-foreground">
-                  Prazos e valores de frete são simulados; a cotação real depende de integração de logística.
-                </p>
-              </section>
+              <StepShell
+                index={2}
+                title="Entrega"
+                subtitle={
+                  step < 2
+                    ? "Preencha seus dados para continuar"
+                    : step > 2
+                      ? `${street}, ${number} — ${city}/${uf}`
+                      : "Informe o CEP para ver as opções de entrega."
+                }
+                active={step === 2}
+                done={step > 2}
+                onEdit={() => setStep(2)}
+              >
+                <div className="space-y-4">
+                  <Field id="cep" label="CEP" placeholder="00000-000" inputMode="numeric" autoComplete="postal-code" value={cep} onChange={lookupCep} error={errors['cep']} />
+                  {cepLoading && <p className="text-xs text-muted-foreground">Buscando endereço…</p>}
+                  {cepMsg && <p className="text-xs text-muted-foreground">{cepMsg}</p>}
 
-              <section className="rounded-md bg-surface p-5">
-                <h2 className="mb-4 text-base font-bold">3. Pagamento</h2>
+                  {!cepOk ? (
+                    <p className="rounded-xl bg-background p-4 text-sm text-muted-foreground">
+                      Informe o CEP para ver as opções e o valor da entrega.
+                    </p>
+                  ) : (
+                    <>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {SHIPPING.map((s) => (
+                          <label
+                            key={s.id}
+                            className={`cursor-pointer rounded-xl border p-4 text-sm ${
+                              shipping === s.id ? "border-brand bg-brand/5" : "border-border"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="entrega"
+                              className="sr-only"
+                              checked={shipping === s.id}
+                              onChange={() => setShipping(s.id)}
+                            />
+                            <span className="block font-bold">{s.label}</span>
+                            <span className="block text-xs text-muted-foreground">{s.eta}</span>
+                            <span className="mt-1 block font-bold text-buy">{brl(s.price)}</span>
+                          </label>
+                        ))}
+                      </div>
+
+                      <div className="grid gap-4 sm:grid-cols-6">
+                        <Field className="sm:col-span-6" id="street" label="Endereço" autoComplete="address-line1" value={street} onChange={setStreet} error={errors['street']} />
+                        <Field className="sm:col-span-2" id="number" label="Número" value={number} onChange={setNumber} error={errors['number']} />
+                        <Field className="sm:col-span-4" id="complement" label="Complemento (opcional)" value={complement} onChange={setComplement} />
+                        <Field className="sm:col-span-3" id="district" label="Bairro" value={district} onChange={setDistrict} error={errors['district']} />
+                        <Field className="sm:col-span-2" id="city" label="Cidade" value={city} onChange={setCity} error={errors['city']} />
+                        <Field className="sm:col-span-1" id="uf" label="UF" maxLength={2} value={uf} onChange={(v) => setUf(v.toUpperCase())} error={errors['uf']} />
+                      </div>
+                    </>
+                  )}
+
+                  <button type="button" onClick={goToStep3} className={ctaClass}>
+                    Ir para Pagamento
+                  </button>
+                  <p className="text-center text-xs text-muted-foreground">
+                    Prazos e valores de frete são simulados; a cotação real depende de integração de logística.
+                  </p>
+                </div>
+              </StepShell>
+
+              <StepShell
+                index={3}
+                title="Pagamento"
+                subtitle={step < 3 ? "Preencha os dados de entrega para continuar" : "Escolha como prefere pagar."}
+                active={step === 3}
+                done={false}
+                onEdit={() => setStep(3)}
+              >
                 <div className="space-y-3">
                   {[
                     { id: "pix", title: "Pix", desc: `Desconto à vista${pixDiscount > 0 ? ` de ${brl(pixDiscount)}` : ""}` },
                     { id: "cartao", title: "Cartão de crédito", desc: "Parcele em até 6x sem juros" },
                   ].map((m) => (
-                    <div key={m.id} className={`rounded-md border ${payment === m.id ? "border-brand" : "border-border"}`}>
-                      <label className="flex cursor-pointer items-center gap-3 p-3 text-sm">
+                    <div key={m.id} className={`rounded-xl border ${payment === m.id ? "border-brand" : "border-border"}`}>
+                      <label className="flex cursor-pointer items-center gap-3 p-4 text-sm">
                         <input
                           type="radio"
                           name="pagamento"
@@ -354,14 +464,14 @@ function CheckoutPage() {
                           <Field className="sm:col-span-4" id="cardName" label="Nome impresso no cartão" value={cardName} onChange={setCardName} error={errors['cardName']} />
                           <Field className="sm:col-span-2" id="cardCvv" label="CVV" inputMode="numeric" maxLength={4} value={cardCvv} onChange={(v) => setCardCvv(onlyDigits(v).slice(0, 4))} error={errors['cardCvv']} />
                           <div className="sm:col-span-6">
-                            <label htmlFor="parcelas" className="mb-1 block text-xs font-bold text-muted-foreground">
+                            <label htmlFor="parcelas" className="mb-1.5 block text-sm font-bold">
                               Parcelas
                             </label>
                             <select
                               id="parcelas"
                               value={cardParcelas}
                               onChange={(e) => setCardParcelas(e.target.value)}
-                              className="h-11 w-full rounded-md border border-border px-3 text-sm"
+                              className="h-12 w-full rounded-xl border border-border bg-surface px-4 text-sm"
                             >
                               {[1, 2, 3, 4, 5, 6].map((n) => (
                                 <option key={n} value={n}>
@@ -383,15 +493,68 @@ function CheckoutPage() {
                       )}
                     </div>
                   ))}
+
+                  <button type="submit" disabled={sending} className={ctaClass}>
+                    {sending ? "Enviando…" : "Finalizar pedido"}
+                  </button>
                 </div>
-              </section>
+              </StepShell>
             </div>
 
-            <aside className="space-y-3 rounded-md bg-surface p-5 lg:sticky lg:top-4">
-              <h2 className="text-base font-bold">
-                Resumo do pedido <span className="font-normal text-muted-foreground">({count} {count === 1 ? "item" : "itens"})</span>
-              </h2>
-              <ul className="max-h-[300px] divide-y divide-border overflow-y-auto">
+            <aside className="space-y-4 rounded-2xl border border-border bg-surface p-5 shadow-sm lg:sticky lg:top-4">
+              <h2 className="text-lg font-bold">Resumo do pedido</h2>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setCouponOpen((v) => !v)}
+                  className="text-sm font-bold text-buy"
+                >
+                  Inserir cupom de desconto
+                </button>
+                {couponOpen && (
+                  <div className="mt-2 flex gap-2">
+                    <input
+                      value={coupon}
+                      onChange={(e) => setCoupon(e.target.value.toUpperCase())}
+                      placeholder="CUPOM"
+                      aria-label="Cupom de desconto"
+                      className="h-10 w-full rounded-xl border border-border px-3 text-sm outline-none focus:border-brand"
+                    />
+                    <button type="button" className="h-10 shrink-0 rounded-xl bg-brand px-4 text-sm font-bold text-primary-foreground">
+                      Aplicar
+                    </button>
+                  </div>
+                )}
+                {couponOpen && (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Cupons dependem de integração com o sistema da loja.
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2 text-sm">
+                <p className="flex justify-between">
+                  <span>Produtos ({count})</span>
+                  <span>{brl(productsTotal)}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span>Frete</span>
+                  {cepOk ? <span>{brl(shippingPrice)}</span> : <span className="text-xs text-muted-foreground">informe o CEP</span>}
+                </p>
+                {savings + pixDiscount > 0 && (
+                  <p className="flex justify-between text-buy">
+                    <span>Você economiza</span>
+                    <strong>{brl(savings + (payment === "pix" ? pixDiscount : 0))}</strong>
+                  </p>
+                )}
+                <p className="flex justify-between border-t border-border pt-2 text-lg">
+                  <strong>Total</strong>
+                  <strong>{brl(total)}</strong>
+                </p>
+              </div>
+
+              <ul className="max-h-[320px] divide-y divide-border overflow-y-auto border-t border-border">
                 {lines.map((l) => (
                   <li key={l.slug} className="flex gap-3 py-3">
                     <img src={l.image} alt="" className="h-14 w-14 shrink-0 object-contain" />
@@ -415,38 +578,6 @@ function CheckoutPage() {
                 ))}
               </ul>
 
-              <div className="space-y-2 border-t border-border pt-3 text-sm">
-                <p className="flex justify-between">
-                  <span>Produtos</span>
-                  <span>{brl(productsTotal)}</span>
-                </p>
-                <p className="flex justify-between">
-                  <span>Frete</span>
-                  {cepOk ? (
-                    <span>{shippingPrice === 0 ? "Grátis" : brl(shippingPrice)}</span>
-                  ) : (
-                    <span className="text-xs text-muted-foreground">informe o CEP</span>
-                  )}
-                </p>
-                {savings > 0 && (
-                  <p className="flex justify-between text-buy">
-                    <span>Você economiza</span>
-                    <strong>{brl(savings + (payment === "pix" ? pixDiscount : 0))}</strong>
-                  </p>
-                )}
-                <p className="flex justify-between border-t border-border pt-2 text-lg">
-                  <strong>Total</strong>
-                  <strong className="text-buy">{brl(total)}</strong>
-                </p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={sending}
-                className="mt-2 w-full rounded-[10px] bg-buy py-3 text-sm font-bold uppercase text-primary-foreground hover:bg-buy-hover disabled:opacity-60"
-              >
-                {sending ? "Enviando…" : "Finalizar pedido"}
-              </button>
               <Link to="/checkout/carrinho" className="block text-center text-sm text-brand underline">
                 Voltar ao carrinho
               </Link>
