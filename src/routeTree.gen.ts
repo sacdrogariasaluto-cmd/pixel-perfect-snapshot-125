@@ -10,10 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BuscaRouteImport } from './routes/busca'
 import { Route as SlugIndexRouteImport } from './routes/$slug/index'
 import { Route as SlugPRouteImport } from './routes/$slug/p'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AjudaIndexRouteImport } from './routes/ajuda.index'
 import { Route as AjudaSlugRouteImport } from './routes/ajuda.$slug'
 import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
@@ -24,6 +26,10 @@ import { Route as CheckoutPedidoRouteImport } from './routes/checkout/pedido'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -45,6 +51,11 @@ const SlugPRoute = SlugPRouteImport.update({
   id: '/$slug/p',
   path: '/$slug/p',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AjudaIndexRoute = AjudaIndexRouteImport.update({
   id: '/ajuda/',
@@ -82,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/busca': typeof BuscaRoute
   '/$slug/p': typeof SlugPRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/ajuda/$slug': typeof AjudaSlugRoute
   '/checkout/carrinho': typeof CheckoutCarrinhoRoute
   '/checkout/login': typeof CheckoutLoginRoute
@@ -95,6 +107,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/busca': typeof BuscaRoute
   '/$slug/p': typeof SlugPRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/ajuda/$slug': typeof AjudaSlugRoute
   '/checkout/carrinho': typeof CheckoutCarrinhoRoute
   '/checkout/login': typeof CheckoutLoginRoute
@@ -106,9 +119,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/busca': typeof BuscaRoute
   '/$slug/p': typeof SlugPRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/ajuda/$slug': typeof AjudaSlugRoute
   '/checkout/carrinho': typeof CheckoutCarrinhoRoute
   '/checkout/login': typeof CheckoutLoginRoute
@@ -124,6 +139,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/busca'
     | '/$slug/p'
+    | '/admin'
     | '/ajuda/$slug'
     | '/checkout/carrinho'
     | '/checkout/login'
@@ -137,6 +153,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/busca'
     | '/$slug/p'
+    | '/admin'
     | '/ajuda/$slug'
     | '/checkout/carrinho'
     | '/checkout/login'
@@ -147,9 +164,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/auth'
     | '/busca'
     | '/$slug/p'
+    | '/_authenticated/admin'
     | '/ajuda/$slug'
     | '/checkout/carrinho'
     | '/checkout/login'
@@ -161,6 +180,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   BuscaRoute: typeof BuscaRoute
   SlugPRoute: typeof SlugPRoute
@@ -180,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -209,6 +236,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$slug/p'
       preLoaderRoute: typeof SlugPRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/ajuda/': {
       id: '/ajuda/'
@@ -255,8 +289,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   BuscaRoute: BuscaRoute,
   SlugPRoute: SlugPRoute,
