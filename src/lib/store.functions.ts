@@ -47,6 +47,7 @@ export type NewOrderInput = {
   items: { slug: string; name: string; image: string; unitPrice: number; qty: number }[];
   subtotal: number;
   total: number;
+  metadata?: Record<string, any>;
 };
 
 export const createOrder = createServerFn({ method: "POST" })
@@ -88,6 +89,7 @@ export const createOrder = createServerFn({ method: "POST" })
       discount: data.coupon?.discount ?? 0,
       subtotal: data.subtotal,
       total: data.total,
+      metadata: data.metadata ?? null,
     });
 
     if (error) throw new Error(error.message);

