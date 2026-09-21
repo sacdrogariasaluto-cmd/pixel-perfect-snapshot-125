@@ -418,7 +418,7 @@ function CheckoutPage() {
       },
       payment:
         payment === "cartao"
-          ? { method: "cartao", parcelas: Number(cardParcelas), last4: onlyDigits(cardNumber).slice(-4) }
+          ? { method: "cartao", brand: cardBrand?.label ?? null, parcelas: Number(cardParcelas), last4: onlyDigits(cardNumber).slice(-4) }
           : { method: "pix" },
       items: lines,
       totals: { products: productsTotal, shipping: shippingOption.price, total },
