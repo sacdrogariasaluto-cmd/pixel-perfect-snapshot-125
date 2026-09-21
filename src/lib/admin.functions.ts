@@ -341,3 +341,23 @@ export const deleteCoupon = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+// Bootstrap: a primeira conta da loja pode se tornar administradora
+// enquanto nenhum administrador existir.
+export const claimFirstAdmin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const ctx = context as unknown as Ctx;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { count, error } = await supabaseAdmin
+      .from("user_roles")
+      .select("id", { count: "exact", head: true })
+      .eq("role", "admin");
+    if (error) throw new Error(error.message);
+    if ((count ?? 0) > 0) return { ok: false as const, message: "A loja já possui administrador." };
+    const { error: insertError } = await supabaseAdmin
+      .from("user_roles")
+      .insert({ user_id: ctx.userId, role: "admin" });
+    if (insertError) throw new Error(insertError.message);
+    return { ok: true as const, message: "Acesso de administrador liberado." };
+  });
