@@ -74,7 +74,7 @@ export function CheckoutFooter() {
 
         <p className="pt-4 pb-2">Formas de Pagamento</p>
         <div className="flex justify-center">
-          <PaymentFlags />
+          <PaymentFlags compact />
         </div>
 
         <div className="flex justify-center pt-4">

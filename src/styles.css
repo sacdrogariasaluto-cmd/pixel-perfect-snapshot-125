@@ -192,3 +192,25 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Bandeiras de pagamento recortadas do sprite (56x34, passo 57, total 1139).
+ * O índice vem de --i e o fator de redução de --k. */
+.flag-sprite {
+  --k: 1;
+  display: block;
+  flex: 0 0 auto;
+  width: calc(56px * var(--k));
+  height: calc(34px * var(--k));
+  background-repeat: no-repeat;
+  background-size: calc(1139px * var(--k)) calc(34px * var(--k));
+  background-position: calc(var(--i, 0) * -57px * var(--k)) 0;
+}
+
+.flag-sprite-sm {
+  @media (max-width: 640px) {
+    --k: 0.6;
+  }
+  @media (max-width: 360px) {
+    --k: 0.5;
+  }
+}
