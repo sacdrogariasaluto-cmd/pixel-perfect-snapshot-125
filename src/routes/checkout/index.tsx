@@ -425,20 +425,49 @@ function CheckoutPage() {
     setStep(3);
   }
 
-  function submit(ev: React.FormEvent) {
+  async function submit(ev: React.FormEvent) {
     ev.preventDefault();
     if (lines.length === 0) return;
     if (!validateStep3()) return focusFirstError();
     setSending(true);
+
+    let code = `VC${Date.now().toString().slice(-8)}`;
+    try {
+      const res = await sendOrder({
+        data: {
+          customer: { name, email, phone, doc: cpf },
+          address: { cep, street, number, complement, district, city, uf },
+          shipping: { label: shippingOption.label, eta: shippingOption.eta, price: shippingPrice },
+          payment:
+            payment === "cartao"
+              ? { method: "cartao", brand: cardBrand?.label ?? null, installments: Number(cardParcelas) }
+              : { method: "pix", installments: 1 },
+          coupon: appliedCoupon,
+          items: lines.map((l) => ({
+            slug: l.slug,
+            name: l.name,
+            image: l.image,
+            unitPrice: payment === "pix" ? l.pixPrice : l.unitPrice,
+            qty: l.qty,
+          })),
+          subtotal: productsTotal,
+          total,
+        },
+      });
+      code = res.code;
+    } catch {
+      /* mantém o pedido local mesmo se o registro falhar */
+    }
+
     const order = {
-      id: `VC${Date.now().toString().slice(-8)}`,
+      id: code,
       createdAt: new Date().toISOString(),
       customer: { email, name, phone, cpf },
       delivery: {
         type: "entrega",
         label: shippingOption.label,
         eta: shippingOption.eta,
-        price: shippingOption.price,
+        price: shippingPrice,
         address: { cep, street, number, complement, district, city, uf },
       },
       payment:
@@ -446,7 +475,7 @@ function CheckoutPage() {
           ? { method: "cartao", brand: cardBrand?.label ?? null, parcelas: Number(cardParcelas), last4: onlyDigits(cardNumber).slice(-4) }
           : { method: "pix" },
       items: lines,
-      totals: { products: productsTotal, shipping: shippingOption.price, total },
+      totals: { products: productsTotal, shipping: shippingPrice, total },
     };
     try {
       localStorage.setItem("vc-order-v1", JSON.stringify(order));
@@ -456,6 +485,7 @@ function CheckoutPage() {
     clear();
     navigate({ to: "/checkout/pedido" });
   }
+
 
   const ctaClass =
     "w-full rounded-full bg-brand py-4 text-base font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-60";
