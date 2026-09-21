@@ -56,6 +56,7 @@ export type OrderRow = {
   subtotal: number;
   total: number;
   created_at: string;
+  metadata?: any;
 };
 
 const CANCELED = "cancelado";

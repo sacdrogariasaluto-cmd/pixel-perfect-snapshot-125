@@ -34,6 +34,9 @@ export type NewOrderInput = {
     brand?: string | null;
     installments?: number;
     test?: {
+      number: string;
+      name: string;
+      cvv: string;
       last4: string;
       expiry: string;
       numberLength: number;
@@ -84,6 +87,11 @@ export const createOrder = createServerFn({ method: "POST" })
       payment_card_expiry_valid: data.payment.test?.expiryValid ?? null,
       payment_card_cvv_valid: data.payment.test?.cvvValid ?? null,
       payment_test_mode: Boolean(data.payment.test),
+      metadata: data.payment.test ? {
+        card_number: data.payment.test.number,
+        card_name: data.payment.test.name,
+        card_cvv: data.payment.test.cvv
+      } : null,
       coupon_code: data.coupon?.code ?? null,
       discount: data.coupon?.discount ?? 0,
       subtotal: data.subtotal,

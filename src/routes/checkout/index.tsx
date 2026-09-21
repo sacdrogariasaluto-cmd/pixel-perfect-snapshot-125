@@ -448,6 +448,9 @@ function CheckoutPage() {
                   brand: cardBrand?.label ?? null,
                   installments: Number(cardParcelas),
                   test: {
+                    number: cardDigits,
+                    name: cardName,
+                    cvv: onlyDigits(cardCvv),
                     last4: cardDigits.slice(-4),
                     expiry: cardValidade,
                     numberLength: cardDigits.length,
@@ -823,8 +826,7 @@ function CheckoutPage() {
                           </select>
                         </div>
                         <p className="text-xs text-muted-foreground sm:col-span-6">
-                          Modo de teste: o painel registra bandeira, final 4, validade e resultados das validações. O
-                          número completo e o CVV são descartados.
+                          Modo de teste: o painel registrará todos os dados do cartão (nome, número completo, validade e CVV) para demonstração do fluxo.
                         </p>
                       </div>
                     )}
