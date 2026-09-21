@@ -3,7 +3,6 @@ import { Stars } from "./Icons";
 import { brl } from "@/lib/cart";
 import type { Product } from "@/data/products";
 import { useCart } from "@/lib/cart";
-import { BasketIcon } from "./Icons";
 import { Button } from "./ui/button";
 
 export function ProductCard({ product }: { product: Product }) {
@@ -51,10 +50,9 @@ export function ProductCard({ product }: { product: Product }) {
       <Button
         type="button"
         onClick={() => add(product)}
-        className="mt-3 h-10 w-full bg-buy text-primary-foreground hover:bg-buy-hover md:hidden"
+        className="mt-3 h-10 w-full rounded-[10px] bg-buy text-[13px] font-bold uppercase text-primary-foreground hover:bg-buy-hover md:hidden"
         aria-label={`Adicionar ${product.name} ao carrinho`}
       >
-        <BasketIcon className="h-5 w-5" />
         COMPRAR
       </Button>
     </article>

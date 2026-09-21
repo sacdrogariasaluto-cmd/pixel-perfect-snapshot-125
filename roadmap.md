@@ -1,3 +1,1 @@
-- [x] Comparar a versão mobile atual com as capturas de referência
-- [x] Ajustar cabeçalho, navegação, conteúdo e rodapé no mobile
-- [x] Validar páginas e interações principais em tela pequena
+- [x] Deixar a adição ao carrinho igual à loja de referência

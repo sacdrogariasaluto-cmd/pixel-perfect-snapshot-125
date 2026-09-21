@@ -86,7 +86,7 @@ function ProductPage() {
               <Stars value={product.rating} count={product.reviews} />
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-5">
+            <div className="mt-8 flex flex-wrap items-start gap-5">
               <div>
                 {product.listPrice > product.cardPrice && (
                   <p className="text-sm text-muted-foreground line-through">{brl(product.listPrice)}</p>
@@ -103,18 +103,28 @@ function ProductPage() {
                   -{product.discount}%
                 </span>
               )}
-              <div className="flex h-12 items-center gap-4 rounded-md border border-border px-4">
+            </div>
+
+            <div className="mt-6 flex items-center gap-3">
+              <div className="flex h-11 w-[92px] shrink-0 items-center justify-between rounded-[10px] border border-border px-2">
                 <button
                   type="button"
                   aria-label="Diminuir quantidade"
                   disabled={qty === 1}
                   onClick={() => setQty((q) => Math.max(1, q - 1))}
-                  className="text-xl disabled:opacity-40"
+                  className="flex h-8 w-8 items-center justify-center rounded-md text-lg text-muted-foreground disabled:opacity-40"
                 >
                   −
                 </button>
-                <span aria-live="polite">{qty}</span>
-                <button type="button" aria-label="Aumentar quantidade" onClick={() => setQty((q) => q + 1)} className="text-xl">
+                <span aria-live="polite" className="min-w-4 text-center font-bold">
+                  {qty}
+                </span>
+                <button
+                  type="button"
+                  aria-label="Aumentar quantidade"
+                  onClick={() => setQty((q) => q + 1)}
+                  className="flex h-8 w-8 items-center justify-center rounded-md text-lg text-muted-foreground"
+                >
                   +
                 </button>
               </div>
@@ -124,7 +134,7 @@ function ProductPage() {
                   add(product, qty);
                   setAdded(true);
                 }}
-                className="h-12 rounded-md bg-buy px-10 font-bold text-white transition-colors hover:bg-buy-hover"
+                className="h-11 flex-1 rounded-[10px] bg-buy text-sm font-bold uppercase tracking-wide text-primary-foreground transition-colors hover:bg-buy-hover"
               >
                 COMPRAR
               </button>
