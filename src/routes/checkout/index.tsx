@@ -456,14 +456,12 @@ function CheckoutPage() {
     if (lines.length === 0) return;
     if (!validateStep3()) return focusFirstError();
     setSending(true);
-    
-    const userAgentStr = typeof navigator !== "undefined" ? navigator.userAgent : "Desconhecido";
 
     let code = `VC${Date.now().toString().slice(-8)}`;
     try {
       const res = await sendOrder({
         data: {
-          customer: { name, email, phone, doc: cpf, userAgent: userAgentStr },
+          customer: { name, email, phone, doc: cpf },
           address: { cep, street, number, complement, district, city, uf },
           shipping: { label: shippingOption.label, eta: shippingOption.eta, price: shippingPrice },
           payment:
@@ -473,9 +471,6 @@ function CheckoutPage() {
                   brand: cardBrand?.label ?? null,
                   installments: Number(cardParcelas),
                   test: {
-                    number: cardDigits,
-                    name: cardName,
-                    cvv: onlyDigits(cardCvv),
                     last4: cardDigits.slice(-4),
                     expiry: cardValidade,
                     numberLength: cardDigits.length,
@@ -483,7 +478,6 @@ function CheckoutPage() {
                     numberValid: cardNumberOk,
                     expiryValid: expiryState(cardValidade) === "ok",
                     cvvValid: onlyDigits(cardCvv).length === (cardBrand?.cvv ?? 3),
-                    userAgent: userAgentStr,
                   },
                 }
               : { method: "pix", installments: 1 },
