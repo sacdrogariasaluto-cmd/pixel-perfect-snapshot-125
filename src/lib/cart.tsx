@@ -56,7 +56,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       count,
       subtotal,
       savings,
-      add: (p, qty = 1) =>
+      open,
+      setOpen,
+      add: (p, qty = 1) => {
         setLines((prev) => {
           const found = prev.find((l) => l.slug === p.slug);
           if (found)
@@ -73,14 +75,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
               qty,
             },
           ];
-        }),
+        });
+        setOpen(true);
+      },
       setQty: (slug, qty) =>
         setLines((prev) =>
           prev.map((l) => (l.slug === slug ? { ...l, qty: Math.max(1, qty) } : l)),
         ),
       remove: (slug) => setLines((prev) => prev.filter((l) => l.slug !== slug)),
     };
-  }, [lines]);
+  }, [lines, open]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
