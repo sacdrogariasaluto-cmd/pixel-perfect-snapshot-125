@@ -700,3 +700,23 @@ export const products: Product[] = [
 
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);
 export const productsByCategory = (cat: string) => products.filter((p) => p.category === cat);
+
+// Textos de descrição de amostra no estilo da referência. Substitua pelo conteúdo real do catálogo (bula, composição, modo de uso).
+const MEDICINE_CATEGORIES = new Set(["medicamentos", "genericos", "hipertensao", "diabetes"]);
+
+export function descriptionFor(p: Product): string[] {
+  if (MEDICINE_CATEGORIES.has(p.category)) {
+    const paragraphs = [
+      `${p.name} é um medicamento de ${p.brand}. Use conforme a orientação da bula ou do seu médico. Em caso de dúvidas sobre indicação, posologia ou conservação, procure a orientação do farmacêutico.`,
+      `SE PERSISTIREM OS SINTOMAS, O MÉDICO DEVERÁ SER CONSULTADO. ${p.name.toUpperCase()} É UM MEDICAMENTO. SEU USO PODE TRAZER RISCOS. PROCURE UM MÉDICO E O FARMACÊUTICO. LEIA A BULA.`,
+    ];
+    if (p.category === "genericos") {
+      paragraphs.push("Medicamento genérico - lei n.º 9.787/99.");
+    }
+    return paragraphs;
+  }
+  return [
+    `${p.name} é um produto de ${p.brand}. Descrição de amostra: substitua pelo conteúdo oficial do fabricante, com composição, modo de uso e advertências.`,
+    "Em caso de dúvidas sobre o uso do produto, fale com a nossa equipe pelo WhatsApp.",
+  ];
+}
