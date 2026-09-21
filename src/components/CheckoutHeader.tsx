@@ -47,10 +47,10 @@ function OfferTimer() {
 
 export function CheckoutHeader() {
   return (
-    <header className="bg-checkout text-checkout-foreground">
+    <header className="border-b border-border bg-surface text-foreground">
       <div className="container-site grid h-[66px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:h-[70px]">
         <Link to="/" aria-label="Página inicial">
-          <img src="/img/a18dca27-logo.svg" alt="Drogaria Vera Cruz" className="h-7 w-auto max-w-[145px] brightness-0 invert sm:h-9 sm:max-w-none" />
+          <img src="/img/a18dca27-logo.svg" alt="Drogaria Vera Cruz" className="h-7 w-auto max-w-[145px] sm:h-9 sm:max-w-none" />
         </Link>
         <SecureBadge />
       </div>
@@ -63,7 +63,7 @@ export function CheckoutHeader() {
 
 export function CheckoutFooter() {
   return (
-    <footer className="mt-3 bg-checkout py-6 text-center text-sm text-checkout-foreground lg:mt-10 lg:py-8">
+    <footer className="mt-3 border-t border-border bg-surface py-6 text-center text-sm text-foreground lg:mt-10 lg:py-8">
       <div className="container-site space-y-1">
         <p className="font-bold">{company.name} | Todos os direitos reservados</p>
         <p className="text-xs opacity-90">{company.address}</p>
