@@ -22,23 +22,17 @@ const FLAGS: { name: string; i: number }[] = [
   { name: "Pix", i: 16 },
 ];
 
-export function PaymentFlags() {
+export function PaymentFlags({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className={`flex flex-wrap justify-center gap-2 ${compact ? "max-w-[300px] sm:max-w-none" : ""}`}>
       {FLAGS.map((f) => (
         <span
           key={f.name}
           role="img"
           aria-label={f.name}
           title={f.name}
-          className="block rounded border border-border bg-white bg-no-repeat"
-          style={{
-            width: `${FLAG_W}px`,
-            height: `${FLAG_H}px`,
-            backgroundImage: `url(${PAYMENT_SPRITE})`,
-            backgroundSize: `${SPRITE_W}px ${FLAG_H}px`,
-            backgroundPosition: `-${f.i * STEP}px 0`,
-          }}
+          className={`flag-sprite rounded border border-border bg-white bg-no-repeat ${compact ? "flag-sprite-sm" : ""}`}
+          style={{ "--i": f.i, backgroundImage: `url(${PAYMENT_SPRITE})` } as CSSProperties}
         />
       ))}
     </div>
