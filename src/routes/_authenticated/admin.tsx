@@ -14,7 +14,6 @@ import {
   Menu,
   Package,
   Search,
-  ShieldCheck,
   Settings,
   ShoppingBag,
   Store,
