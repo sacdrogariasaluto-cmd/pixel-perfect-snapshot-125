@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T23:06:12.998710+00:00",
+  "generated_at": "2026-09-21T23:09:55.927558+00:00",
   "files": [
     {
       "path": "components.json",
@@ -275,7 +275,7 @@
     },
     {
       "path": "src/routes/_authenticated/admin/cartoes.tsx",
-      "bytes": 4808
+      "bytes": 4861
     },
     {
       "path": "src/routes/_authenticated/admin/clientes.tsx",
