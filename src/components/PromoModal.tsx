@@ -34,7 +34,7 @@ export function PromoModal() {
       onClick={close}
     >
       <div
-        className="relative grid max-h-[92vh] w-full max-w-4xl overflow-auto rounded-lg bg-surface md:grid-cols-2"
+        className="relative grid max-h-[92vh] w-full max-w-[370px] overflow-auto bg-surface md:max-w-4xl md:grid-cols-2 md:rounded-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -51,21 +51,22 @@ export function PromoModal() {
           className="hidden h-full w-full object-cover md:block"
         />
         <form
-          className="space-y-3 bg-brand p-6 text-white"
+          className="space-y-4 bg-brand px-8 py-9 text-primary-foreground md:p-6"
           onSubmit={(e) => {
             e.preventDefault();
             setDone(true);
           }}
         >
-          <h2 id="vip-title" className="text-2xl font-bold">
-            Clube VIP
+          <h2 id="vip-title" className="text-center text-base font-bold md:text-left md:text-2xl">
+            Entre para o nosso grupo VIP e aproveite as melhores ofertas!
           </h2>
-          <p className="text-sm">Cadastro promocional. Nenhum dado é enviado nesta demonstração.</p>
-          <input required placeholder="Nome" className="h-11 w-full rounded-md px-3 text-foreground" />
+          <label className="block text-sm">Nome:</label>
+          <input required placeholder="Digite o seu nome" className="h-11 w-full rounded-md px-3 text-foreground" />
+          <label className="block text-sm">E-mail:</label>
           <input
             required
             type="email"
-            placeholder="E-mail"
+            placeholder="Digite o seu e-mail"
             className="h-11 w-full rounded-md px-3 text-foreground"
           />
           <fieldset className="flex gap-2">
@@ -76,11 +77,11 @@ export function PromoModal() {
           </fieldset>
           <label className="flex items-start gap-2 text-xs">
             <input type="checkbox" required className="mt-1" />
-            Li e aceito os termos e a política de privacidade.
+             Ao clicar em “inscrever-se” você aceita os termos de uso e a política de privacidade.
           </label>
           <button
             type="submit"
-            className="w-full rounded-md bg-promo py-3 font-bold text-promo-foreground hover:opacity-90"
+            className="mx-auto block w-auto rounded-md bg-promo px-6 py-3 font-bold text-promo-foreground hover:opacity-90"
           >
             Inscrever-se!
           </button>

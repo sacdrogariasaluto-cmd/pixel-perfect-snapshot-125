@@ -45,17 +45,17 @@ function Index() {
     <SiteLayout>
       <CategoryCarousel />
 
-      <div className="pt-5">
+      <div className="pt-10 md:pt-5">
         <BannerCarousel banners={bannersTop} label="Campanhas em destaque" />
       </div>
 
-      <p className="container-site py-8 text-center text-[22px] font-bold leading-snug">
+      <p className="container-site py-8 text-center text-[22px] font-bold leading-snug md:py-8">
         Sua Farmácia online confiável! Encontre medicamentos e tudo para a sua saúde e bem-estar,
         com entrega rápida, as melhores marcas, os melhores preços e um atendimento de qualidade.
       </p>
 
       <section className="bg-surface py-6" aria-label="Benefícios">
-        <div className="container-site grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="container-site grid grid-cols-2 gap-x-3 gap-y-5 lg:grid-cols-4 lg:gap-6">
           {[
             { title: "Entrega rápida", text: "Prazos conforme configuração da loja.", link: "Ver condições" },
             { title: "Parcelamento", text: "Condições definidas pelo lojista.", link: "Formas de pagamento" },
@@ -64,9 +64,9 @@ function Index() {
           ].map((b, i) => {
             const Icon = benefitIcons[i]!;
             return (
-              <div key={b.title} className="flex items-start gap-3">
-                <Icon className="h-9 w-9 shrink-0 text-brand" />
-                <div>
+              <div key={b.title} className="flex min-w-0 items-start gap-2 md:gap-3">
+                <Icon className="h-8 w-8 shrink-0 text-brand md:h-9 md:w-9" />
+                <div className="min-w-0">
                   <p className="font-bold">{b.title}</p>
                   <p className="text-sm text-muted-foreground">{b.text}</p>
                   <a href="#" className="text-sm text-brand underline">

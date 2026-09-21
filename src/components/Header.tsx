@@ -3,6 +3,7 @@ import { useState } from "react";
 import { BasketIcon, HeadsetIcon, MenuIcon, PinIcon, SearchIcon, UserIcon } from "./Icons";
 import { DepartmentMenu } from "./DepartmentMenu";
 import { useCart } from "@/lib/cart";
+import { Button } from "./ui/button";
 
 export function Header() {
   const [menu, setMenu] = useState(false);
@@ -10,23 +11,26 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-surface shadow-[0_1px_0_rgba(0,0,0,0.08)]">
-      <div className="container-site relative flex h-[74px] items-center gap-4">
+      <div className="container-site relative grid h-[62px] grid-cols-[44px_minmax(0,1fr)_44px] items-center gap-2 md:flex md:h-[74px] md:gap-4">
         <div className="relative">
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={() => setMenu((v) => !v)}
             aria-expanded={menu}
             aria-haspopup="menu"
-            className="flex items-center gap-2 rounded px-2 py-2 text-[15px] font-bold text-foreground hover:bg-accent focus-visible:outline-2 focus-visible:outline-brand"
+            aria-label="Abrir menu"
+            className="md:w-auto md:px-2"
           >
             <MenuIcon className="h-5 w-5" />
-            MENU
-          </button>
+            <span className="hidden text-[15px] font-bold md:inline">MENU</span>
+          </Button>
           <DepartmentMenu open={menu} onClose={() => setMenu(false)} />
         </div>
 
-        <Link to="/" className="shrink-0" aria-label="Página inicial">
-          <img src="/img/a18dca27-logo.svg" alt="Drogaria Vera Cruz" className="h-[42px] w-auto" />
+        <Link to="/" className="min-w-0 justify-self-center md:shrink-0" aria-label="Página inicial">
+          <img src="/img/a18dca27-logo.svg" alt="Drogaria Vera Cruz" className="h-[30px] w-auto md:h-[42px]" />
         </Link>
 
         <form
@@ -51,7 +55,7 @@ export function Header() {
           </button>
         </form>
 
-        <nav className="ml-auto flex items-center gap-5 text-[13px]">
+        <nav className="ml-auto flex items-center gap-5 justify-self-end text-[13px]">
           <span className="hidden items-center gap-2 lg:flex">
             <HeadsetIcon className="h-6 w-6" />
             <span className="leading-tight">
@@ -64,7 +68,7 @@ export function Header() {
             <PinIcon className="h-6 w-6" />
             Lojas
           </span>
-          <Link to="/checkout/login" className="flex items-center gap-2 hover:text-brand">
+          <Link to="/checkout/login" className="hidden items-center gap-2 hover:text-brand md:flex">
             <UserIcon className="h-6 w-6" />
             Entrar
           </Link>
@@ -80,6 +84,21 @@ export function Header() {
           </Link>
         </nav>
       </div>
+      <form
+        className="relative px-4 pb-3 md:hidden"
+        role="search"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <label className="sr-only" htmlFor="busca-mobile">Buscar produtos</label>
+        <input
+          id="busca-mobile"
+          placeholder="O que você está buscando?"
+          className="h-[51px] w-full rounded-full border border-border bg-surface pl-5 pr-12 text-[15px] outline-none placeholder:text-muted-foreground focus:border-brand"
+        />
+        <Button type="submit" variant="ghost" size="icon" aria-label="Buscar" className="absolute right-6 top-1 text-muted-foreground">
+          <SearchIcon className="h-5 w-5" />
+        </Button>
+      </form>
     </header>
   );
 }
