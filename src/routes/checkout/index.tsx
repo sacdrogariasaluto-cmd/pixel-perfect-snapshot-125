@@ -314,9 +314,9 @@ function CheckoutPage() {
         ) : (
           <form
             onSubmit={submit}
-            className="grid items-start gap-6 lg:grid-cols-[400px_minmax(0,380px)] lg:justify-center lg:gap-12"
+            className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_375px] lg:gap-10"
           >
-            <div className="space-y-1">
+            <div className="lg:columns-2 lg:gap-10">
               <StepShell
                 index={1}
                 title="Identificação"
