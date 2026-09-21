@@ -37,7 +37,10 @@ function OrdersPage() {
   const queryClient = useQueryClient();
   const { data: orders, isLoading } = useQuery({
     queryKey: ["admin-orders", status, term, period],
-    queryFn: () => load({ data: { status, q: term, days: PERIOD_DAYS[period] } }),
+    queryFn: () => {
+      const selectedDays = PERIOD_DAYS[period];
+      return load({ data: { status, q: term, ...(selectedDays ? { days: selectedDays } : {}) } });
+    },
   });
   const changeStatus = useServerFn(setOrderStatus);
   const mutation = useMutation({

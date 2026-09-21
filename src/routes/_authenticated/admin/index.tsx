@@ -115,7 +115,7 @@ function DashboardPage() {
     return <div className="py-16 text-center text-sm text-muted-foreground">Carregando indicadores…</div>;
   }
 
-  const pixCount = data.paymentCount.pix?.count ?? 0;
+  const pixCount = data.paymentCount["pix"]?.count ?? 0;
   const pixShare = data.orders ? (pixCount / data.orders) * 100 : 0;
   const statusData = STATUS.map((status) => ({ name: status.label, value: data.statusCount[status.id] ?? 0 }));
   const maxState = Math.max(1, ...stateData.map(([, value]) => value));
