@@ -386,7 +386,7 @@ function CheckoutPage() {
   function validateStep1() {
     const e: Record<string, string> = {};
     if (name.trim().split(" ").filter(Boolean).length < 2) e['name'] = "Informe nome e sobrenome";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e['email'] = "Informe um e-mail válido";
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) e['email'] = "Informe um e-mail válido";
     if (onlyDigits(phone).length < 10) e['phone'] = "Informe um celular com DDD";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -415,18 +415,22 @@ function CheckoutPage() {
 
     if (payment === "cartao") {
       const digits = onlyDigits(cardNumber);
-      if (!digits) e['cardNumber'] = "Informe o número do cartão";
-      else if (!cardBrand) e['cardNumber'] = "Bandeira não reconhecida";
-      else if (!cardBrand.lengths.includes(digits.length))
+      if (!digits) {
+        e['cardNumber'] = "Informe o número do cartão";
+      } else if (!cardBrand) {
+        e['cardNumber'] = "Bandeira não reconhecida";
+      } else if (!cardBrand.lengths.includes(digits.length)) {
         e['cardNumber'] = `Número incompleto para ${cardBrand.label}`;
-      else if (!luhnValid(digits) || !!digits.match(/^(\d)\1+$/)) e['cardNumber'] = "Número de cartão inválido ou gerado";
+      } else if (!luhnValid(digits) || !!digits.match(/^(\d)\1+$/)) {
+        e['cardNumber'] = "Cartão inválido ou gerado";
+      }
 
       if (!cardName.trim()) e['cardName'] = "Informe o nome impresso no cartão";
 
       const exp = expiryState(cardValidade);
       if (exp === "incompleto") e['cardValidade'] = "Informe MM/AA";
       else if (exp === "mes") e['cardValidade'] = "Mês inválido";
-      else if (exp === "vencido") e['cardValidade'] = "Cartão vencido";
+      else if (exp === "vencido") e['cardValidade'] = "Data de validade vencida";
 
       const cvvLen = cardBrand?.cvv ?? 3;
       if (onlyDigits(cardCvv).length !== cvvLen) e['cardCvv'] = `${cvvLen} dígitos`;
