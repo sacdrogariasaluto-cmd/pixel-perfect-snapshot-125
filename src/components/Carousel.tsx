@@ -23,7 +23,7 @@ export function Carousel({
         type="button"
         aria-label={`${label}: anterior`}
         onClick={() => scrollBy(-1)}
-        className={`absolute -left-2 top-1/2 z-10 -translate-y-1/2 rounded-full p-2 transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-brand ${arrowClass}`}
+        className={`absolute -left-2 top-1/2 z-10 hidden -translate-y-1/2 rounded-full p-2 transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-brand md:flex md:items-center md:justify-center ${arrowClass}`}
       >
         <ChevronLeft className="h-6 w-6" />
       </button>
@@ -40,7 +40,7 @@ export function Carousel({
         type="button"
         aria-label={`${label}: próximo`}
         onClick={() => scrollBy(1)}
-        className={`absolute -right-2 top-1/2 z-10 -translate-y-1/2 rounded-full p-2 transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-brand ${arrowClass}`}
+        className={`absolute -right-2 top-1/2 z-10 hidden -translate-y-1/2 rounded-full p-2 transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-brand md:flex md:items-center md:justify-center ${arrowClass}`}
       >
         <ChevronRight className="h-6 w-6" />
       </button>
