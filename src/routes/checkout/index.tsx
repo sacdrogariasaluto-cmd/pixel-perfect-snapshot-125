@@ -1,7 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { CheckoutFooter, CheckoutHeader } from "@/components/CheckoutHeader";
+import { checkCoupon, createOrder } from "@/lib/store.functions";
 import { brl, useCart } from "@/lib/cart";
+
 
 export const Route = createFileRoute("/checkout/")({
   head: () => ({
