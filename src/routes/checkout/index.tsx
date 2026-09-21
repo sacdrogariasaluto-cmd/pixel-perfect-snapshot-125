@@ -25,7 +25,6 @@ type Shipping = { id: string; label: string; eta: string; price: number };
 const SHIPPING: Shipping[] = [
   { id: "expressa", label: "Entrega expressa", eta: "hoje, em até 2h", price: 14.9 },
   { id: "padrao", label: "Entrega padrão", eta: "em até 2 dias úteis", price: 9.9 },
-  { id: "retirada", label: "Retirar na loja", eta: "pronto em 1h", price: 0 },
 ];
 
 const onlyDigits = (v: string) => v.replace(/\D/g, "");
@@ -107,12 +106,13 @@ function CheckoutPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
 
-  const isPickup = shipping === "retirada";
+  const cepOk = onlyDigits(cep).length === 8;
   const shippingOption = SHIPPING.find((s) => s.id === shipping)!;
+  const shippingPrice = cepOk ? shippingOption.price : 0;
   const pixTotal = useMemo(() => lines.reduce((s, l) => s + l.pixPrice * l.qty, 0), [lines]);
   const productsTotal = payment === "pix" ? pixTotal : subtotal;
   const pixDiscount = subtotal - pixTotal;
-  const total = productsTotal + shippingOption.price;
+  const total = productsTotal + shippingPrice;
 
   async function lookupCep(value: string) {
     const digits = onlyDigits(value);
