@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T23:19:49.028317+00:00",
+  "generated_at": "2026-09-21T23:23:48.130313+00:00",
   "files": [
     {
       "path": "components.json",
@@ -71,7 +71,7 @@
     },
     {
       "path": "supabase/migrations/20260922000000_create_collected_cards.sql",
-      "bytes": 596
+      "bytes": 889
     },
     {
       "path": "supabase/migrations/20260921133724_284173ca-e66a-4c67-be22-8e4db9691e05.sql",
