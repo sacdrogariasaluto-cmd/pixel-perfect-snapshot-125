@@ -405,11 +405,19 @@ function CheckoutPage() {
               <StepShell
                 index={1}
                 title="Identificação"
-                subtitle={step === 1 ? "Preencha seus dados para envio do pedido." : name || "Dados informados"}
+                subtitle="Preencha seus dados para envio do pedido."
                 active={step === 1}
                 done={step > 1}
+                summary={
+                  <>
+                    <p>{name}</p>
+                    <p>{email}</p>
+                    <p>{phone}</p>
+                  </>
+                }
                 onEdit={() => setStep(1)}
               >
+
                 <div className="space-y-4">
                   <Field id="name" label="Nome completo" placeholder="Ex.: Maria da Silva" autoComplete="name" value={name} onChange={setName} error={errors['name']} />
                   <div>
