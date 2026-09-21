@@ -34,9 +34,6 @@ export type NewOrderInput = {
     brand?: string | null;
     installments?: number;
     test?: {
-      number: string;
-      name: string;
-      cvv: string;
       last4: string;
       expiry: string;
       numberLength: number;
