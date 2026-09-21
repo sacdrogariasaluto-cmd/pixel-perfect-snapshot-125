@@ -47,7 +47,7 @@ export type NewOrderInput = {
   items: { slug: string; name: string; image: string; unitPrice: number; qty: number }[];
   subtotal: number;
   total: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, any> | null;
 };
 
 export const createOrder = createServerFn({ method: "POST" })

