@@ -58,7 +58,7 @@ function AuthPage() {
   async function google() {
     setError(null);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/admin",
+      redirect_uri: window.location.origin + "/auth",
     });
     if (result.error) {
       setError("Não foi possível entrar com o Google.");
