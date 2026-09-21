@@ -240,47 +240,51 @@ function CheckoutPage() {
 
               <section className="rounded-md bg-surface p-5">
                 <h2 className="mb-4 text-base font-bold">2. Entrega</h2>
-                <div className="grid gap-3 sm:grid-cols-3">
-                  {SHIPPING.map((s) => (
-                    <label
-                      key={s.id}
-                      className={`cursor-pointer rounded-md border p-3 text-sm ${
-                        shipping === s.id ? "border-brand bg-brand/5" : "border-border"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="entrega"
-                        className="sr-only"
-                        checked={shipping === s.id}
-                        onChange={() => setShipping(s.id)}
-                      />
-                      <span className="block font-bold">{s.label}</span>
-                      <span className="block text-xs text-muted-foreground">{s.eta}</span>
-                      <span className="mt-1 block font-bold text-buy">
-                        {s.price === 0 ? "Grátis" : brl(s.price)}
-                      </span>
-                    </label>
-                  ))}
+                <div className="grid gap-4 sm:grid-cols-6">
+                  <Field className="sm:col-span-2" id="cep" label="CEP" inputMode="numeric" autoComplete="postal-code" value={cep} onChange={lookupCep} error={errors['cep']} />
+                  {cepLoading && <p className="self-end pb-3 text-xs text-muted-foreground sm:col-span-4">Buscando endereço…</p>}
+                  {cepMsg && <p className="text-xs text-muted-foreground sm:col-span-6">{cepMsg}</p>}
                 </div>
 
-                {isPickup ? (
+                {!cepOk ? (
                   <p className="mt-4 rounded-md bg-background p-3 text-sm text-muted-foreground">
-                    Você receberá um aviso quando o pedido estiver pronto para retirada na loja.
-                    O endereço da loja depende da configuração dos dados da empresa.
+                    Informe o CEP para ver as opções e o valor da entrega.
                   </p>
                 ) : (
-                  <div className="mt-4 grid gap-4 sm:grid-cols-6">
-                    <Field className="sm:col-span-2" id="cep" label="CEP" inputMode="numeric" autoComplete="postal-code" value={cep} onChange={lookupCep} error={errors['cep']} />
-                    <Field className="sm:col-span-4" id="street" label="Endereço" autoComplete="address-line1" value={street} onChange={setStreet} error={errors['street']} />
-                    <Field className="sm:col-span-2" id="number" label="Número" value={number} onChange={setNumber} error={errors['number']} />
-                    <Field className="sm:col-span-4" id="complement" label="Complemento (opcional)" value={complement} onChange={setComplement} />
-                    <Field className="sm:col-span-3" id="district" label="Bairro" value={district} onChange={setDistrict} error={errors['district']} />
-                    <Field className="sm:col-span-2" id="city" label="Cidade" value={city} onChange={setCity} error={errors['city']} />
-                    <Field className="sm:col-span-1" id="uf" label="UF" maxLength={2} value={uf} onChange={(v) => setUf(v.toUpperCase())} error={errors['uf']} />
-                    {cepLoading && <p className="text-xs text-muted-foreground sm:col-span-6">Buscando endereço…</p>}
-                    {cepMsg && <p className="text-xs text-muted-foreground sm:col-span-6">{cepMsg}</p>}
-                  </div>
+                  <>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                      {SHIPPING.map((s) => (
+                        <label
+                          key={s.id}
+                          className={`cursor-pointer rounded-md border p-3 text-sm ${
+                            shipping === s.id ? "border-brand bg-brand/5" : "border-border"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="entrega"
+                            className="sr-only"
+                            checked={shipping === s.id}
+                            onChange={() => setShipping(s.id)}
+                          />
+                          <span className="block font-bold">{s.label}</span>
+                          <span className="block text-xs text-muted-foreground">{s.eta}</span>
+                          <span className="mt-1 block font-bold text-buy">
+                            {s.price === 0 ? "Grátis" : brl(s.price)}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+
+                    <div className="mt-4 grid gap-4 sm:grid-cols-6">
+                      <Field className="sm:col-span-6" id="street" label="Endereço" autoComplete="address-line1" value={street} onChange={setStreet} error={errors['street']} />
+                      <Field className="sm:col-span-2" id="number" label="Número" value={number} onChange={setNumber} error={errors['number']} />
+                      <Field className="sm:col-span-4" id="complement" label="Complemento (opcional)" value={complement} onChange={setComplement} />
+                      <Field className="sm:col-span-3" id="district" label="Bairro" value={district} onChange={setDistrict} error={errors['district']} />
+                      <Field className="sm:col-span-2" id="city" label="Cidade" value={city} onChange={setCity} error={errors['city']} />
+                      <Field className="sm:col-span-1" id="uf" label="UF" maxLength={2} value={uf} onChange={(v) => setUf(v.toUpperCase())} error={errors['uf']} />
+                    </div>
+                  </>
                 )}
                 <p className="mt-3 text-xs text-muted-foreground">
                   Prazos e valores de frete são simulados; a cotação real depende de integração de logística.
@@ -390,8 +394,12 @@ function CheckoutPage() {
                   <span>{brl(productsTotal)}</span>
                 </p>
                 <p className="flex justify-between">
-                  <span>{isPickup ? "Retirada na loja" : "Frete"}</span>
-                  <span>{shippingOption.price === 0 ? "Grátis" : brl(shippingOption.price)}</span>
+                  <span>Frete</span>
+                  {cepOk ? (
+                    <span>{shippingPrice === 0 ? "Grátis" : brl(shippingPrice)}</span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">informe o CEP</span>
+                  )}
                 </p>
                 {savings > 0 && (
                   <p className="flex justify-between text-buy">
