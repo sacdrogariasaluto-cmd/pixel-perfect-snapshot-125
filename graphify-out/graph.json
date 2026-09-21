@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T23:23:48.130313+00:00",
+  "generated_at": "2026-09-21T23:29:17.534813+00:00",
   "files": [
     {
       "path": "components.json",
@@ -147,7 +147,7 @@
     },
     {
       "path": "src/lib/store.functions.ts",
-      "bytes": 5742
+      "bytes": 6385
     },
     {
       "path": "src/lib/utils.ts",
@@ -247,7 +247,7 @@
     },
     {
       "path": "src/routes/checkout/index.tsx",
-      "bytes": 42366
+      "bytes": 42673
     },
     {
       "path": "src/routes/checkout/carrinho.tsx",
