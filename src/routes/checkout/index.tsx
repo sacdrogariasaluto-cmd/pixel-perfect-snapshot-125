@@ -120,11 +120,9 @@ function StepShell({
 }) {
   return (
     <section
-      className={
-        active
-          ? "rounded-2xl border border-border bg-surface p-5 shadow-sm md:p-6"
-          : "px-1 py-5"
-      }
+      className={`mb-6 break-inside-avoid ${
+        active ? "rounded-2xl bg-surface p-5 shadow-sm md:p-6" : "px-1 py-2"
+      }`}
     >
       <div className="flex items-start justify-between gap-3">
         <h2 className={`text-xl font-bold ${active ? "" : "text-muted-foreground"}`}>{title}</h2>
