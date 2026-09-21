@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T21:27:18.172087+00:00",
+  "generated_at": "2026-09-21T21:38:40.992894+00:00",
   "files": [
     {
       "path": "components.json",
@@ -143,7 +143,7 @@
     },
     {
       "path": "src/lib/store.functions.ts",
-      "bytes": 5157
+      "bytes": 4912
     },
     {
       "path": "src/lib/utils.ts",
@@ -243,7 +243,7 @@
     },
     {
       "path": "src/routes/checkout/index.tsx",
-      "bytes": 41424
+      "bytes": 41129
     },
     {
       "path": "src/routes/checkout/carrinho.tsx",
@@ -263,7 +263,7 @@
     },
     {
       "path": "src/routes/_authenticated/admin.tsx",
-      "bytes": 7256
+      "bytes": 7191
     },
     {
       "path": "src/routes/_authenticated/route.tsx",
@@ -272,10 +272,6 @@
     {
       "path": "src/routes/_authenticated/admin/index.tsx",
       "bytes": 9661
-    },
-    {
-      "path": "src/routes/_authenticated/admin/cartoes.tsx",
-      "bytes": 4914
     },
     {
       "path": "src/routes/_authenticated/admin/clientes.tsx",
@@ -1366,34 +1362,6 @@
     {
       "source": "src/routes/_authenticated/admin/index.tsx",
       "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/routes/_authenticated/admin/cartoes.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/admin/cartoes.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/routes/_authenticated/admin/cartoes.tsx",
-      "target": "@/integrations/supabase/client"
-    },
-    {
-      "source": "src/routes/_authenticated/admin/cartoes.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/routes/_authenticated/admin/cartoes.tsx",
-      "target": "@/components/admin/ui"
-    },
-    {
-      "source": "src/routes/_authenticated/admin/cartoes.tsx",
-      "target": "@/components/ui/input"
-    },
-    {
-      "source": "src/routes/_authenticated/admin/cartoes.tsx",
-      "target": "react"
     },
     {
       "source": "src/routes/_authenticated/admin/clientes.tsx",
