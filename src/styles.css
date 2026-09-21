@@ -90,6 +90,8 @@
   --buy: oklch(0.552 0.16 148); /* verde compra */
   --buy-hover: oklch(0.49 0.15 148);
   --coupon: oklch(0.968 0.21 110); /* #ffff00 */
+  --checkout: oklch(0.3 0.06 250); /* azul escuro do checkout */
+  --checkout-foreground: oklch(1 0 0);
   --primary: oklch(0.674 0.129 219.5);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.968 0 0);
