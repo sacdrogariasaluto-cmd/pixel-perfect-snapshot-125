@@ -334,7 +334,8 @@ function CheckoutPage() {
   }
 
   const ctaClass =
-    "w-full rounded-xl bg-brand py-4 text-base font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-60";
+    "w-full rounded-full bg-brand py-4 text-base font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-60";
+
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
