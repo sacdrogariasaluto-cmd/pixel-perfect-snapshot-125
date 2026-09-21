@@ -25,6 +25,7 @@ export const Route = createFileRoute("/_authenticated/admin/pedidos")({
 });
 
 const PERIODS = ["Hoje", "Ontem", "Semana", "Mês", "Todos"];
+const PERIOD_DAYS: Record<string, number | undefined> = { Hoje: 1, Ontem: 2, Semana: 7, Mês: 30, Todos: undefined };
 
 function OrdersPage() {
   const [status, setStatus] = useState("todos");
@@ -35,8 +36,8 @@ function OrdersPage() {
   const load = useServerFn(listOrders);
   const queryClient = useQueryClient();
   const { data: orders, isLoading } = useQuery({
-    queryKey: ["admin-orders", status, term],
-    queryFn: () => load({ data: { status, q: term } }),
+    queryKey: ["admin-orders", status, term, period],
+    queryFn: () => load({ data: { status, q: term, days: PERIOD_DAYS[period] } }),
   });
   const changeStatus = useServerFn(setOrderStatus);
   const mutation = useMutation({

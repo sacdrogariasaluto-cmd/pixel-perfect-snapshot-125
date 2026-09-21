@@ -198,12 +198,13 @@ export const getDashboard = createServerFn({ method: "GET" })
 
 export const listOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { status?: string; q?: string }) => data)
+  .inputValidator((data: { status?: string; q?: string; days?: number }) => data)
   .handler(async ({ data, context }) => {
     const ctx = context as unknown as Ctx;
     await ensureAdmin(ctx);
     let query = ctx.supabase.from("orders").select("*").order("created_at", { ascending: false }).limit(300);
     if (data.status && data.status !== "todos") query = query.eq("status", data.status);
+    if (data.days) query = query.gte("created_at", new Date(Date.now() - data.days * 86400000).toISOString());
     if (data.q && data.q.trim()) {
       const term = `%${data.q.trim()}%`;
       query = query.or(`code.ilike.${term},customer_name.ilike.${term},customer_email.ilike.${term}`);

@@ -2,10 +2,22 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
+import { Search, UserRound } from "lucide-react";
 import { listCustomers } from "@/lib/admin.functions";
 import { brl, Card, dateTime, Metric } from "@/components/admin/ui";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/_authenticated/admin/clientes")({
+  head: () => ({
+    meta: [
+      { title: "Clientes — Drogaria Vera Cruz" },
+      { name: "description", content: "Visão de clientes e recorrência da loja." },
+      { property: "og:title", content: "Clientes — Drogaria Vera Cruz" },
+      { property: "og:description", content: "Gestão de clientes da loja." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: CustomersPage,
 });
 
@@ -38,7 +50,7 @@ function CustomersPage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-xl font-bold">Clientes</h1>
+      <div><p className="text-xs text-muted-foreground">Início / Clientes</p><h1 className="mt-1 text-2xl font-bold">Clientes</h1></div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Metric label="Clientes" value={String(totals.count)} />
@@ -47,18 +59,13 @@ function CustomersPage() {
         <Metric label="Ticket médio" value={brl(totals.ticket)} />
       </div>
 
-      <input
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-        placeholder="Buscar cliente por nome, e-mail ou telefone"
-        className="h-10 w-full rounded-lg border border-border bg-surface px-3 text-sm outline-none focus:border-brand"
-      />
+      <label className="relative block max-w-md"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar cliente por nome, e-mail ou telefone" className="bg-surface pl-9" /></label>
 
       <Card>
         {isLoading ? (
           <p className="text-sm text-muted-foreground">Carregando clientes…</p>
         ) : rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Nenhum cliente encontrado.</p>
+          <div className="flex min-h-48 flex-col items-center justify-center"><UserRound className="h-8 w-8 text-muted-foreground" /><p className="mt-3 text-sm text-muted-foreground">Nenhum cliente encontrado.</p></div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[680px] text-sm">
