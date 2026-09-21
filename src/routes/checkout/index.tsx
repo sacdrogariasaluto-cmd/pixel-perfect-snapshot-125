@@ -393,7 +393,6 @@ function CheckoutPage() {
                     </datalist>
                   </div>
                   <Field id="phone" label="Celular / WhatsApp" placeholder="(11) 99999-9999" inputMode="tel" autoComplete="tel" value={phone} onChange={(v) => setPhone(maskPhone(v))} error={errors['phone']} />
-                  <Field id="cpf" label="CPF" placeholder="000.000.000-00" inputMode="numeric" value={cpf} onChange={(v) => setCpf(maskCpf(v))} error={errors['cpf']} />
 
                   {pixDiscount > 0 && (
                     <p className="rounded-xl bg-background p-4 text-sm">
