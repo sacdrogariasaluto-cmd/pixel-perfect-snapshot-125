@@ -74,23 +74,8 @@ export function Header() {
           </Link>
         </nav>
       </div>
-      <form
-        className="relative px-4 pb-3 md:hidden"
-        role="search"
-        onSubmit={submitSearch}
-      >
-        <label className="sr-only" htmlFor="busca-mobile">Buscar produtos</label>
-        <input
-          id="busca-mobile"
-          value={term}
-          onChange={(e) => setTerm(e.target.value)}
-          placeholder="O que você está buscando?"
-          className="h-[51px] w-full rounded-full border border-border bg-surface pl-5 pr-12 text-[15px] outline-none placeholder:text-muted-foreground focus:border-brand"
-        />
-        <Button type="submit" variant="ghost" size="icon" aria-label="Buscar" className="absolute right-6 top-1 text-muted-foreground">
-          <SearchIcon className="h-5 w-5" />
-        </Button>
-      </form>
+      <SearchBox variant="mobile" />
+
     </header>
   );
 }
