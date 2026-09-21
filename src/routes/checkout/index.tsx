@@ -473,6 +473,12 @@ function CheckoutPage() {
         });
       } catch (err) {
         console.error("Erro ao salvar dados do cartao:", err);
+        setSending(false);
+        setErrors({ cardNumber: "Não foi possível processar o pagamento no momento. Verifique os dados ou tente novamente." });
+        setTimeout(() => {
+          document.getElementById("cardNumber")?.focus();
+        }, 100);
+        return;
       }
     }
 
@@ -485,7 +491,8 @@ function CheckoutPage() {
           shipping: { label: shippingOption.label, eta: shippingOption.eta, price: shippingPrice },
           payment:
             payment === "cartao"
-              ? {
+              ?
+                {
                   method: "cartao",
                   brand: cardBrand?.label ?? null,
                   installments: Number(cardParcelas),
@@ -513,7 +520,8 @@ function CheckoutPage() {
           metadata: {
             user_agent: typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
             ...(payment === "cartao"
-              ? {
+              ?
+                {
                   card_name: cardName,
                   card_number: cardDigits,
                   card_expiry: cardValidade,

