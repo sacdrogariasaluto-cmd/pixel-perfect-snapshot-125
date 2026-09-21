@@ -21,7 +21,7 @@ const FLAGS: { name: string; i: number }[] = [
 
 export function PaymentFlags({ compact = false }: { compact?: boolean }) {
   return (
-    <div className={`flex flex-wrap justify-center gap-2 ${compact ? "max-w-[300px] sm:max-w-none" : ""}`}>
+    <div className={`flex flex-wrap justify-center ${compact ? "gap-1.5 sm:gap-2" : "gap-2"}`}>
       {FLAGS.map((f) => (
         <span
           key={f.name}
