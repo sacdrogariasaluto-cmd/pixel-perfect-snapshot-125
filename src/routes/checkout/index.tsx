@@ -454,17 +454,25 @@ function CheckoutPage() {
               <StepShell
                 index={2}
                 title="Entrega"
-                subtitle={
-                  step < 2
-                    ? "Preencha seus dados para continuar"
-                    : step > 2
-                      ? `${street}, ${number} — ${city}/${uf}`
-                      : "Informe o endereço de entrega"
-                }
+                subtitle={step < 2 ? "Preencha seus dados para continuar" : "Informe o endereço de entrega"}
                 active={step === 2}
                 done={step > 2}
+                summary={
+                  <>
+                    <p>
+                      {street}, {number}
+                      {complement ? ` — ${complement}` : ""}
+                    </p>
+                    <p>
+                      {district} — {city}/{uf}
+                    </p>
+                    <p className="text-muted-foreground">Código Postal: {cep}</p>
+                    <p className="pt-1 font-bold uppercase">{shippingOption.label}</p>
+                  </>
+                }
                 onEdit={() => setStep(2)}
               >
+
                 {!addressConfirmed ? (
                   <div className="space-y-4">
                     <Field className="max-w-[200px]" id="cep" label="Código Postal" placeholder="Digite seu código postal" inputMode="numeric" autoComplete="postal-code" value={cep} onChange={lookupCep} error={errors['cep']} />
