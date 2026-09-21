@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T21:45:00.981063+00:00",
+  "generated_at": "2026-09-21T21:51:34.276113+00:00",
   "files": [
     {
       "path": "components.json",
@@ -143,7 +143,7 @@
     },
     {
       "path": "src/lib/store.functions.ts",
-      "bytes": 4912
+      "bytes": 4985
     },
     {
       "path": "src/lib/utils.ts",
@@ -243,7 +243,7 @@
     },
     {
       "path": "src/routes/checkout/index.tsx",
-      "bytes": 41870
+      "bytes": 41375
     },
     {
       "path": "src/routes/checkout/carrinho.tsx",
@@ -279,7 +279,7 @@
     },
     {
       "path": "src/routes/_authenticated/admin/pedidos.tsx",
-      "bytes": 20150
+      "bytes": 20683
     },
     {
       "path": "src/routes/_authenticated/admin/cupons.tsx",
