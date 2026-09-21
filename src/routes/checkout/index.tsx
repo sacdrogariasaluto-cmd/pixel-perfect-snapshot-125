@@ -176,8 +176,12 @@ function CheckoutPage() {
   const [sending, setSending] = useState(false);
 
   const cepOk = onlyDigits(cep).length === 8;
-  const shippingOption = SHIPPING.find((s) => s.id === shipping) ?? SHIPPING[1];
-  if (!shippingOption) return null;
+  const shippingOption = SHIPPING.find((s) => s.id === shipping) ?? {
+    id: "padrao",
+    label: "Entrega padrão",
+    eta: "em até 2 dias úteis",
+    price: 9.9,
+  };
   const shippingPrice = cepOk ? shippingOption.price : 0;
   const pixTotal = useMemo(() => lines.reduce((s, l) => s + l.pixPrice * l.qty, 0), [lines]);
   const productsTotal = payment === "pix" ? pixTotal : subtotal;
