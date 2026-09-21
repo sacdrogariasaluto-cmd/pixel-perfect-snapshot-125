@@ -74,9 +74,19 @@ function AdminLayout() {
             <div className="rounded-2xl border border-border bg-surface p-8">
               <h2 className="text-lg font-bold">Acesso restrito</h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Sua conta ainda não tem permissão de administrador. Peça para um administrador liberar seu acesso.
+                Sua conta ainda não tem permissão de administrador. Se você é o dono da loja e este é o primeiro
+                acesso, libere sua conta abaixo.
               </p>
+              <button
+                onClick={() => claim.mutate()}
+                disabled={claim.isPending}
+                className="mt-4 h-10 rounded-full bg-brand px-5 text-sm font-bold text-primary-foreground disabled:opacity-60"
+              >
+                Liberar meu acesso de administrador
+              </button>
+              {claimMsg ? <p className="mt-2 text-sm text-muted-foreground">{claimMsg}</p> : null}
             </div>
+
           )}
         </main>
       </div>
