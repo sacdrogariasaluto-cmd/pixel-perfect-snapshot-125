@@ -41,41 +41,39 @@ export const createOrder = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const supabase = publicClient();
     const code = `VC${Date.now().toString().slice(-8)}`;
+    const orderId = crypto.randomUUID();
 
-    const { data: order, error } = await supabase
-      .from("orders")
-      .insert({
-        code,
-        customer_name: data.customer.name,
-        customer_email: data.customer.email.toLowerCase(),
-        customer_phone: data.customer.phone,
-        customer_doc: data.customer.doc,
-        address_cep: data.address.cep,
-        address_street: data.address.street,
-        address_number: data.address.number,
-        address_complement: data.address.complement,
-        address_district: data.address.district,
-        address_city: data.address.city,
-        address_uf: data.address.uf,
-        shipping_label: data.shipping.label,
-        shipping_eta: data.shipping.eta,
-        shipping_price: data.shipping.price,
-        payment_method: data.payment.method,
-        payment_brand: data.payment.brand ?? null,
-        installments: data.payment.installments ?? 1,
-        coupon_code: data.coupon?.code ?? null,
-        discount: data.coupon?.discount ?? 0,
-        subtotal: data.subtotal,
-        total: data.total,
-      })
-      .select("id, code")
-      .single();
+    const { error } = await supabase.from("orders").insert({
+      id: orderId,
+      code,
+      customer_name: data.customer.name,
+      customer_email: data.customer.email.toLowerCase(),
+      customer_phone: data.customer.phone,
+      customer_doc: data.customer.doc,
+      address_cep: data.address.cep,
+      address_street: data.address.street,
+      address_number: data.address.number,
+      address_complement: data.address.complement,
+      address_district: data.address.district,
+      address_city: data.address.city,
+      address_uf: data.address.uf,
+      shipping_label: data.shipping.label,
+      shipping_eta: data.shipping.eta,
+      shipping_price: data.shipping.price,
+      payment_method: data.payment.method,
+      payment_brand: data.payment.brand ?? null,
+      installments: data.payment.installments ?? 1,
+      coupon_code: data.coupon?.code ?? null,
+      discount: data.coupon?.discount ?? 0,
+      subtotal: data.subtotal,
+      total: data.total,
+    });
 
-    if (error || !order) throw new Error(error?.message ?? "Não foi possível registrar o pedido");
+    if (error) throw new Error(error.message);
 
     const { error: itemsError } = await supabase.from("order_items").insert(
       data.items.map((i) => ({
-        order_id: order.id,
+        order_id: orderId,
         slug: i.slug,
         name: i.name,
         image: i.image,
@@ -85,8 +83,9 @@ export const createOrder = createServerFn({ method: "POST" })
     );
     if (itemsError) throw new Error(itemsError.message);
 
-    return { code: order.code };
+    return { code };
   });
+
 
 export const checkCoupon = createServerFn({ method: "POST" })
   .inputValidator((data: { code: string; subtotal: number }) => data)
