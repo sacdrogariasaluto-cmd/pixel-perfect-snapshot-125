@@ -820,6 +820,13 @@ function CheckoutPage() {
                   <span>Frete</span>
                   {cepOk ? <span>{brl(shippingPrice)}</span> : <span className="text-xs text-muted-foreground">informe o CEP</span>}
                 </p>
+                {appliedCoupon && (
+                  <p className="flex justify-between text-buy">
+                    <span>Cupom {appliedCoupon.code}</span>
+                    <strong>-{brl(appliedCoupon.discount)}</strong>
+                  </p>
+                )}
+
                 {savings + pixDiscount > 0 && (
                   <p className="flex justify-between text-buy">
                     <span>Você economiza</span>
