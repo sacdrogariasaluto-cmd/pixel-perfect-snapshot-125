@@ -1,0 +1,3 @@
+- [ ] Comparar a versão mobile atual com as capturas de referência
+- [ ] Ajustar cabeçalho, navegação, conteúdo e rodapé no mobile
+- [ ] Validar páginas e interações principais em tela pequena
