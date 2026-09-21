@@ -67,6 +67,8 @@
   --color-buy-hover: var(--buy-hover);
   --color-coupon: var(--coupon);
   --color-surface: var(--surface);
+  --color-checkout: var(--checkout);
+  --color-checkout-foreground: var(--checkout-foreground);
   --color-price: var(--brand);
   --font-sans: Ubuntu, system-ui, sans-serif;
   --container-site: 1130px;
