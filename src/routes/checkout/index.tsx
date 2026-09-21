@@ -505,7 +505,8 @@ function CheckoutPage() {
         },
       });
       code = res.code;
-    } catch {
+    } catch (err) {
+      console.error("Erro na criação do pedido no Supabase:", err);
       /* mantém o pedido local mesmo se o registro falhar */
     }
 
@@ -869,7 +870,7 @@ function CheckoutPage() {
                     placeholder="Digite o número"
                     inputMode="numeric"
                     value={cpf}
-                    onChange={(v) => setCpf(maskCpf(v))}
+                    onChange={(v) => setCpf(maskCpf(v))} 
                     error={errors['cpf']}
                   />
 

