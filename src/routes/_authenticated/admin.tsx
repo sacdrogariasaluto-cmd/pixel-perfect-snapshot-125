@@ -14,6 +14,7 @@ import {
   Menu,
   Package,
   Search,
+  ShieldCheck,
   Settings,
   ShoppingBag,
   Store,
@@ -87,14 +88,15 @@ function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="fixed inset-x-0 top-0 z-40 h-14 border-t-4 border-brand border-b border-border bg-surface">
+      <div className="fixed inset-x-0 top-0 z-50 h-1 bg-buy" />
+      <header className="fixed inset-x-0 top-1 z-40 h-14 border-b border-border bg-surface">
         <div className="flex h-full items-center gap-3 px-3 lg:px-5">
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Abrir menu">
             {menuOpen ? <X /> : <Menu />}
           </Button>
-          <Link to="/admin" className="flex w-48 items-center gap-2 text-base font-bold">
-            <span className="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-primary-foreground"><Store className="h-4 w-4" /></span>
-            Vera Cruz
+          <Link to="/admin" className="flex w-44 items-center gap-2 text-base font-bold">
+            <span className="flex h-7 w-7 items-center justify-center rounded-md bg-buy text-primary-foreground"><Store className="h-4 w-4" /></span>
+            Vera Cruz Admin
           </Link>
           <div className="mx-auto hidden w-full max-w-md md:block">
             <label className="relative block">
@@ -111,7 +113,7 @@ function AdminLayout() {
       </header>
 
       {menuOpen ? <button type="button" className="fixed inset-0 z-30 bg-foreground/20 lg:hidden" onClick={() => setMenuOpen(false)} aria-label="Fechar menu" /> : null}
-      <aside className={`fixed bottom-0 left-0 top-14 z-30 w-60 border-r border-border bg-sidebar p-3 transition-transform lg:translate-x-0 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}>
+       <aside className={`fixed bottom-0 left-0 top-[60px] z-30 w-48 border-r border-border bg-sidebar p-3 transition-transform lg:translate-x-0 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <nav className="space-y-1">
           <Link to="/" className="mb-3 flex items-center gap-3 rounded-md px-3 py-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent">
             <House className="h-4 w-4" /> Início
@@ -138,8 +140,12 @@ function AdminLayout() {
         </nav>
       </aside>
 
-      <div className="pt-14 lg:pl-60">
-        <main className="mx-auto min-w-0 max-w-[1120px] px-4 py-6 lg:px-7 lg:py-7">
+       <div className="pt-[60px] lg:pl-48">
+         <div className="mx-4 mt-4 hidden items-center justify-between rounded-md border border-coupon bg-coupon/10 px-4 py-2.5 text-xs lg:flex">
+           <span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-buy" /><span><strong>Proteja sua conta com um autenticador</strong><span className="ml-2 text-muted-foreground">Adicione uma segunda confirmação ao entrar.</span></span></span>
+           <Button variant="outline" size="sm" className="h-7 bg-surface text-[11px]">Configurar autenticador</Button>
+         </div>
+         <main className="mx-auto min-w-0 max-w-[1160px] px-4 py-5 lg:px-6 lg:py-5">
           {isLoading ? (
             <p className="text-sm text-muted-foreground">Carregando…</p>
           ) : data?.admin ? (
