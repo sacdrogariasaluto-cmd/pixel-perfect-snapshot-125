@@ -135,7 +135,7 @@ export function CartDrawer() {
                 <strong className="text-lg text-brand">{brl(subtotal)}</strong>
               </p>
               <Link
-                to="/checkout/carrinho"
+                to="/checkout"
                 onClick={() => setOpen(false)}
                 className="mt-3 block rounded-[10px] bg-buy py-3 text-center text-sm font-bold uppercase text-primary-foreground hover:bg-buy-hover"
               >

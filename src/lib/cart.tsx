@@ -16,6 +16,7 @@ type CartCtx = {
   add: (p: Product, qty?: number) => void;
   setQty: (slug: string, qty: number) => void;
   remove: (slug: string) => void;
+  clear: () => void;
   count: number;
   subtotal: number;
   savings: number;
@@ -83,6 +84,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           prev.map((l) => (l.slug === slug ? { ...l, qty: Math.max(1, qty) } : l)),
         ),
       remove: (slug) => setLines((prev) => prev.filter((l) => l.slug !== slug)),
+      clear: () => setLines([]),
     };
   }, [lines, open]);
 

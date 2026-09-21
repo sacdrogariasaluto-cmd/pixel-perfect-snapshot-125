@@ -223,7 +223,7 @@ function CartPage() {
                     </div>
                   )}
                   <Link
-                    to="/checkout/login"
+                    to="/checkout"
                     className="block rounded-md bg-buy py-3 text-center font-bold text-white hover:bg-buy-hover"
                   >
                     Finalizar pedido
