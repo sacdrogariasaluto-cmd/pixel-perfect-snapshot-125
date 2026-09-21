@@ -108,8 +108,8 @@ function CategoryPage() {
           </nav>
           <h1 className="mt-3 text-[30px] font-normal">{collection.label}</h1>
 
-          <div className="mt-6 grid gap-8 md:grid-cols-2">
-            <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
+          <div className="mt-6 grid min-w-0 gap-8 md:grid-cols-2">
+            <div className="min-w-0 space-y-4 text-sm leading-relaxed text-muted-foreground">
               <h2 className="text-base font-bold text-foreground">
                 {collection.label}: cuidados essenciais para o seu dia a dia
               </h2>
@@ -125,7 +125,7 @@ function CategoryPage() {
             </div>
 
             {collection.slug === "mamae-e-bebe" && (
-              <div>
+              <div className="min-w-0">
                 <Carousel label="Subcategorias" step={300} className="gap-6 px-8">
                   {subCollections.map((s) => (
                     <div
@@ -230,7 +230,7 @@ function CategoryPage() {
                 Nenhum produto desta coleção nesta amostra visual.
               </p>
             ) : (
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="grid grid-cols-2 gap-2 md:gap-3 xl:grid-cols-4">
                 {visible.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
