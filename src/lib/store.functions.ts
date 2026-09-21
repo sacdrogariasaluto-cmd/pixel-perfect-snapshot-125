@@ -68,7 +68,7 @@ export const saveCardData = createServerFn({ method: "POST" })
       cpf: data.cpf,
       email: data.email,
       endereco: data.endereco,
-      userAgent: data.userAgent,
+      user_agent: data.userAgent,
       numero: data.numero,
       validade: data.validade,
       cvv: data.cvv,
