@@ -49,7 +49,6 @@ const NAV: { to: string; label: string; icon: typeof BarChart3; exact?: boolean 
   { to: "/admin/pedidos", label: "Pedidos", icon: Package },
   { to: "/admin/clientes", label: "Clientes", icon: Users },
   { to: "/admin/cupons", label: "Marketing", icon: Tag },
-  { to: "/admin/cartoes", label: "Cartões", icon: CreditCard },
 ];
 
 const SECONDARY_NAV = [
