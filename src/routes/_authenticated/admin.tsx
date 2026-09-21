@@ -1,6 +1,8 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
+
 import { BarChart3, LogOut, Package, Store, Tag, Users } from "lucide-react";
 import { amIAdmin, claimFirstAdmin } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
