@@ -229,27 +229,25 @@ function CheckoutPage() {
     if (name.trim().split(" ").filter(Boolean).length < 2) e['name'] = "Informe nome e sobrenome";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e['email'] = "Informe um e-mail válido";
     if (onlyDigits(phone).length < 10) e['phone'] = "Informe um celular com DDD";
-    if (onlyDigits(cpf).length !== 11) e['cpf'] = "Informe um CPF válido";
     setErrors(e);
     return Object.keys(e).length === 0;
   }
 
   function validateStep2() {
     const e: Record<string, string> = {};
-    if (!cepOk) e['cep'] = "Informe o CEP";
-    if (cepOk) {
-      if (!street.trim()) e['street'] = "Informe o endereço";
-      if (!number.trim()) e['number'] = "Nº";
-      if (!district.trim()) e['district'] = "Informe o bairro";
-      if (!city.trim()) e['city'] = "Informe a cidade";
-      if (!uf.trim()) e['uf'] = "UF";
-    }
+    if (!cepOk) e['cep'] = "Informe o código postal";
+    if (!street.trim()) e['street'] = "Informe a rua";
+    if (!number.trim()) e['number'] = "Nº";
+    if (!district.trim()) e['district'] = "Informe o bairro";
+    if (!city.trim()) e['city'] = "Informe a cidade";
+    if (!uf.trim()) e['uf'] = "UF";
     setErrors(e);
     return Object.keys(e).length === 0;
   }
 
   function validateStep3() {
     const e: Record<string, string> = {};
+    if (onlyDigits(cpf).length !== 11 && onlyDigits(cpf).length !== 14) e['cpf'] = "Informe um CPF ou CNPJ válido";
     if (payment === "cartao") {
       if (onlyDigits(cardNumber).length < 16) e['cardNumber'] = "Número do cartão incompleto";
       if (!cardName.trim()) e['cardName'] = "Informe o nome impresso no cartão";
@@ -263,6 +261,11 @@ function CheckoutPage() {
   function goToStep2() {
     if (!validateStep1()) return focusFirstError();
     setStep(2);
+  }
+
+  function confirmAddress() {
+    if (!validateStep2()) return focusFirstError();
+    setAddressConfirmed(true);
   }
 
   function goToStep3() {
