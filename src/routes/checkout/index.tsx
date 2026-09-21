@@ -284,6 +284,8 @@ function CheckoutPage() {
 
   const [coupon, setCoupon] = useState("");
   const [couponOpen, setCouponOpen] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
+  const [couponMsg, setCouponMsg] = useState<string | null>(null);
   const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -300,7 +302,30 @@ function CheckoutPage() {
   const pixTotal = useMemo(() => lines.reduce((s, l) => s + l.pixPrice * l.qty, 0), [lines]);
   const productsTotal = payment === "pix" ? pixTotal : subtotal;
   const pixDiscount = subtotal - pixTotal;
-  const total = productsTotal + shippingPrice;
+  const couponDiscount = appliedCoupon?.discount ?? 0;
+  const total = Math.max(0, productsTotal + shippingPrice - couponDiscount);
+
+  const runCoupon = useServerFn(checkCoupon);
+  const sendOrder = useServerFn(createOrder);
+
+  async function applyCoupon() {
+    if (!coupon.trim()) return;
+    setCouponMsg(null);
+    try {
+      const res = await runCoupon({ data: { code: coupon, subtotal: productsTotal } });
+      if (res.ok) {
+        setAppliedCoupon({ code: res.code, discount: res.discount });
+        setCouponMsg(`Cupom ${res.code} aplicado.`);
+      } else {
+        setAppliedCoupon(null);
+        setCouponMsg(res.message);
+      }
+    } catch {
+      setAppliedCoupon(null);
+      setCouponMsg("Não foi possível validar o cupom agora.");
+    }
+  }
+
 
   async function lookupCep(value: string) {
     const digits = onlyDigits(value);
