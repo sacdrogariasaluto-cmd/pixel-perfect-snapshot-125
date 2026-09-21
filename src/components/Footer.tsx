@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { HeadsetIcon } from "./Icons";
 import { Newsletter } from "./Newsletter";
 import { company, institutionalLinks } from "@/data/site";
