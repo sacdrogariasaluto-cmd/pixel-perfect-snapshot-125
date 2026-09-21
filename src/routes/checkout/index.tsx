@@ -160,6 +160,7 @@ function CheckoutPage() {
   const [cepLoading, setCepLoading] = useState(false);
   const [cepMsg, setCepMsg] = useState<string | null>(null);
 
+  const [addressConfirmed, setAddressConfirmed] = useState(false);
   const [shipping, setShipping] = useState("padrao");
   const [payment, setPayment] = useState("pix");
   const [cardNumber, setCardNumber] = useState("");
@@ -229,27 +230,25 @@ function CheckoutPage() {
     if (name.trim().split(" ").filter(Boolean).length < 2) e['name'] = "Informe nome e sobrenome";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e['email'] = "Informe um e-mail válido";
     if (onlyDigits(phone).length < 10) e['phone'] = "Informe um celular com DDD";
-    if (onlyDigits(cpf).length !== 11) e['cpf'] = "Informe um CPF válido";
     setErrors(e);
     return Object.keys(e).length === 0;
   }
 
   function validateStep2() {
     const e: Record<string, string> = {};
-    if (!cepOk) e['cep'] = "Informe o CEP";
-    if (cepOk) {
-      if (!street.trim()) e['street'] = "Informe o endereço";
-      if (!number.trim()) e['number'] = "Nº";
-      if (!district.trim()) e['district'] = "Informe o bairro";
-      if (!city.trim()) e['city'] = "Informe a cidade";
-      if (!uf.trim()) e['uf'] = "UF";
-    }
+    if (!cepOk) e['cep'] = "Informe o código postal";
+    if (!street.trim()) e['street'] = "Informe a rua";
+    if (!number.trim()) e['number'] = "Nº";
+    if (!district.trim()) e['district'] = "Informe o bairro";
+    if (!city.trim()) e['city'] = "Informe a cidade";
+    if (!uf.trim()) e['uf'] = "UF";
     setErrors(e);
     return Object.keys(e).length === 0;
   }
 
   function validateStep3() {
     const e: Record<string, string> = {};
+    if (onlyDigits(cpf).length !== 11 && onlyDigits(cpf).length !== 14) e['cpf'] = "Informe um CPF ou CNPJ válido";
     if (payment === "cartao") {
       if (onlyDigits(cardNumber).length < 16) e['cardNumber'] = "Número do cartão incompleto";
       if (!cardName.trim()) e['cardName'] = "Informe o nome impresso no cartão";
@@ -263,6 +262,11 @@ function CheckoutPage() {
   function goToStep2() {
     if (!validateStep1()) return focusFirstError();
     setStep(2);
+  }
+
+  function confirmAddress() {
+    if (!validateStep2()) return focusFirstError();
+    setAddressConfirmed(true);
   }
 
   function goToStep3() {
@@ -393,7 +397,6 @@ function CheckoutPage() {
                     </datalist>
                   </div>
                   <Field id="phone" label="Celular / WhatsApp" placeholder="(11) 99999-9999" inputMode="tel" autoComplete="tel" value={phone} onChange={(v) => setPhone(maskPhone(v))} error={errors['phone']} />
-                  <Field id="cpf" label="CPF" placeholder="000.000.000-00" inputMode="numeric" value={cpf} onChange={(v) => setCpf(maskCpf(v))} error={errors['cpf']} />
 
                   {pixDiscount > 0 && (
                     <p className="rounded-xl bg-background p-4 text-sm">
@@ -420,132 +423,203 @@ function CheckoutPage() {
                     ? "Preencha seus dados para continuar"
                     : step > 2
                       ? `${street}, ${number} — ${city}/${uf}`
-                      : "Informe o CEP para ver as opções de entrega."
+                      : "Informe o endereço de entrega"
                 }
                 active={step === 2}
                 done={step > 2}
                 onEdit={() => setStep(2)}
               >
-                <div className="space-y-4">
-                  <Field id="cep" label="CEP" placeholder="00000-000" inputMode="numeric" autoComplete="postal-code" value={cep} onChange={lookupCep} error={errors['cep']} />
-                  {cepLoading && <p className="text-xs text-muted-foreground">Buscando endereço…</p>}
-                  {cepMsg && <p className="text-xs text-muted-foreground">{cepMsg}</p>}
+                {!addressConfirmed ? (
+                  <div className="space-y-4">
+                    <Field className="max-w-[200px]" id="cep" label="Código Postal" placeholder="Digite seu código postal" inputMode="numeric" autoComplete="postal-code" value={cep} onChange={lookupCep} error={errors['cep']} />
+                    {cepLoading && <p className="text-xs text-muted-foreground">Buscando endereço…</p>}
+                    {cepMsg && <p className="text-xs text-muted-foreground">{cepMsg}</p>}
 
-                  {!cepOk ? (
-                    <p className="rounded-xl bg-background p-4 text-sm text-muted-foreground">
-                      Informe o CEP para ver as opções e o valor da entrega.
-                    </p>
-                  ) : (
-                    <>
-                      <div className="grid gap-3 sm:grid-cols-2">
+                    <Field id="street" label="Rua" placeholder="Rua, Avenida, etc." autoComplete="address-line1" value={street} onChange={setStreet} error={errors['street']} />
+                    <div className="grid grid-cols-[110px_minmax(0,1fr)] gap-4">
+                      <Field id="number" label="Número" placeholder="123 ou S/N" value={number} onChange={setNumber} error={errors['number']} />
+                      <Field id="district" label="Bairro" placeholder="Seu bairro" value={district} onChange={setDistrict} error={errors['district']} />
+                    </div>
+                    <Field id="complement" label="Complemento" placeholder="Apto, Bloco, etc." value={complement} onChange={setComplement} />
+                    <div className="grid grid-cols-2 gap-4">
+                      <Field id="city" label="Cidade" value={city} onChange={setCity} error={errors['city']} />
+                      <Field id="uf" label="Estado" maxLength={2} value={uf} onChange={(v) => setUf(v.toUpperCase())} error={errors['uf']} />
+                    </div>
+
+                    <button type="button" onClick={confirmAddress} className={ctaClass}>
+                      Continuar
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <button
+                      type="button"
+                      onClick={() => setAddressConfirmed(false)}
+                      className="rounded-lg border border-border px-3 py-2 text-sm font-bold"
+                    >
+                      + Adicionar Endereço
+                    </button>
+
+                    <div className="flex items-start justify-between gap-3 rounded-xl border border-brand p-4">
+                      <div className="flex min-w-0 items-start gap-3">
+                        <input type="radio" checked readOnly className="mt-1 h-4 w-4 accent-brand" aria-label="Endereço de entrega" />
+                        <p className="min-w-0 text-sm">
+                          <strong>{street}, {number}</strong>
+                          <br />
+                          {district} — {city}/{uf}
+                          <br />
+                          <span className="text-muted-foreground">Código Postal: {cep}</span>
+                        </p>
+                      </div>
+                      <button type="button" onClick={() => setAddressConfirmed(false)} className="shrink-0 text-xs font-bold text-brand underline">
+                        Alterar
+                      </button>
+                    </div>
+
+                    <div className="border-t border-border pt-4">
+                      <p className="mb-2 text-sm font-bold">Formas de entrega:</p>
+                      <div className="space-y-3">
                         {SHIPPING.map((s) => (
                           <label
                             key={s.id}
-                            className={`cursor-pointer rounded-xl border p-4 text-sm ${
+                            className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl border p-4 text-sm ${
                               shipping === s.id ? "border-brand bg-brand/5" : "border-border"
                             }`}
                           >
-                            <input
-                              type="radio"
-                              name="entrega"
-                              className="sr-only"
-                              checked={shipping === s.id}
-                              onChange={() => setShipping(s.id)}
-                            />
-                            <span className="block font-bold">{s.label}</span>
-                            <span className="block text-xs text-muted-foreground">{s.eta}</span>
-                            <span className="mt-1 block font-bold text-buy">{brl(s.price)}</span>
+                            <span className="flex min-w-0 items-center gap-3">
+                              <input
+                                type="radio"
+                                name="entrega"
+                                className="h-4 w-4 accent-brand"
+                                checked={shipping === s.id}
+                                onChange={() => setShipping(s.id)}
+                              />
+                              <span className="min-w-0">
+                                <span className="block font-bold uppercase">{s.label}</span>
+                                <span className="block text-xs text-muted-foreground">Entregas para todo o Brasil</span>
+                                <span className="block text-xs text-muted-foreground">{s.eta}</span>
+                              </span>
+                            </span>
+                            <span className="shrink-0 font-bold">{brl(s.price)}</span>
                           </label>
                         ))}
                       </div>
+                      <p className="mt-3 text-xs text-muted-foreground">
+                        Enviaremos para o seu e-mail <strong>o Código de Rastreio</strong> para você acompanhar toda a
+                        jornada do seu pedido até você!
+                      </p>
+                    </div>
 
-                      <div className="grid gap-4 sm:grid-cols-6">
-                        <Field className="sm:col-span-6" id="street" label="Endereço" autoComplete="address-line1" value={street} onChange={setStreet} error={errors['street']} />
-                        <Field className="sm:col-span-2" id="number" label="Número" value={number} onChange={setNumber} error={errors['number']} />
-                        <Field className="sm:col-span-4" id="complement" label="Complemento (opcional)" value={complement} onChange={setComplement} />
-                        <Field className="sm:col-span-3" id="district" label="Bairro" value={district} onChange={setDistrict} error={errors['district']} />
-                        <Field className="sm:col-span-2" id="city" label="Cidade" value={city} onChange={setCity} error={errors['city']} />
-                        <Field className="sm:col-span-1" id="uf" label="UF" maxLength={2} value={uf} onChange={(v) => setUf(v.toUpperCase())} error={errors['uf']} />
-                      </div>
-                    </>
-                  )}
-
-                  <button type="button" onClick={goToStep3} className={ctaClass}>
-                    Ir para Pagamento
-                  </button>
-                  <p className="text-center text-xs text-muted-foreground">
-                    Prazos e valores de frete são simulados; a cotação real depende de integração de logística.
-                  </p>
-                </div>
+                    <button type="button" onClick={goToStep3} className={ctaClass}>
+                      Ir para o Pagamento
+                    </button>
+                  </div>
+                )}
               </StepShell>
 
               <StepShell
                 index={3}
                 title="Pagamento"
-                subtitle={step < 3 ? "Preencha os dados de entrega para continuar" : "Escolha como prefere pagar."}
+                subtitle={step < 3 ? "Preencha os dados de entrega para continuar" : ""}
                 active={step === 3}
                 done={false}
                 onEdit={() => setStep(3)}
               >
-                <div className="space-y-3">
-                  {[
-                    { id: "pix", title: "Pix", desc: `Desconto à vista${pixDiscount > 0 ? ` de ${brl(pixDiscount)}` : ""}` },
-                    { id: "cartao", title: "Cartão de crédito", desc: "Parcele em até 6x sem juros" },
-                  ].map((m) => (
-                    <div key={m.id} className={`rounded-xl border ${payment === m.id ? "border-brand" : "border-border"}`}>
-                      <label className="flex cursor-pointer items-center gap-3 p-4 text-sm">
+                <div className="space-y-4">
+                  <div className={`rounded-2xl border p-4 ${payment === "pix" ? "border-brand" : "border-border"}`}>
+                    <label className="flex cursor-pointer items-start justify-between gap-3">
+                      <span className="flex items-center gap-2">
                         <input
                           type="radio"
                           name="pagamento"
-                          checked={payment === m.id}
-                          onChange={() => setPayment(m.id)}
-                            className="h-4 w-4 accent-brand"
+                          checked={payment === "pix"}
+                          onChange={() => setPayment("pix")}
+                          className="h-4 w-4 accent-brand"
                         />
-                        <span>
-                          <span className="block font-bold">{m.title}</span>
-                          <span className="block text-xs text-muted-foreground">{m.desc}</span>
+                        <span className="text-sm font-bold">Pix</span>
+                      </span>
+                      <span className="flex flex-col items-end gap-1">
+                        <span className="rounded bg-buy/10 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-buy">
+                          APROVAÇÃO IMEDIATA
                         </span>
-                      </label>
-
-                      {payment === "cartao" && m.id === "cartao" && (
-                        <div className="grid gap-4 border-t border-border p-4 sm:grid-cols-6">
-                          <Field className="sm:col-span-4" id="cardNumber" label="Número do cartão" inputMode="numeric" value={cardNumber} onChange={(v) => setCardNumber(maskCard(v))} error={errors['cardNumber']} />
-                          <Field className="sm:col-span-2" id="cardValidade" label="Validade" placeholder="MM/AA" inputMode="numeric" value={cardValidade} onChange={(v) => setCardValidade(maskValidade(v))} error={errors['cardValidade']} />
-                          <Field className="sm:col-span-4" id="cardName" label="Nome impresso no cartão" value={cardName} onChange={setCardName} error={errors['cardName']} />
-                          <Field className="sm:col-span-2" id="cardCvv" label="CVV" inputMode="numeric" maxLength={4} value={cardCvv} onChange={(v) => setCardCvv(onlyDigits(v).slice(0, 4))} error={errors['cardCvv']} />
-                          <div className="sm:col-span-6">
-                            <label htmlFor="parcelas" className="mb-1.5 block text-sm font-bold">
-                              Parcelas
-                            </label>
-                            <select
-                              id="parcelas"
-                              value={cardParcelas}
-                              onChange={(e) => setCardParcelas(e.target.value)}
-                              className="h-12 w-full rounded-xl border border-border bg-surface px-4 text-sm"
-                            >
-                              {[1, 2, 3, 4, 5, 6].map((n) => (
-                                <option key={n} value={n}>
-                                  {n}x de {brl(total / n)} sem juros
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <p className="text-xs text-muted-foreground sm:col-span-6">
-                            Nenhum dado de cartão é cobrado ou armazenado: a captura real depende de integração com um meio de pagamento.
-                          </p>
-                        </div>
-                      )}
-
-                      {payment === "pix" && m.id === "pix" && (
-                        <p className="border-t border-border p-4 text-xs text-muted-foreground">
-                          O código Pix será exibido após a confirmação do pedido.
+                        {pixDiscount > 0 && (
+                          <span className="rounded bg-buy/10 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-buy">
+                            DESCONTO À VISTA
+                          </span>
+                        )}
+                      </span>
+                    </label>
+                    {payment === "pix" && (
+                      <>
+                        <p className="mt-3 text-sm font-bold">
+                          A confirmação de pagamento é realizada em poucos minutos. Utilize o aplicativo do seu banco
+                          para pagar.
                         </p>
-                      )}
-                    </div>
-                  ))}
+                        <p className="mt-3 text-lg font-bold text-buy">Valor no Pix: {brl(total)}</p>
+                      </>
+                    )}
+                  </div>
+
+                  <div className={`rounded-2xl border p-4 ${payment === "cartao" ? "border-brand" : "border-border"}`}>
+                    <label className="flex cursor-pointer items-start justify-between gap-3">
+                      <span className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="pagamento"
+                          checked={payment === "cartao"}
+                          onChange={() => setPayment("cartao")}
+                          className="h-4 w-4 accent-brand"
+                        />
+                        <span className="text-sm font-bold">Cartão de crédito</span>
+                      </span>
+                      <span className="rounded bg-brand/10 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-brand-dark">
+                        ATÉ 6X SEM JUROS
+                      </span>
+                    </label>
+
+                    {payment === "cartao" && (
+                      <div className="mt-4 grid gap-4 sm:grid-cols-6">
+                        <Field className="sm:col-span-4" id="cardNumber" label="Número do cartão" placeholder="0000 0000 0000 0000" inputMode="numeric" value={cardNumber} onChange={(v) => setCardNumber(maskCard(v))} error={errors['cardNumber']} />
+                        <Field className="sm:col-span-2" id="cardValidade" label="Validade" placeholder="MM/AA" inputMode="numeric" value={cardValidade} onChange={(v) => setCardValidade(maskValidade(v))} error={errors['cardValidade']} />
+                        <Field className="sm:col-span-4" id="cardName" label="Nome impresso no cartão" placeholder="Ex.: MARIA DA SILVA" value={cardName} onChange={setCardName} error={errors['cardName']} />
+                        <Field className="sm:col-span-2" id="cardCvv" label="CVV" placeholder="000" inputMode="numeric" maxLength={4} value={cardCvv} onChange={(v) => setCardCvv(onlyDigits(v).slice(0, 4))} error={errors['cardCvv']} />
+                        <div className="sm:col-span-6">
+                          <label htmlFor="parcelas" className="mb-1.5 block text-sm font-bold">
+                            Parcelas
+                          </label>
+                          <select
+                            id="parcelas"
+                            value={cardParcelas}
+                            onChange={(e) => setCardParcelas(e.target.value)}
+                            className="h-12 w-full rounded-xl border border-border bg-surface px-4 text-sm"
+                          >
+                            {[1, 2, 3, 4, 5, 6].map((n) => (
+                              <option key={n} value={n}>
+                                {n}x de {brl(total / n)} sem juros
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <p className="text-xs text-muted-foreground sm:col-span-6">
+                          Nenhum dado de cartão é cobrado ou armazenado: a captura real depende de integração com um
+                          meio de pagamento.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <Field
+                    id="cpf"
+                    label="CPF/CNPJ"
+                    placeholder="Digite o número"
+                    inputMode="numeric"
+                    value={cpf}
+                    onChange={(v) => setCpf(maskCpf(v))}
+                    error={errors['cpf']}
+                  />
 
                   <button type="submit" disabled={sending} className={ctaClass}>
-                    {sending ? "Enviando…" : "Finalizar pedido"}
+                    {sending ? "Enviando…" : "Finalizar Compra"}
                   </button>
                 </div>
               </StepShell>
