@@ -19,6 +19,8 @@ type CartCtx = {
   count: number;
   subtotal: number;
   savings: number;
+  open: boolean;
+  setOpen: (open: boolean) => void;
 };
 
 const Ctx = createContext<CartCtx | null>(null);
@@ -26,6 +28,7 @@ const KEY = "vc-cart-v1";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -53,7 +56,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       count,
       subtotal,
       savings,
-      add: (p, qty = 1) =>
+      open,
+      setOpen,
+      add: (p, qty = 1) => {
         setLines((prev) => {
           const found = prev.find((l) => l.slug === p.slug);
           if (found)
@@ -70,14 +75,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
               qty,
             },
           ];
-        }),
+        });
+        setOpen(true);
+      },
       setQty: (slug, qty) =>
         setLines((prev) =>
           prev.map((l) => (l.slug === slug ? { ...l, qty: Math.max(1, qty) } : l)),
         ),
       remove: (slug) => setLines((prev) => prev.filter((l) => l.slug !== slug)),
     };
-  }, [lines]);
+  }, [lines, open]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

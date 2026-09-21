@@ -4,6 +4,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { CookieNotice } from "./CookieNotice";
 import { WhatsAppButton } from "./WhatsAppButton";
+import { CartDrawer } from "./CartDrawer";
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   return (
@@ -14,6 +15,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <Footer />
       <CookieNotice />
       <WhatsAppButton />
+      <CartDrawer />
     </div>
   );
 }
