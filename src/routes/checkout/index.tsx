@@ -27,7 +27,31 @@ const SHIPPING: Shipping[] = [
   { id: "padrao", label: "Entrega padrão", eta: "em até 2 dias úteis", price: 9.9 },
 ];
 
-const EMAIL_DOMAINS = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com.br", "icloud.com", "uol.com.br", "bol.com.br"];
+const EMAIL_DOMAINS = [
+  "gmail.com",
+  "hotmail.com",
+  "outlook.com",
+  "live.com",
+  "yahoo.com.br",
+  "yahoo.com",
+  "icloud.com",
+  "me.com",
+  "uol.com.br",
+  "bol.com.br",
+  "terra.com.br",
+  "ig.com.br",
+  "r7.com",
+  "globomail.com",
+  "zipmail.com.br",
+  "oi.com.br",
+  "msn.com",
+  "aol.com",
+  "protonmail.com",
+  "gmx.com",
+  "zoho.com",
+  "mail.com",
+  "yandex.com",
+];
 
 const onlyDigits = (v: string) => v.replace(/\D/g, "");
 const maskCpf = (v: string) =>
