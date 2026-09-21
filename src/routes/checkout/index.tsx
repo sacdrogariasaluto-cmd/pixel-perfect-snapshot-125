@@ -107,6 +107,7 @@ function StepShell({
   subtitle,
   active,
   done,
+  summary,
   onEdit,
   children,
 }: {
@@ -115,29 +116,55 @@ function StepShell({
   subtitle: string;
   active: boolean;
   done: boolean;
+  summary?: React.ReactNode;
   onEdit: () => void;
   children: React.ReactNode;
 }) {
+  if (done && !active) {
+    return (
+      <section className="mb-4 break-inside-avoid rounded-2xl border border-buy/40 bg-buy/5 p-5 lg:mb-6 lg:p-6">
+        <div className="flex items-start justify-between gap-3">
+          <h2 className="text-xl font-bold">{title}</h2>
+          <button
+            type="button"
+            onClick={onEdit}
+            className="flex shrink-0 items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
+            Editar
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4">
+              <path d="M4 20h4L19 9l-4-4L4 16v4Z" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
+        <div className="mt-3 space-y-0.5 text-sm text-foreground">{summary}</div>
+      </section>
+    );
+  }
+
+  if (!active) {
+    return (
+      <section className="mb-4 hidden break-inside-avoid px-1 py-2 lg:mb-6 lg:block">
+        <div className="flex items-start justify-between gap-3">
+          <h2 className="text-xl font-bold text-muted-foreground">{title}</h2>
+          <span className="mt-1 shrink-0 text-xs text-muted-foreground">{index} de 3</span>
+        </div>
+        <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
+      </section>
+    );
+  }
+
   return (
-    <section
-      className={`break-inside-avoid lg:mb-6 ${!active ? "hidden lg:block" : ""} ${
-        active ? "bg-surface px-4 py-5 lg:rounded-2xl lg:p-6 lg:shadow-sm" : "px-1 py-2"
-      }`}
-    >
+    <section className="mb-4 break-inside-avoid bg-surface px-4 py-5 lg:mb-6 lg:rounded-2xl lg:border lg:border-border lg:p-6">
       <div className="flex items-start justify-between gap-3">
-        <h2 className={`text-xl font-bold ${active ? "" : "text-muted-foreground"}`}>{title}</h2>
-        <span className="mt-1 shrink-0 text-xs font-bold text-muted-foreground">{index} de 3</span>
+        <h2 className="text-xl font-bold">{title}</h2>
+        <span className="mt-1 shrink-0 text-xs text-muted-foreground">{index} de 3</span>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
-      {!active && done && (
-        <button type="button" onClick={onEdit} className="mt-2 text-sm font-bold text-brand underline">
-          Editar
-        </button>
-      )}
-      {active && <div className="mt-5">{children}</div>}
+      <div className="mt-5">{children}</div>
     </section>
   );
 }
+
 
 function CheckoutPage() {
   const navigate = useNavigate();
@@ -307,7 +334,8 @@ function CheckoutPage() {
   }
 
   const ctaClass =
-    "w-full rounded-xl bg-brand py-4 text-base font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-60";
+    "w-full rounded-full bg-brand py-4 text-base font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-60";
+
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -377,11 +405,19 @@ function CheckoutPage() {
               <StepShell
                 index={1}
                 title="Identificação"
-                subtitle={step === 1 ? "Preencha seus dados para envio do pedido." : name || "Dados informados"}
+                subtitle="Preencha seus dados para envio do pedido."
                 active={step === 1}
                 done={step > 1}
+                summary={
+                  <>
+                    <p>{name}</p>
+                    <p>{email}</p>
+                    <p>{phone}</p>
+                  </>
+                }
                 onEdit={() => setStep(1)}
               >
+
                 <div className="space-y-4">
                   <Field id="name" label="Nome completo" placeholder="Ex.: Maria da Silva" autoComplete="name" value={name} onChange={setName} error={errors['name']} />
                   <div>
@@ -418,17 +454,25 @@ function CheckoutPage() {
               <StepShell
                 index={2}
                 title="Entrega"
-                subtitle={
-                  step < 2
-                    ? "Preencha seus dados para continuar"
-                    : step > 2
-                      ? `${street}, ${number} — ${city}/${uf}`
-                      : "Informe o endereço de entrega"
-                }
+                subtitle={step < 2 ? "Preencha seus dados para continuar" : "Informe o endereço de entrega"}
                 active={step === 2}
                 done={step > 2}
+                summary={
+                  <>
+                    <p>
+                      {street}, {number}
+                      {complement ? ` — ${complement}` : ""}
+                    </p>
+                    <p>
+                      {district} — {city}/{uf}
+                    </p>
+                    <p className="text-muted-foreground">Código Postal: {cep}</p>
+                    <p className="pt-1 font-bold uppercase">{shippingOption.label}</p>
+                  </>
+                }
                 onEdit={() => setStep(2)}
               >
+
                 {!addressConfirmed ? (
                   <div className="space-y-4">
                     <Field className="max-w-[200px]" id="cep" label="Código Postal" placeholder="Digite seu código postal" inputMode="numeric" autoComplete="postal-code" value={cep} onChange={lookupCep} error={errors['cep']} />
