@@ -309,7 +309,7 @@ function CheckoutPage() {
         Compra 100% segura · Identificação › Entrega › Pagamento
       </div>
 
-      <main className="container-site flex-1 py-6">
+      <main className="container-site flex-1 py-6 lg:py-10">
         {lines.length === 0 ? (
           <div className="mt-6 rounded-2xl bg-surface p-12 text-center">
             <h2 className="text-xl font-bold">Seu carrinho está vazio</h2>
@@ -318,7 +318,10 @@ function CheckoutPage() {
             </Link>
           </div>
         ) : (
-          <form onSubmit={submit} className="grid items-start gap-6 lg:grid-cols-[1fr_360px]">
+          <form
+            onSubmit={submit}
+            className="grid items-start gap-6 lg:grid-cols-[400px_minmax(0,380px)] lg:justify-center lg:gap-12"
+          >
             <div className="space-y-1">
               <StepShell
                 index={1}
