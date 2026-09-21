@@ -4,7 +4,7 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { ProductShelf } from "@/components/ProductShelf";
 import { ChevronRight, Stars, ZoomIcon } from "@/components/Icons";
 import { collectionBySlug } from "@/data/site";
-import { getProduct, products } from "@/data/products";
+import { descriptionFor, getProduct, products } from "@/data/products";
 import { brl, useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/$slug/p")({
