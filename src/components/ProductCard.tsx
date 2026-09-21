@@ -3,7 +3,6 @@ import { Stars } from "./Icons";
 import { brl } from "@/lib/cart";
 import type { Product } from "@/data/products";
 import { useCart } from "@/lib/cart";
-import { BasketIcon } from "./Icons";
 import { Button } from "./ui/button";
 
 export function ProductCard({ product }: { product: Product }) {
