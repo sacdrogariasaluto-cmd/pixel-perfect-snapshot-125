@@ -1,14 +1,11 @@
 import { Link } from "@tanstack/react-router";
+import type { CSSProperties } from "react";
 import { HeadsetIcon } from "./Icons";
 import { Newsletter } from "./Newsletter";
 import { company, institutionalLinks } from "@/data/site";
 
-const PAYMENT_SPRITE = "/img/67436b40-sprite-payments.svg";
 // Sprite 1139x34 com 20 bandeiras de 56px (passo 57px).
-const FLAG_W = 56;
-const FLAG_H = 34;
-const STEP = 57;
-const SPRITE_W = 1139;
+const PAYMENT_SPRITE = "/img/67436b40-sprite-payments.svg";
 
 // Somente as bandeiras vistas na referência.
 const FLAGS: { name: string; i: number }[] = [
