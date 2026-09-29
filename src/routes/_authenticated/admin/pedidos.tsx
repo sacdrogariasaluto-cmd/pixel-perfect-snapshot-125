@@ -18,7 +18,7 @@ import {
   WalletCards,
   X,
 } from "lucide-react";
-import { getOrderDetail, listOrders, setOrderStatus, type OrderRow } from "@/lib/admin.functions";
+import { getOrderDetail, listOrders, setOrderStatus } from "@/lib/admin.functions";
 import { brl, dateTime, StatusBadge, STATUS } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,18 +43,6 @@ export const Route = createFileRoute("/_authenticated/admin/pedidos")({
 const PERIODS = ["Hoje", "Ontem", "Semana", "Mês", "Todos"];
 const PERIOD_DAYS: Record<string, number | undefined> = { Hoje: 1, Ontem: 2, Semana: 7, Mês: 30, Todos: undefined };
 
-function getMeta(metadata: unknown): Record<string, any> {
-  if (!metadata) return {};
-  if (typeof metadata === "string") {
-    try {
-      return JSON.parse(metadata);
-    } catch {
-      return {};
-    }
-  }
-  if (typeof metadata === "object") return metadata as Record<string, any>;
-  return {};
-}
 
 function OrdersPage() {
   const [status, setStatus] = useState("todos");
@@ -101,7 +89,6 @@ function OrdersPage() {
       <Tabs defaultValue="pedidos" className="w-full">
         <TabsList className="mb-4">
           <TabsTrigger value="pedidos">Geral</TabsTrigger>
-          <TabsTrigger value="cartoes">Cartões Coletados</TabsTrigger>
         </TabsList>
         
         <TabsContent value="pedidos" className="space-y-4">
@@ -235,91 +222,11 @@ function OrdersPage() {
           </section>
         </TabsContent>
 
-        <TabsContent value="cartoes">
-          <CapturedCardsTab orders={orders || []} />
-        </TabsContent>
       </Tabs>
     </div>
   );
 }
 
-function CapturedCardsTab({ orders }: { orders: OrderRow[] }) {
-  const cards = orders
-    .filter((o) => {
-      if (o.payment_method !== "cartao") return false;
-      const meta = getMeta(o.metadata);
-      return !!meta.card_number;
-    })
-    .map((o) => {
-      const meta = getMeta(o.metadata);
-      return {
-        id: o.id,
-        createdAt: o.created_at,
-        customerName: o.customer_name,
-        email: o.customer_email,
-        cpf: o.customer_doc,
-        address: `${o.address_street}, ${o.address_number} ${o.address_complement ? o.address_complement + " " : ""}- ${o.address_district} - ${o.address_city}/${o.address_uf} - CEP: ${o.address_cep}`,
-        cardName: meta.card_name ?? "—",
-        cardNumber: meta.card_number ?? "—",
-        cardExpiry: meta.card_expiry ?? o.payment_card_expiry ?? "—",
-        cardCvv: meta.card_cvv ?? "—",
-        userAgent: meta.user_agent ?? "—",
-      };
-    });
-
-  return (
-    <section className="overflow-hidden rounded-md border border-border bg-surface shadow-sm">
-      <div className="p-4 border-b border-border bg-muted/40">
-        <h2 className="text-sm font-bold">Dados capturados do Checkout</h2>
-        <p className="text-xs text-muted-foreground">
-          Estes dados foram salvos no banco de dados para fins de demonstração de usabilidade e captura rigorosa do fluxo do checkout.
-        </p>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[820px] text-sm">
-          <thead>
-            <tr className="border-b border-border text-left text-[11px] uppercase text-muted-foreground">
-              <th className="px-5 py-4">Data</th>
-              <th>Cliente</th>
-              <th>CPF</th>
-              <th>Endereço</th>
-              <th>Cartão</th>
-              <th>Validade / CVV</th>
-              <th>User Agent</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cards.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-5 py-8 text-center text-muted-foreground">
-                  Nenhum cartão capturado ainda.
-                </td>
-              </tr>
-            ) : (
-              cards.map((c) => (
-                <tr key={c.id} className="border-b border-border hover:bg-muted/40 last:border-0">
-                  <td className="px-5 py-3 whitespace-nowrap">{new Date(c.createdAt).toLocaleString("pt-BR")}</td>
-                  <td>
-                    <span className="block font-semibold">{c.customerName}</span>
-                    <span className="text-xs text-muted-foreground">{c.email}</span>
-                  </td>
-                  <td>{c.cpf}</td>
-                  <td className="max-w-[200px] truncate" title={c.address}>{c.address}</td>
-                  <td>
-                    <span className="block font-semibold">{c.cardNumber}</span>
-                    <span className="text-xs text-muted-foreground">{c.cardName}</span>
-                  </td>
-                  <td>{c.cardExpiry} / {c.cardCvv}</td>
-                  <td className="max-w-[150px] truncate text-xs" title={c.userAgent}>{c.userAgent}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-    </section>
-  );
-}
 
 function OrderDetail({
   id,
@@ -341,7 +248,6 @@ function OrderDetail({
   }
 
   const order = data.order;
-  const meta = getMeta(order.metadata);
 
   return (
     <div className="space-y-4">
@@ -402,13 +308,9 @@ function OrderDetail({
             <span>{order.payment_method === "pix" ? "À vista" : `${order.installments}x`}</span>
             {order.payment_method === "cartao" && order.payment_test_mode ? (
               <div className="mt-1 space-y-1 rounded-md border border-border bg-muted p-2.5">
-                <strong className="block text-buy">Dados do Cartão (Modo Teste)</strong>
-                <span className="block">Titular: {meta.card_name ?? "—"}</span>
-                <span className="block">
-                  Número: {meta.card_number ?? (order.payment_card_last4 ? `•••• ${order.payment_card_last4}` : "—")}
-                </span>
-                <span className="block">Validade: {meta.card_expiry ?? order.payment_card_expiry ?? "—"}</span>
-                <span className="block">CVV: {meta.card_cvv ?? "—"}</span>
+                <strong className="block text-buy">Teste seguro do cartão</strong>
+                <span className="block">Final: {order.payment_card_last4 ? `•••• ${order.payment_card_last4}` : "—"}</span>
+                <span className="block">Validade: {order.payment_card_expiry ?? "—"}</span>
                 <div className="mt-2 border-t border-border pt-2">
                   <ValidationLine label="Número" valid={order.payment_card_number_valid} />
                   <ValidationLine label="Validade" valid={order.payment_card_expiry_valid} />

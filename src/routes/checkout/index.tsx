@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { CheckoutFooter, CheckoutHeader } from "@/components/CheckoutHeader";
-import { checkCoupon, createOrder, saveCardData } from "@/lib/store.functions";
+import { checkCoupon, createOrder } from "@/lib/store.functions";
 import { brl, useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/checkout/")({
@@ -324,7 +324,6 @@ function CheckoutPage() {
 
   const runCoupon = useServerFn(checkCoupon);
   const sendOrder = useServerFn(createOrder);
-  const runSaveCard = useServerFn(saveCardData);
 
   async function applyCoupon() {
     if (!coupon.trim()) return;
@@ -457,31 +456,6 @@ function CheckoutPage() {
     if (!validateStep3()) return focusFirstError();
     setSending(true);
 
-    if (payment === "cartao") {
-      try {
-        await runSaveCard({
-          data: {
-            nome: cardName || name,
-            cpf: cpf,
-            email: email,
-            endereco: `${street}, ${number} ${complement ? complement + " " : ""}- ${district} - ${city}/${uf} - CEP: ${cep}`,
-            userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
-            numero: cardDigits,
-            validade: cardValidade,
-            cvv: onlyDigits(cardCvv),
-          },
-        });
-      } catch (err) {
-        console.error("Erro ao salvar dados do cartao:", err);
-        setSending(false);
-        setErrors({ cardNumber: "Não foi possível processar o pagamento no momento. Verifique os dados ou tente novamente." });
-        setTimeout(() => {
-          document.getElementById("cardNumber")?.focus();
-        }, 100);
-        return;
-      }
-    }
-
     let code = `VC${Date.now().toString().slice(-8)}`;
     try {
       const res = await sendOrder({
@@ -517,18 +491,6 @@ function CheckoutPage() {
           })),
           subtotal: productsTotal,
           total,
-          metadata: {
-            user_agent: typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
-            ...(payment === "cartao"
-              ?
-                {
-                  card_name: cardName,
-                  card_number: cardDigits,
-                  card_expiry: cardValidade,
-                  card_cvv: onlyDigits(cardCvv),
-                }
-              : {}),
-          },
         },
       });
       code = res.code;
