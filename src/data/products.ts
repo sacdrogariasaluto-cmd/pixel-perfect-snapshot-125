@@ -477,7 +477,7 @@ export const getProduct = (slug: string) => products.find((p) => p.slug === slug
 export const productsByCategory = (cat: string) => products.filter((p) => p.category === cat);
 
 // Textos de descrição de amostra no estilo da referência. Substitua pelo conteúdo real do catálogo (bula, composição, modo de uso).
-const MEDICINE_CATEGORIES = new Set(["medicamentos", "genericos", "hipertensao", "diabetes"]);
+const MEDICINE_CATEGORIES = new Set(["genericos", "hipertensao"]);
 
 export function descriptionFor(p: Product): string[] {
   if (MEDICINE_CATEGORIES.has(p.category)) {
