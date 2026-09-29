@@ -77,7 +77,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border">
-        <div className="container-site grid gap-8 py-8 md:grid-cols-4">
+        <div className="container-site grid gap-8 py-8 md:grid-cols-3">
           <div>
             <h3 className="mb-4 text-muted-foreground">Pague com</h3>
             <div className="flex flex-col items-start gap-3">
