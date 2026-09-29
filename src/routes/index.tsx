@@ -37,9 +37,7 @@ function Index() {
   const suplementos = products.filter((p) =>
     ["nutricao-esportiva", "vitaminas-e-minerais", "senior"].includes(p.category),
   );
-  const farmacinha = products.filter((p) =>
-    ["medicamentos", "genericos"].includes(p.category),
-  );
+  const farmacinha = products.filter((p) => p.category === "genericos");
 
   return (
     <SiteLayout>
@@ -104,7 +102,7 @@ function Index() {
             Farmácia online com tudo para a sua saúde
           </h2>
           <p>
-            Reúna em um só lugar medicamentos, genéricos, dermocosméticos, nutrição e cuidados
+            Reúna em um só lugar genéricos, dermocosméticos, nutrição e cuidados
             pessoais. Este texto editorial é configurável e deve refletir o conteúdo do titular do
             projeto.
           </p>
