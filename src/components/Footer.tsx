@@ -40,13 +40,6 @@ export function PaymentFlags({ compact = false }: { compact?: boolean }) {
 
 
 
-const socials = [
-  { name: "Facebook", color: "#1877f2", letter: "f" },
-  { name: "Instagram", color: "#d62976", letter: "in" },
-  { name: "LinkedIn", color: "#0a66c2", letter: "in" },
-  { name: "WhatsApp", color: "#25d366", letter: "w" },
-];
-
 export function Footer() {
   return (
     <footer className="bg-surface text-sm">
