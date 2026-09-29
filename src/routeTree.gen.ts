@@ -25,7 +25,6 @@ import { Route as CheckoutCarrinhoRouteImport } from './routes/checkout/carrinho
 import { Route as CheckoutLoginRouteImport } from './routes/checkout/login'
 import { Route as CheckoutPedidoRouteImport } from './routes/checkout/pedido'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
-import { Route as AuthenticatedAdminCartoesRouteImport } from './routes/_authenticated/admin/cartoes'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin/clientes'
 import { Route as AuthenticatedAdminCuponsRouteImport } from './routes/_authenticated/admin/cupons'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
@@ -109,12 +108,6 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
-const AuthenticatedAdminCartoesRoute =
-  AuthenticatedAdminCartoesRouteImport.update({
-    id: '/cartoes',
-    path: '/cartoes',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
 const AuthenticatedAdminClientesRoute =
   AuthenticatedAdminClientesRouteImport.update({
     id: '/clientes',
@@ -149,7 +142,6 @@ export interface FileRoutesByFullPath {
   '/$slug/': typeof SlugIndexRoute
   '/ajuda/': typeof AjudaIndexRoute
   '/checkout/': typeof CheckoutIndexRoute
-  '/admin/cartoes': typeof AuthenticatedAdminCartoesRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
@@ -169,7 +161,6 @@ export interface FileRoutesByTo {
   '/$slug': typeof SlugIndexRoute
   '/ajuda': typeof AjudaIndexRoute
   '/checkout': typeof CheckoutIndexRoute
-  '/admin/cartoes': typeof AuthenticatedAdminCartoesRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
@@ -192,7 +183,6 @@ export interface FileRoutesById {
   '/$slug/': typeof SlugIndexRoute
   '/ajuda/': typeof AjudaIndexRoute
   '/checkout/': typeof CheckoutIndexRoute
-  '/_authenticated/admin/cartoes': typeof AuthenticatedAdminCartoesRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
@@ -215,7 +205,6 @@ export interface FileRouteTypes {
     | '/$slug/'
     | '/ajuda/'
     | '/checkout/'
-    | '/admin/cartoes'
     | '/admin/clientes'
     | '/admin/cupons'
     | '/admin/pedidos'
@@ -235,7 +224,6 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/ajuda'
     | '/checkout'
-    | '/admin/cartoes'
     | '/admin/clientes'
     | '/admin/cupons'
     | '/admin/pedidos'
@@ -257,7 +245,6 @@ export interface FileRouteTypes {
     | '/$slug/'
     | '/ajuda/'
     | '/checkout/'
-    | '/_authenticated/admin/cartoes'
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/cupons'
     | '/_authenticated/admin/pedidos'
@@ -395,13 +382,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/_authenticated/admin/cartoes': {
-      id: '/_authenticated/admin/cartoes'
-      path: '/cartoes'
-      fullPath: '/admin/cartoes'
-      preLoaderRoute: typeof AuthenticatedAdminCartoesRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
     '/_authenticated/admin/clientes': {
       id: '/_authenticated/admin/clientes'
       path: '/clientes'
@@ -427,7 +407,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
-  AuthenticatedAdminCartoesRoute: typeof AuthenticatedAdminCartoesRoute
   AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
   AuthenticatedAdminCuponsRoute: typeof AuthenticatedAdminCuponsRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
@@ -435,7 +414,6 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
-  AuthenticatedAdminCartoesRoute: AuthenticatedAdminCartoesRoute,
   AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
   AuthenticatedAdminCuponsRoute: AuthenticatedAdminCuponsRoute,
   AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,

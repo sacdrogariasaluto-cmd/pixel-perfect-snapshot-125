@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { CheckoutFooter, CheckoutHeader } from "@/components/CheckoutHeader";
-import { checkCoupon, createOrder, saveCardData } from "@/lib/store.functions";
+import { checkCoupon, createOrder } from "@/lib/store.functions";
 import { brl, useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/checkout/")({
@@ -324,7 +324,6 @@ function CheckoutPage() {
 
   const runCoupon = useServerFn(checkCoupon);
   const sendOrder = useServerFn(createOrder);
-  const runSaveCard = useServerFn(saveCardData);
 
   async function applyCoupon() {
     if (!coupon.trim()) return;

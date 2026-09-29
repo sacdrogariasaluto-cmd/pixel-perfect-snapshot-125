@@ -18,7 +18,7 @@ import {
   WalletCards,
   X,
 } from "lucide-react";
-import { getOrderDetail, listOrders, setOrderStatus, type OrderRow } from "@/lib/admin.functions";
+import { getOrderDetail, listOrders, setOrderStatus } from "@/lib/admin.functions";
 import { brl, dateTime, StatusBadge, STATUS } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
