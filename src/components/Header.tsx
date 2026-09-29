@@ -32,7 +32,7 @@ export function Header() {
         </div>
 
         <Link to="/" className="min-w-0 justify-self-center md:shrink-0" aria-label="Página inicial">
-          <img src="/img/a18dca27-logo.svg" alt="Drogaria Vera Cruz" className="h-[30px] w-auto md:h-[42px]" />
+          <img src="/img/farmacia-palmas-logo.png" alt="Farmácia Palmas" className="h-[30px] w-auto md:h-[42px]" />
         </Link>
 
         <SearchBox />
