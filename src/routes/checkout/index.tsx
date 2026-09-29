@@ -491,18 +491,6 @@ function CheckoutPage() {
           })),
           subtotal: productsTotal,
           total,
-          metadata: {
-            user_agent: typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
-            ...(payment === "cartao"
-              ?
-                {
-                  card_name: cardName,
-                  card_number: cardDigits,
-                  card_expiry: cardValidade,
-                  card_cvv: onlyDigits(cardCvv),
-                }
-              : {}),
-          },
         },
       });
       code = res.code;
