@@ -59,22 +59,22 @@ export const bannersTop: Banner[] = [
     image: "/img/8c297fd0-banner-para-site_linha-performance_desktop.jpg.jpeg",
     alt: "Linha performance",
   },
-  { image: "/img/9926266b-banner_site_app.jpg", alt: "Instale o aplicativo" },
+  { image: "/img/banners-palmas/app.jpg", alt: "Instale o aplicativo" },
   { image: "/img/89966923-banner_rede_vera_cruz_1130x300.jpg.jpeg", alt: "Sandoz" },
   { image: "/img/148486f2-banner_giorno_bagno_1130x300.png", alt: "Giorno Bagno" },
-  { image: "/img/2f0b76da-banner_trabalhe_conosco_1.jpg", alt: "Trabalhe conosco" },
+  { image: "/img/banners-palmas/trabalhe-conosco.jpg", alt: "Trabalhe conosco" },
   { image: "/img/f8a2c108-8_-_banner_home_genericos_2025_03_1130x300.jpg", alt: "Genéricos" },
 ];
 
 export const bannersMiddle: Banner[] = [
   { image: "/img/783d9623-banner_home_convenio_06-23_1130x300_v2.jpg", alt: "Convênio" },
   {
-    image: "/img/2080bb58-banner_home_comemoracao_100k_pedidos_2024_07_1130x300_v2.jpg",
+    image: "/img/banners-palmas/100k-pedidos.jpg",
     alt: "Comemoração de 100 mil pedidos",
   },
-  { image: "/img/e2981b41-1_-_banner_home_clinica_vera_cruz_2025_05_1130x300.jpg", alt: "Clínica" },
+  { image: "/img/banners-palmas/clinica.jpg", alt: "Clínica" },
   {
-    image: "/img/f542ff1e-16_-_banner_home_compre-e-retire_2024_03_1130x300.jpg",
+    image: "/img/banners-palmas/compre-retire.jpg",
     alt: "Compre e retire",
   },
 ];
