@@ -40,13 +40,6 @@ export function PaymentFlags({ compact = false }: { compact?: boolean }) {
 
 
 
-const socials = [
-  { name: "Facebook", color: "#1877f2", letter: "f" },
-  { name: "Instagram", color: "#d62976", letter: "in" },
-  { name: "LinkedIn", color: "#0a66c2", letter: "in" },
-  { name: "WhatsApp", color: "#25d366", letter: "w" },
-];
-
 export function Footer() {
   return (
     <footer className="bg-surface text-sm">
@@ -84,7 +77,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border">
-        <div className="container-site grid gap-8 py-8 md:grid-cols-4">
+        <div className="container-site grid gap-8 py-8 md:grid-cols-3">
           <div>
             <h3 className="mb-4 text-muted-foreground">Pague com</h3>
             <div className="flex flex-col items-start gap-3">
@@ -107,23 +100,6 @@ export function Footer() {
             <p className="mt-2 text-[11px] text-muted-foreground">
               Selos de referência. Exiba apenas certificações aplicáveis ao projeto publicado.
             </p>
-          </div>
-
-          <div>
-            <h3 className="mb-4 text-muted-foreground">Redes Sociais</h3>
-            <div className="flex gap-3">
-              {socials.map((s) => (
-                <a
-                  key={s.name}
-                  href="#"
-                  aria-label={s.name}
-                  className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold text-white"
-                  style={{ backgroundColor: s.color }}
-                >
-                  {s.letter}
-                </a>
-              ))}
-            </div>
           </div>
 
           <div>
