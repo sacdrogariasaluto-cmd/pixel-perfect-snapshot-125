@@ -20,7 +20,7 @@ export function BannerCarousel({ banners, label }: { banners: Banner[]; label: s
         width={1130}
         height={300}
 
-           className="aspect-[3.75/1] w-full object-cover"
+           className="h-auto w-full object-contain"
         />
       </div>
       <button
