@@ -50,7 +50,7 @@ export function CheckoutHeader() {
     <header className="border-b border-border bg-surface text-foreground">
       <div className="container-site grid h-[66px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:h-[70px]">
         <Link to="/" aria-label="Página inicial">
-          <img src="/img/a18dca27-logo.svg" alt="Drogaria Vera Cruz" className="h-7 w-auto max-w-[145px] sm:h-9 sm:max-w-none" />
+          <img src="/img/farmacia-palmas-logo.png" alt="Farmácia Palmas" className="h-7 w-auto max-w-[145px] sm:h-9 sm:max-w-none" />
         </Link>
         <SecureBadge />
       </div>
