@@ -3,7 +3,6 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { CategoryCarousel } from "@/components/CategoryCarousel";
 import { BannerCarousel } from "@/components/BannerCarousel";
 import { ProductShelf } from "@/components/ProductShelf";
-import { PromoModal } from "@/components/PromoModal";
 import { Carousel } from "@/components/Carousel";
 import { CardIcon, ShieldIcon, StoreIcon, TruckIcon } from "@/components/Icons";
 import { bannersMiddle, bannersTop, brands, collections } from "@/data/site";
@@ -117,7 +116,6 @@ function Index() {
         </div>
       </section>
 
-      <PromoModal />
     </SiteLayout>
   );
 }
