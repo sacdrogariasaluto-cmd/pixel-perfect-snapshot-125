@@ -94,7 +94,6 @@ export const departments = [
   "Dermocosméticos",
   "Beleza e Higiene",
   "Genéricos",
-  "Home Care",
   "Mamãe e Bebê",
   "Saúde e Bem Estar",
 ];
@@ -103,7 +102,6 @@ export const departmentSlugs: Record<string, string> = {
   Dermocosméticos: "dermocosmeticos",
   "Beleza e Higiene": "cuidados-pessoais",
   Genéricos: "genericos",
-  "Home Care": "ortopedicos",
   "Mamãe e Bebê": "mamae-e-bebe",
   "Saúde e Bem Estar": "vitaminas-e-minerais",
 };
