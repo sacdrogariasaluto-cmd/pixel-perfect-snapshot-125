@@ -12,16 +12,16 @@ import { products } from "@/data/products";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Farmácia online — medicamentos, dermocosméticos e nutrição" },
+      { title: "Farmácia online — genéricos, dermocosméticos e nutrição" },
       {
         name: "description",
         content:
-          "Farmácia online com medicamentos, genéricos, dermocosméticos, nutrição e cuidados pessoais, com entrega rápida e preços no pix.",
+          "Farmácia online com genéricos, dermocosméticos, nutrição e cuidados pessoais, com entrega rápida e preços no pix.",
       },
       { property: "og:title", content: "Farmácia online — saúde e bem-estar" },
       {
         property: "og:description",
-        content: "Medicamentos, genéricos, dermocosméticos e nutrição com entrega rápida.",
+        content: "Genéricos, dermocosméticos e nutrição com entrega rápida.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
