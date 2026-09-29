@@ -22,111 +22,6 @@ export const products: Product[] = [
     "reviews": 12
   },
   {
-    "id": "2",
-    "slug": "antiacido-sonrisal-sabor-limao-2-comprimidos-efervescentes",
-    "name": "Antiácido Sonrisal Sabor Limão 2 comprimidos efervescentes",
-    "brand": "Sonrisal",
-    "code": "10037",
-    "image": "/img/24c1bd6a-antiacido-sonrisal-sabor-limao-2-comprimidos-efervescentes_16336.jpg",
-    "category": "medicamentos",
-    "pixPrice": 9.35,
-    "cardPrice": 9.85,
-    "listPrice": 13.68,
-    "discount": 28,
-    "rating": 0,
-    "reviews": 1
-  },
-  {
-    "id": "3",
-    "slug": "epocler-sabor-abacaxi-10ml",
-    "name": "Epocler Sabor Abacaxi 10ml",
-    "brand": "Epocler",
-    "code": "10074",
-    "image": "/img/f79f96d0-epocler-flaconete-com-10ml_16119.jpg",
-    "category": "medicamentos",
-    "pixPrice": 57.45,
-    "cardPrice": 60.49,
-    "listPrice": 84.01,
-    "discount": 28,
-    "rating": 4,
-    "reviews": 0
-  },
-  {
-    "id": "4",
-    "slug": "engov-6-comprimidos",
-    "name": "Engov 6 comprimidos",
-    "brand": "Engov",
-    "code": "10111",
-    "image": "/img/9c0b4ede-engov-6-comprimidos_16329.jpg",
-    "category": "medicamentos",
-    "pixPrice": 12.74,
-    "cardPrice": 13.42,
-    "listPrice": 16.57,
-    "discount": 19,
-    "rating": 0,
-    "reviews": 0
-  },
-  {
-    "id": "5",
-    "slug": "ciflogex-pastilha-sabor-laranja-12un",
-    "name": "Ciflogex Pastilha Sabor Laranja 12un",
-    "brand": "Drogaria Vera Cruz",
-    "code": "10148",
-    "image": "/img/91f8d325-pastilha-ciflogex-sabor-laranja-12un_22726.jpg",
-    "category": "medicamentos",
-    "pixPrice": 13.16,
-    "cardPrice": 13.86,
-    "listPrice": 17.11,
-    "discount": 19,
-    "rating": 0,
-    "reviews": 7
-  },
-  {
-    "id": "6",
-    "slug": "novalgina-1g-10-comprimidos",
-    "name": "Novalgina 1g 10 comprimidos",
-    "brand": "Novalgina",
-    "code": "10185",
-    "image": "/img/b89ff666-analgesico-novalgina-1g-10-comprimidos_24823.jpg",
-    "category": "medicamentos",
-    "pixPrice": 16.14,
-    "cardPrice": 17.0,
-    "listPrice": 19.32,
-    "discount": 12,
-    "rating": 0,
-    "reviews": 7
-  },
-  {
-    "id": "7",
-    "slug": "engov-after-sabor-tangerina-250ml",
-    "name": "Engov After Sabor Tangerina 250ml",
-    "brand": "Engov",
-    "code": "10222",
-    "image": "/img/f95fec2f-suplemento-alimentar-engov-after-sabor-tangerina-250ml_16332.jpg",
-    "category": "medicamentos",
-    "pixPrice": 57.7,
-    "cardPrice": 60.76,
-    "listPrice": 60.76,
-    "discount": 0,
-    "rating": 4,
-    "reviews": 0
-  },
-  {
-    "id": "8",
-    "slug": "sal-de-frutas-eno-tradicional-2-envelopes-com-5g",
-    "name": "Sal de Frutas Eno Tradicional 2 envelopes com 5g",
-    "brand": "Drogaria Vera Cruz",
-    "code": "10259",
-    "image": "/img/b278757e-sal-de-frutas-eno-tradicional-2-envelopes-com-5g_16123.jpg",
-    "category": "medicamentos",
-    "pixPrice": 55.1,
-    "cardPrice": 58.02,
-    "listPrice": 63.76,
-    "discount": 9,
-    "rating": 4.5,
-    "reviews": 3
-  },
-  {
     "id": "9",
     "slug": "citrato-de-sildenafila-50mg-neo-quimica-4-comprimidos-revestidos",
     "name": "Citrato de Sildenafila 50mg, Neo Química 4 comprimidos revestidos",
@@ -140,36 +35,6 @@ export const products: Product[] = [
     "discount": 5,
     "rating": 4.5,
     "reviews": 7
-  },
-  {
-    "id": "10",
-    "slug": "dorflex-10-comprimidos",
-    "name": "Dorflex 10 comprimidos",
-    "brand": "Dorflex",
-    "code": "10333",
-    "image": "/img/394b54a4-analgesico-dorflex-10-comprimidos_24405.jpg",
-    "category": "medicamentos",
-    "pixPrice": 78.45,
-    "cardPrice": 82.61,
-    "listPrice": 90.78,
-    "discount": 9,
-    "rating": 0,
-    "reviews": 7
-  },
-  {
-    "id": "11",
-    "slug": "cimegripe-20-capsulas",
-    "name": "Cimegripe 20 cápsulas",
-    "brand": "Drogaria Vera Cruz",
-    "code": "10370",
-    "image": "/img/da3af17a-cimegripe-20-capsulas_10263.jpg",
-    "category": "medicamentos",
-    "pixPrice": 56.41,
-    "cardPrice": 59.4,
-    "listPrice": 67.5,
-    "discount": 12,
-    "rating": 4.5,
-    "reviews": 0
   },
   {
     "id": "12",
@@ -199,21 +64,6 @@ export const products: Product[] = [
     "listPrice": 34.43,
     "discount": 28,
     "rating": 5,
-    "reviews": 1
-  },
-  {
-    "id": "14",
-    "slug": "cha-vick-pyrena-sabor-camomila-e-erva-cidreira-5g",
-    "name": "Chá Vick Pyrena Sabor Camomila e Erva-Cidreira 5g",
-    "brand": "Drogaria Vera Cruz",
-    "code": "10481",
-    "image": "/img/4964d537-cha-vick-pyrena-sabor-camomila-e-erva-cidreira-5g_13299.png",
-    "category": "medicamentos",
-    "pixPrice": 46.9,
-    "cardPrice": 49.39,
-    "listPrice": 63.32,
-    "discount": 22,
-    "rating": 4.5,
     "reviews": 1
   },
   {
@@ -427,21 +277,6 @@ export const products: Product[] = [
     "reviews": 0
   },
   {
-    "id": "29",
-    "slug": "glucerna-sr-baunilha-7x-mais-inositol-850g",
-    "name": "Glucerna Sr Baunilha 7x Mais Inositol 850g",
-    "brand": "Drogaria Vera Cruz",
-    "code": "11036",
-    "image": "/img/c2b082b0-glucerna-sr-baunilha-7x-mais-inositol-850g_31719.jpg",
-    "category": "diabetes",
-    "pixPrice": 19.97,
-    "cardPrice": 21.03,
-    "listPrice": 25.96,
-    "discount": 19,
-    "rating": 4.5,
-    "reviews": 0
-  },
-  {
     "id": "30",
     "slug": "curc-400mg-60-comprimidos",
     "name": "Curc 400mg 60 comprimidos",
@@ -530,21 +365,6 @@ export const products: Product[] = [
     "discount": 17,
     "rating": 4.5,
     "reviews": 0
-  },
-  {
-    "id": "36",
-    "slug": "glucerna-sr-baunilha-850g",
-    "name": "Glucerna SR Baunilha 850g",
-    "brand": "Drogaria Vera Cruz",
-    "code": "11295",
-    "image": "/img/0fd9fb13-suplemento-alimentar-glucerna-sr-baunilha-850g_29980.jpg",
-    "category": "diabetes",
-    "pixPrice": 67.14,
-    "cardPrice": 70.7,
-    "listPrice": 98.19,
-    "discount": 28,
-    "rating": 0,
-    "reviews": 3
   },
   {
     "id": "37",
@@ -650,71 +470,14 @@ export const products: Product[] = [
     "discount": 35,
     "rating": 5,
     "reviews": 0
-  },
-  {
-    "id": "44",
-    "slug": "dorflex-24-comprimidos",
-    "name": "Dorflex 24 comprimidos",
-    "brand": "Dorflex",
-    "code": "11591",
-    "image": "/img/0d739d70-analgesico-dorflex-24-comprimidos_24403.jpg",
-    "category": "medicamentos",
-    "pixPrice": 62.1,
-    "cardPrice": 65.39,
-    "listPrice": 78.78,
-    "discount": 17,
-    "rating": 4.5,
-    "reviews": 3
-  },
-  {
-    "id": "45",
-    "slug": "neosaldina-4-drageas",
-    "name": "Neosaldina 4 drágeas",
-    "brand": "Drogaria Vera Cruz",
-    "code": "11628",
-    "image": "/img/67c2492b-neosaldina-4-drageas_6761.png",
-    "category": "medicamentos",
-    "pixPrice": 16.06,
-    "cardPrice": 16.91,
-    "listPrice": 21.68,
-    "discount": 22,
-    "rating": 5,
-    "reviews": 3
-  },
-  {
-    "id": "46",
-    "slug": "hepatilon-10ml",
-    "name": "Hepatilon 10ml",
-    "brand": "Drogaria Vera Cruz",
-    "code": "11665",
-    "image": "/img/4c5d49c4-hepatilon-flaconete-de-10ml_16330.jpg",
-    "category": "medicamentos",
-    "pixPrice": 48.55,
-    "cardPrice": 51.12,
-    "listPrice": 53.81,
-    "discount": 5,
-    "rating": 4,
-    "reviews": 0
   }
 ];
 
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);
 export const productsByCategory = (cat: string) => products.filter((p) => p.category === cat);
 
-// Textos de descrição de amostra no estilo da referência. Substitua pelo conteúdo real do catálogo (bula, composição, modo de uso).
-const MEDICINE_CATEGORIES = new Set(["medicamentos", "genericos", "hipertensao", "diabetes"]);
-
+// Textos de descrição de amostra no estilo da referência. Substitua pelo conteúdo real do catálogo (composição, modo de uso).
 export function descriptionFor(p: Product): string[] {
-  if (MEDICINE_CATEGORIES.has(p.category)) {
-    const paragraphs = [
-      `${p.name} é um medicamento de ${p.brand}. Use conforme a orientação da bula ou do seu médico. Em caso de dúvidas sobre indicação, posologia ou conservação, procure a orientação do farmacêutico.`,
-      `SE PERSISTIREM OS SINTOMAS, O MÉDICO DEVERÁ SER CONSULTADO. ${p.name.toUpperCase()} É UM MEDICAMENTO. SEU USO PODE TRAZER RISCOS. PROCURE UM MÉDICO E O FARMACÊUTICO. LEIA A BULA.`,
-    ];
-    if (p.category === "genericos") {
-      paragraphs.push("Medicamento genérico - lei n.º 9.787/99.");
-    }
-    return paragraphs;
-  }
   return [
     `${p.name} é um produto de ${p.brand}. Descrição de amostra: substitua pelo conteúdo oficial do fabricante, com composição, modo de uso e advertências.`,
     "Em caso de dúvidas sobre o uso do produto, fale com a nossa equipe pelo WhatsApp.",

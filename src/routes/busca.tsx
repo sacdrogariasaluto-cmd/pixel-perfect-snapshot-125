@@ -17,7 +17,7 @@ export const Route = createFileRoute("/busca")({
       { title: "Busca de produtos — farmácia online" },
       { name: "description", content: "Resultados da busca de produtos da farmácia online." },
       { property: "og:title", content: "Busca de produtos" },
-      { property: "og:description", content: "Encontre medicamentos, vitaminas e produtos de cuidados pessoais." },
+      { property: "og:description", content: "Encontre vitaminas e produtos de cuidados pessoais." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

@@ -11,7 +11,6 @@ export type Collection = {
 export const collections: Collection[] = [
   { label: "Mamãe e Bebê", slug: "mamae-e-bebe", image: "/img/6bb8cc33-mamae_e_bebe.svg" },
   { label: "Genéricos", slug: "genericos", image: "/img/95c69361-genericos.svg" },
-  { label: "Medicamentos", slug: "medicamentos", image: "/img/c0f53b93-medicamentos.svg" },
   {
     label: "Oncológicos e Alto Custo",
     slug: "oncologicos-e-alto-custo",
@@ -27,9 +26,7 @@ export const collections: Collection[] = [
     slug: "nutricao-esportiva",
     image: "/img/eecc4f8a-suplementos_e_vitaminas_mNTnTDk.svg",
   },
-  { label: "Ortopédicos", slug: "ortopedicos", image: "/img/d6e5d199-ortopedicos.svg" },
   { label: "Sênior", slug: "senior", image: "/img/574dd9f0-nutricao_senior_menor.svg" },
-  { label: "Diabetes", slug: "diabetes", image: "/img/b57de5ec-diabetes.svg" },
   { label: "Hipertensão", slug: "hipertensao", image: "/img/b57125ed-hipertensao.svg" },
   { label: "Dermo", slug: "dermocosmeticos", image: "/img/548d679b-untitled-1.svg" },
   {
@@ -97,9 +94,7 @@ export const departments = [
   "Dermocosméticos",
   "Beleza e Higiene",
   "Genéricos",
-  "Home Care",
   "Mamãe e Bebê",
-  "Medicamentos",
   "Saúde e Bem Estar",
 ];
 
@@ -107,9 +102,7 @@ export const departmentSlugs: Record<string, string> = {
   Dermocosméticos: "dermocosmeticos",
   "Beleza e Higiene": "cuidados-pessoais",
   Genéricos: "genericos",
-  "Home Care": "ortopedicos",
   "Mamãe e Bebê": "mamae-e-bebe",
-  Medicamentos: "medicamentos",
   "Saúde e Bem Estar": "vitaminas-e-minerais",
 };
 
