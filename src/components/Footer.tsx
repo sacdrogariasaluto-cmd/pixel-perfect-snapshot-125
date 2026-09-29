@@ -89,11 +89,6 @@ export function Footer() {
             <h3 className="mb-4 text-muted-foreground">Pague com</h3>
             <div className="flex flex-col items-start gap-3">
               <PaymentFlags />
-              <img
-                src="/img/10fbedc9-cartao-convenio.png"
-                alt="Cartão convênio"
-                className="h-[34px] w-auto rounded border border-border"
-              />
             </div>
 
           </div>
