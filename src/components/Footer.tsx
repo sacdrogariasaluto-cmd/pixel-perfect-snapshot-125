@@ -130,10 +130,6 @@ export function Footer() {
             prescrever o tratamento adequado. Preços e promoções são válidos apenas para compras
             feitas pela internet e dependem de confirmação de disponibilidade em estoque.
           </p>
-          <div className="mt-6 flex items-center justify-center gap-6 opacity-80">
-            <img src="/img/0ccf97d4-convertize.svg" alt="Convertize" className="h-6 w-auto" />
-            <img src="/img/6f1e1ecd-etrio_preto.svg" alt="Etrio" className="h-6 w-auto" />
-          </div>
         </div>
       </div>
     </footer>
