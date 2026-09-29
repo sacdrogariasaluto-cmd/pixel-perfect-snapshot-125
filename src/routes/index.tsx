@@ -82,25 +82,8 @@ function Index() {
 
       <ProductShelf title="Farmacinha" products={farmacinha} />
 
-      <section className="container-site py-8" aria-label="Depoimentos dos Clientes">
-        <h2 className="text-[22px] font-bold">Depoimentos dos Clientes</h2>
-        <p className="mt-2 text-center text-muted-foreground">
-          Confira as opiniões de clientes satisfeitos
-        </p>
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="rounded-md border border-dashed border-border bg-surface p-6 text-sm text-muted-foreground"
-            >
-              Espaço reservado para avaliações reais da sua operação. As opiniões exibidas na loja
-              de referência não são reproduzidas aqui; conecte seu widget de avaliações.
-            </div>
-          ))}
-        </div>
-      </section>
-
       <section className="container-site py-8" aria-label="As marcas mais procuradas">
+
         <h2 className="mb-4 text-[22px] font-bold">As marcas mais procuradas</h2>
         <Carousel label="Marcas" step={460} className="items-center gap-6 px-6">
           {brands.map((b) => (
