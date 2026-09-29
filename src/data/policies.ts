@@ -290,7 +290,6 @@ export const policyPages: Record<string, PolicyPage> = {
         paragraphs: [
           "Sim, você pode trocar qualquer produto* comprado pelo site, televendas ou em uma de nossas lojas físicas em até 7 dias após a data da compra.",
           "Importante: o crédito será concedido de acordo com o valor do produto mencionado no cupom ou na nota fiscal. Se o valor do produto escolhido para a troca for diferente, será cobrada a diferença, de acordo com a política de preços vigente na loja. Caso o produto escolhido para a troca seja de valor inferior, realizaremos o estorno/reembolso do valor.",
-          "*Estas regras não são válidas para medicamentos antimicrobianos e medicamentos de uso controlado, conforme o disposto na RDC 20/2011 cap. VII art. 20, art. 44 da Portaria 344/98 e art. 90 da Portaria 6/99 SVS/MS (Secretaria de Vigilância em Saúde/Ministério da Saúde), e medicamentos termolábeis.",
         ],
       },
       {
@@ -298,7 +297,6 @@ export const policyPages: Record<string, PolicyPage> = {
         paragraphs: [
           "Sim, você pode devolver qualquer produto* comprado pelo site, televendas ou aplicativo em uma de nossas lojas físicas ou pela Central de Atendimento em até 7 dias após o recebimento do pedido. Leve o produto, um documento de identificação e a nota fiscal. Após a devolução aos estoques, será processada a solicitação de devolução do valor. A devolução poderá ser realizada apenas no caso de arrependimento (previsto no Código de Defesa do Consumidor, art. 49).",
           "Importante: o produto devolvido não pode ter indícios de uso, embalagem original aberta ou danificada.",
-          "*Estas regras não são válidas para medicamentos antimicrobianos e medicamentos de uso controlado, conforme o disposto na RDC 20/2011 cap. VII art. 20, art. 44 da Portaria 344/98 e art. 90 da Portaria 6/99 SVS/MS (Secretaria de Vigilância em Saúde/Ministério da Saúde), e medicamentos termolábeis.",
         ],
       },
     ],
@@ -315,13 +313,6 @@ export const policyPages: Record<string, PolicyPage> = {
         paragraphs: [
           "Sim, a solicitação pode ser feita através da nossa Central de Atendimento ao Cliente pelos nossos canais de atendimento. Atendimento de Segunda à Sexta, das 08h às 18h.",
           "*Lembrando que a Nota Fiscal sempre é enviada para o e-mail cadastrado. Verifique a caixa de entrada, o Spam e o Lixo Eletrônico.",
-        ],
-      },
-      {
-        heading: "- Posso comprar medicamentos controlados no site?",
-        paragraphs: [
-          "Não. De acordo com a Anvisa, Portaria Nº 344 de 01/02/1999 do Ministério da Saúde, é proibida a venda de medicamentos controlados através de site.",
-          "Para mais informações, entre em contato através da nossa Central de Atendimento ao Cliente. Atendimento de Segunda à Sexta, das 08h às 18h.",
         ],
       },
       {
