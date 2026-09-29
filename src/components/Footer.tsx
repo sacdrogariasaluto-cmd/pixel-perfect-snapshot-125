@@ -103,23 +103,6 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-muted-foreground">Redes Sociais</h3>
-            <div className="flex gap-3">
-              {socials.map((s) => (
-                <a
-                  key={s.name}
-                  href="#"
-                  aria-label={s.name}
-                  className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold text-white"
-                  style={{ backgroundColor: s.color }}
-                >
-                  {s.letter}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <div>
             <h3 className="mb-4 text-muted-foreground">Baixe nosso aplicativo</h3>
             <div className="flex gap-3">
               <img src="/img/11dcac59-google-play.svg" alt="Google Play" className="h-10 w-auto" />
