@@ -6,15 +6,15 @@ export function PromoBar() {
 
   return (
     <>
-      <div className="h-[38px] w-full bg-promo text-promo-foreground">
-        <div className="container-site flex h-full items-center justify-center gap-3 text-[13px]">
-          <span>
+      <div className="w-full bg-promo text-promo-foreground">
+        <div className="container-site flex min-h-[38px] items-center justify-between gap-2 py-1 text-[12px] sm:justify-center sm:gap-3 sm:text-[13px]">
+          <span className="min-w-0 leading-tight">
             <strong className="text-coupon">GANHE R$10 OFF</strong> em sua primeira compra!
           </span>
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="rounded bg-coupon px-2 py-1 text-[12px] font-bold tracking-wide text-promo transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="shrink-0 rounded bg-coupon px-2 py-1 text-[11px] font-bold tracking-wide text-promo transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:text-[12px]"
           >
             RESGATE AQUI
           </button>
