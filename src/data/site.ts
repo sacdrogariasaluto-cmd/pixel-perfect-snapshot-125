@@ -10,12 +10,6 @@ export type Collection = {
 
 export const collections: Collection[] = [
   { label: "Mamãe e Bebê", slug: "mamae-e-bebe", image: "/img/6bb8cc33-mamae_e_bebe.svg" },
-  { label: "Genéricos", slug: "genericos", image: "/img/95c69361-genericos.svg" },
-  {
-    label: "Oncológicos e Alto Custo",
-    slug: "oncologicos-e-alto-custo",
-    image: "/img/ffd2524d-oncologicos_e_alto_custo.svg",
-  },
   {
     label: "Vitaminas e Minerais",
     slug: "vitaminas-e-minerais",
@@ -27,7 +21,6 @@ export const collections: Collection[] = [
     image: "/img/eecc4f8a-suplementos_e_vitaminas_mNTnTDk.svg",
   },
   { label: "Sênior", slug: "senior", image: "/img/574dd9f0-nutricao_senior_menor.svg" },
-  { label: "Hipertensão", slug: "hipertensao", image: "/img/b57125ed-hipertensao.svg" },
   { label: "Dermo", slug: "dermocosmeticos", image: "/img/548d679b-untitled-1.svg" },
   {
     label: "Cuidados Pessoais",
@@ -57,10 +50,8 @@ export const bannersTop: Banner[] = [
     alt: "Linha performance",
   },
   { image: "/img/banners-palmas/app.jpg", alt: "Instale o aplicativo" },
-  { image: "/img/89966923-banner_rede_vera_cruz_1130x300.jpg.jpeg", alt: "Sandoz" },
   { image: "/img/148486f2-banner_giorno_bagno_1130x300.png", alt: "Giorno Bagno" },
   { image: "/img/banners-palmas/trabalhe-conosco.jpg", alt: "Trabalhe conosco" },
-  { image: "/img/f8a2c108-8_-_banner_home_genericos_2025_03_1130x300.jpg", alt: "Genéricos" },
 ];
 
 export const bannersMiddle: Banner[] = [
@@ -93,7 +84,6 @@ export const brands = [
 export const departments = [
   "Dermocosméticos",
   "Beleza e Higiene",
-  "Genéricos",
   "Mamãe e Bebê",
   "Saúde e Bem Estar",
 ];
@@ -101,7 +91,6 @@ export const departments = [
 export const departmentSlugs: Record<string, string> = {
   Dermocosméticos: "dermocosmeticos",
   "Beleza e Higiene": "cuidados-pessoais",
-  Genéricos: "genericos",
   "Mamãe e Bebê": "mamae-e-bebe",
   "Saúde e Bem Estar": "vitaminas-e-minerais",
 };

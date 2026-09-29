@@ -11,16 +11,16 @@ import { products } from "@/data/products";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Farmácia online — genéricos, dermocosméticos e nutrição" },
+      { title: "Farmácia online — dermocosméticos, nutrição e beleza" },
       {
         name: "description",
         content:
-          "Farmácia online com genéricos, dermocosméticos, nutrição e cuidados pessoais, com entrega rápida e preços no pix.",
+          "Farmácia online com dermocosméticos, nutrição e cuidados pessoais, com entrega rápida e preços no pix.",
       },
       { property: "og:title", content: "Farmácia online — saúde e bem-estar" },
       {
         property: "og:description",
-        content: "Genéricos, dermocosméticos e nutrição com entrega rápida.",
+        content: "Dermocosméticos, nutrição e beleza com entrega rápida.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -36,7 +36,6 @@ function Index() {
   const suplementos = products.filter((p) =>
     ["nutricao-esportiva", "vitaminas-e-minerais", "senior"].includes(p.category),
   );
-  const farmacinha = products.filter((p) => p.category === "genericos");
 
   return (
     <SiteLayout>
@@ -77,8 +76,6 @@ function Index() {
 
       <BannerCarousel banners={bannersMiddle} label="Campanhas institucionais" />
 
-      <ProductShelf title="Farmacinha" products={farmacinha} />
-
       <section className="container-site py-8" aria-label="As marcas mais procuradas">
 
         <h2 className="mb-4 text-[22px] font-bold">As marcas mais procuradas</h2>
@@ -101,7 +98,7 @@ function Index() {
             Farmácia online com tudo para a sua saúde
           </h2>
           <p>
-            Reúna em um só lugar genéricos, dermocosméticos, nutrição e cuidados
+            Reúna em um só lugar dermocosméticos, nutrição e cuidados
             pessoais. Este texto editorial é configurável e deve refletir o conteúdo do titular do
             projeto.
           </p>
