@@ -7,81 +7,6 @@ export type Product = {
 
 export const products: Product[] = [
   {
-    "id": "1",
-    "slug": "ibuprofeno-100mg-ml-sabor-tutti-frutti-cimed-20ml",
-    "name": "Ibuprofeno 100mg/ml Sabor Tutti-Frutti Cimed 20ml",
-    "brand": "Cimed",
-    "code": "10000",
-    "image": "/img/9a93ffb8-ibuprofeno-100mgml-sabor-tutti-frutti-cimed-20ml_16333.jpg",
-    "category": "genericos",
-    "pixPrice": 34.14,
-    "cardPrice": 35.95,
-    "listPrice": 39.51,
-    "discount": 9,
-    "rating": 5,
-    "reviews": 12
-  },
-  {
-    "id": "9",
-    "slug": "citrato-de-sildenafila-50mg-neo-quimica-4-comprimidos-revestidos",
-    "name": "Citrato de Sildenafila 50mg, Neo Química 4 comprimidos revestidos",
-    "brand": "Neo Química",
-    "code": "10296",
-    "image": "/img/64e2b7b7-citrato-de-sildenafila-50mg-neo-quimica-4-comprimidos-revestidos_17171.jpg",
-    "category": "genericos",
-    "pixPrice": 17.98,
-    "cardPrice": 18.93,
-    "listPrice": 19.93,
-    "discount": 5,
-    "rating": 4.5,
-    "reviews": 7
-  },
-  {
-    "id": "12",
-    "slug": "ibuprofeno-600mg-prati-20-comprimidos-revestidos",
-    "name": "Ibuprofeno 600mg Prati 20 comprimidos revestidos",
-    "brand": "Prati",
-    "code": "10407",
-    "image": "/img/8dfa7785-ibuprofeno-600mg-prati-20-comprimidos-revestidos_26000.jpg",
-    "category": "genericos",
-    "pixPrice": 54.3,
-    "cardPrice": 57.18,
-    "listPrice": 60.19,
-    "discount": 5,
-    "rating": 0,
-    "reviews": 7
-  },
-  {
-    "id": "13",
-    "slug": "dipirona-1g-neo-quimica-10-comprimidos",
-    "name": "Dipirona 1g Neo Química 10 comprimidos",
-    "brand": "Neo Química",
-    "code": "10444",
-    "image": "/img/af69f5a1-dipirona-1g-neo-quimica-10-comprimidos_24394.jpg",
-    "category": "genericos",
-    "pixPrice": 23.54,
-    "cardPrice": 24.79,
-    "listPrice": 34.43,
-    "discount": 28,
-    "rating": 5,
-    "reviews": 1
-  },
-  {
-    "id": "15",
-    "slug": "tadalafila-20mg-prati-2-comprimidos-revestidos",
-    "name": "Tadalafila 20mg Prati 2 comprimidos revestidos",
-    "brand": "Prati",
-    "code": "10518",
-    "image": "/img/2178f06e-tadalafila-20mg-prati-2-comprimidos-revestidos_25191.jpg",
-    "category": "genericos",
-    "pixPrice": 27.36,
-    "cardPrice": 28.81,
-    "listPrice": 31.66,
-    "discount": 9,
-    "rating": 4,
-    "reviews": 0
-  },
-  {
     "id": "16",
     "slug": "soro-fisiologico-sorimax-0-9-500ml",
     "name": "Soro Fisiológico Sorimax 0,9% 500ml",
@@ -155,51 +80,6 @@ export const products: Product[] = [
     "discount": 28,
     "rating": 4.5,
     "reviews": 1
-  },
-  {
-    "id": "21",
-    "slug": "tadalafila-5mg-eurofarma-30-comprimidos-revestidos",
-    "name": "Tadalafila 5mg Eurofarma 30 comprimidos revestidos",
-    "brand": "Eurofarma",
-    "code": "10740",
-    "image": "/img/6195aa18-tadalafila-5mg-eurofarma-30-comprimidos-revestidos_17151.jpg",
-    "category": "genericos",
-    "pixPrice": 67.58,
-    "cardPrice": 71.16,
-    "listPrice": 109.48,
-    "discount": 35,
-    "rating": 5,
-    "reviews": 7
-  },
-  {
-    "id": "22",
-    "slug": "losartana-potassica-50mg-medley-30-comprimidos-revestidos",
-    "name": "Losartana Potássica 50mg Medley 30 comprimidos revestidos",
-    "brand": "Medley",
-    "code": "10777",
-    "image": "/img/1e258f2a-losartana-potassica-50mg-medley-30-comprimidos-revestidos_21355.jpg",
-    "category": "hipertensao",
-    "pixPrice": 76.72,
-    "cardPrice": 80.79,
-    "listPrice": 85.04,
-    "discount": 5,
-    "rating": 0,
-    "reviews": 1
-  },
-  {
-    "id": "23",
-    "slug": "nimesulida-100mg-ems-12-comprimidos",
-    "name": "Nimesulida 100mg EMS 12 comprimidos",
-    "brand": "EMS",
-    "code": "10814",
-    "image": "/img/09a82938-nimesulida-100mg-ems-12-comprimidos_17196.jpg",
-    "category": "genericos",
-    "pixPrice": 47.67,
-    "cardPrice": 50.2,
-    "listPrice": 52.84,
-    "discount": 5,
-    "rating": 0,
-    "reviews": 12
   },
   {
     "id": "24",
@@ -456,21 +336,6 @@ export const products: Product[] = [
     "rating": 0,
     "reviews": 0
   },
-  {
-    "id": "43",
-    "slug": "dipirona-monoidratada-500mg-ems-10-comprimidos",
-    "name": "Dipirona Monoidratada 500mg EMS 10 comprimidos",
-    "brand": "EMS",
-    "code": "11554",
-    "image": "/img/e1a04743-dipirona-monoidratada-500mg-ems-10-comprimidos_16335.jpg",
-    "category": "genericos",
-    "pixPrice": 83.69,
-    "cardPrice": 88.13,
-    "listPrice": 135.58,
-    "discount": 35,
-    "rating": 5,
-    "reviews": 0
-  }
 ];
 
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);

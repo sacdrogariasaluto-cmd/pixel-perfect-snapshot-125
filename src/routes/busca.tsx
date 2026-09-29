@@ -87,7 +87,7 @@ function BuscaPage() {
           <div className="mt-6 rounded-md bg-surface p-10 text-center">
             <p className="font-bold">Nenhum produto encontrado</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Verifique a ortografia ou tente um termo mais genérico, como o princípio ativo.
+              Verifique a ortografia ou tente um termo mais simples, como a marca do produto.
             </p>
             <Link to="/" className="mt-4 inline-block text-brand underline">
               Voltar para a página inicial

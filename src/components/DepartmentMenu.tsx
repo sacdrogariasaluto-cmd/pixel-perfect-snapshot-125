@@ -33,7 +33,7 @@ export function DepartmentMenu({ open, onClose }: { open: boolean; onClose: () =
         <Link
           key={d}
           to="/$slug"
-          params={{ slug: departmentSlugs[d] ?? "genericos" }}
+          params={{ slug: departmentSlugs[d] ?? "dermocosmeticos" }}
           onClick={onClose}
           role="menuitem"
           className="flex items-center justify-between px-5 py-2 text-sm text-foreground transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none"
