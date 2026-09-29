@@ -49,10 +49,6 @@ function Index() {
         <BannerCarousel banners={bannersTop} label="Campanhas em destaque" />
       </div>
 
-      <p className="container-site py-8 text-center text-[22px] font-bold leading-snug md:py-8">
-        Sua Farmácia online confiável! Encontre medicamentos e tudo para a sua saúde e bem-estar,
-        com entrega rápida, as melhores marcas, os melhores preços e um atendimento de qualidade.
-      </p>
 
       <section className="bg-surface py-6" aria-label="Benefícios">
         <div className="container-site grid grid-cols-2 gap-x-3 gap-y-5 lg:grid-cols-4 lg:gap-6">
