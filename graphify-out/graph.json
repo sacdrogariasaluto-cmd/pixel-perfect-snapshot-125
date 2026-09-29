@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-29T17:04:18.273359+00:00",
+  "generated_at": "2026-09-29T17:14:34.090088+00:00",
   "files": [
     {
       "path": "roadmap.md",
@@ -219,7 +219,7 @@
     },
     {
       "path": "src/routes/index.tsx",
-      "bytes": 4964
+      "bytes": 4889
     },
     {
       "path": "src/data/products.ts",
@@ -1102,10 +1102,6 @@
     {
       "source": "src/routes/index.tsx",
       "target": "@/components/ProductShelf"
-    },
-    {
-      "source": "src/routes/index.tsx",
-      "target": "@/components/PromoModal"
     },
     {
       "source": "src/routes/index.tsx",
