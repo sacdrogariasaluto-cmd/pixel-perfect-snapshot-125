@@ -39,9 +39,17 @@ export function BannerCarousel({ banners, label }: { banners: Banner[]; label: s
       >
         <ChevronRight className="h-7 w-7" />
       </button>
-      <div className="absolute bottom-1 left-1/2 flex -translate-x-1/2 gap-2" aria-hidden="true">
+      <div className="absolute bottom-1 left-1/2 flex -translate-x-1/2 gap-2">
         {banners.map((banner, index) => (
-          <span key={banner.image} className={`h-2.5 w-2.5 rounded-full ${index === i ? "bg-foreground" : "bg-muted-foreground/70"}`} />
+          <button
+            key={banner.image}
+            type="button"
+            onClick={() => setI(index)}
+            aria-label={`${label}: ir para o banner ${index + 1}`}
+            className="p-1"
+          >
+            <span className={`block h-2.5 w-2.5 rounded-full ${index === i ? "bg-foreground" : "bg-muted-foreground/70"}`} />
+          </button>
         ))}
       </div>
     </section>
