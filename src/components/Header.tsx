@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { BasketIcon, HeadsetIcon, MenuIcon, PinIcon, UserIcon } from "./Icons";
+import { BasketIcon, HeadsetIcon, MenuIcon, TruckIcon, UserIcon } from "./Icons";
 import { DepartmentMenu } from "./DepartmentMenu";
 import { SearchBox } from "./SearchBox";
 import { useCart } from "@/lib/cart";
@@ -47,10 +47,10 @@ export function Header() {
               Atendimento
             </span>
           </span>
-          <span className="hidden items-center gap-2 sm:flex">
-            <PinIcon className="h-6 w-6" />
-            Lojas
-          </span>
+          <Link to="/rastrear" className="hidden items-center gap-2 sm:flex">
+            <TruckIcon className="h-6 w-6" />
+            Rastrear pedido
+          </Link>
           <Link to="/checkout/login" className="hidden items-center gap-2 hover:text-brand md:flex">
             <UserIcon className="h-6 w-6" />
             Entrar
