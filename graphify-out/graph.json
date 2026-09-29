@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-29T16:55:39.620853+00:00",
+  "generated_at": "2026-09-29T16:59:07.803510+00:00",
   "files": [
     {
       "path": "roadmap.md",
@@ -87,7 +87,7 @@
     },
     {
       "path": "src/components/DepartmentMenu.tsx",
-      "bytes": 1768
+      "bytes": 1765
     },
     {
       "path": "src/components/SearchBox.tsx",
@@ -195,7 +195,7 @@
     },
     {
       "path": "src/routes/busca.tsx",
-      "bytes": 4005
+      "bytes": 3991
     },
     {
       "path": "src/routes/ajuda.$slug.tsx",
@@ -219,19 +219,19 @@
     },
     {
       "path": "src/routes/index.tsx",
-      "bytes": 5040
+      "bytes": 4964
     },
     {
       "path": "src/data/products.ts",
-      "bytes": 21077
+      "bytes": 14304
     },
     {
       "path": "src/data/site.ts",
-      "bytes": 6072
+      "bytes": 5715
     },
     {
       "path": "src/data/policies.ts",
-      "bytes": 22029
+      "bytes": 20949
     },
     {
       "path": "src/hooks/use-mobile.tsx",
