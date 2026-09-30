@@ -89,8 +89,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
-      // favicon vazio: impede o navegador de exibir ícone antigo em cache
-      { rel: "icon", href: "data:," },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+
 
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
