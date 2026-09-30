@@ -14,14 +14,26 @@ export function BannerCarousel({ banners, label }: { banners: Banner[]; label: s
   return (
     <section className="container-site relative pb-5" aria-label={label} aria-roledescription="carrossel">
       <div className="overflow-hidden rounded-md bg-surface md:rounded-xl">
-        <img
-        src={banners[i]?.image}
-        alt={banners[i]?.alt ?? ""}
-        width={1130}
-        height={300}
-
-           className="h-auto w-full object-contain"
-        />
+        {banners[i]?.mobile ? (
+          <picture>
+            <source media="(max-width: 767px)" srcSet={banners[i].mobile} />
+            <img
+              src={banners[i]?.image}
+              alt={banners[i]?.alt ?? ""}
+              width={1130}
+              height={300}
+              className="h-auto w-full object-contain"
+            />
+          </picture>
+        ) : (
+          <img
+            src={banners[i]?.image}
+            alt={banners[i]?.alt ?? ""}
+            width={1130}
+            height={300}
+            className="h-auto w-full object-contain"
+          />
+        )}
       </div>
       <button
         type="button"
