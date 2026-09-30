@@ -39,9 +39,29 @@ export const subCollections = [
   { label: "Troca do Bebê", image: "/img/22e7ade4-troca-bebe.svg" },
 ];
 
-export type Banner = { image: string; alt: string };
+export type Banner = { image: string; alt: string; mobile?: string };
 
 export const bannersTop: Banner[] = [
+  {
+    image: "/img/banners-palmas/dermocosmeticos.jpg",
+    mobile: "/img/banners-palmas/dermocosmeticos-mobile.jpg",
+    alt: "Dermocosméticos — cuidado diário para a sua pele",
+  },
+  {
+    image: "/img/banners-palmas/mamae-bebe.jpg",
+    mobile: "/img/banners-palmas/mamae-bebe-mobile.jpg",
+    alt: "Mamãe e Bebê — tudo para o seu pequeno",
+  },
+  {
+    image: "/img/banners-palmas/vitaminas.jpg",
+    mobile: "/img/banners-palmas/vitaminas-mobile.jpg",
+    alt: "Vitaminas e Minerais — energia para o seu dia",
+  },
+  {
+    image: "/img/banners-palmas/nutricao-esportiva.jpg",
+    mobile: "/img/banners-palmas/nutricao-esportiva-mobile.jpg",
+    alt: "Nutrição Esportiva — performance e recuperação",
+  },
   { image: "/img/272013a6-mb4719-banner-sustagen-1130x300.jpg", alt: "Sustagen Senior" },
   { image: "/img/b6e52005-11_-_banner_home_hidratantes_2025_03_1130x300.jpg", alt: "Hidratantes" },
   { image: "/img/ad83a64a-mb4719-banner-olla-play-1130x300.jpg", alt: "Olla" },
